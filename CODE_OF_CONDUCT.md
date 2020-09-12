@@ -30,4 +30,8 @@ Project maintainers have the right and responsibility to remove, edit, or reject
 
 ## Scope
 
-This Code of Conduct applies both within project spaces and in public spaces when
+This Code of Conduct applies both within project spaces and in public spaces when an individual is representing the project or its community. Examples of representing a project or community include using an official project e-mail address, posting via an official social media account, or acting as an appointed representative at an online or offline event. Representation of a project may be further defined and clarified by project maintainers.
+
+## Enforcement
+
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at [gitter.im/swaggo/swag](https://gitter.im/swaggo/swag).The project team will review and investigate a
