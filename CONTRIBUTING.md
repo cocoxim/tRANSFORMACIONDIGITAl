@@ -10,4 +10,7 @@ Please note we have a code of conduct, please follow it in all your interactions
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
+
+Please make an issue first if the change is likely to increase.
