@@ -1,0 +1,13 @@
+GOCMD:=$(shell which go)
+GOLINT:=$(shell which golint)
+GOIMPORT:=$(shell which goimports)
+GOFMT:=$(shell which gofmt)
+GOBUILD:=$(GOCMD) build
+GOINSTALL:=$(GOCMD) install
+GOCLEAN:=$(GOCMD) clean
+GOTEST:=$(GOCMD) test
+GOGET:=$(GOCMD) get
+GOLIST:=$(GOCMD) list
+GOVET:=$(GOCMD) vet
+GOPATH:=$(shell $(GOCMD) env GOPATH)
+u :=
