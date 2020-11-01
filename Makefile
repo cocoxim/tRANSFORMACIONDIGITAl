@@ -63,4 +63,32 @@ deps:
 	$(GOGET) golang.org/x/tools/go/loader
 
 .PHONY: devel-deps
-dev
+devel-deps:
+	GO111MODULE=off $(GOGET) -v -u \
+		golang.org/x/lint/golint
+
+.PHONY: lint
+lint: devel-deps
+	for PKG in $(PACKAGES); do golint -set_exit_status $$PKG || exit 1; done;
+
+.PHONY: vet
+vet: deps devel-deps
+	$(GOVET) $(PACKAGES)
+
+.PHONY: fmt
+fmt:
+	$(GOFMT) -s -w $(GOFILES)
+
+.PHONY: fmt-check
+fmt-check:
+	@diff=$$($(GOFMT) -s -d $(GOFILES)); \
+	if [ -n "$$diff" ]; then \
+		echo "Please run 'make fmt' and commit the result:"; \
+		echo "$${diff}"; \
+		exit 1; \
+	fi;
+
+.PHONY: view-covered
+view-covered:
+	$(GOTEST) -coverprofile=cover.out $(TARGET)
+	$(GOCMD) tool cover -html=co
