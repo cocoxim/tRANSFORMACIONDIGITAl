@@ -91,4 +91,4 @@ fmt-check:
 .PHONY: view-covered
 view-covered:
 	$(GOTEST) -coverprofile=cover.out $(TARGET)
-	$(GOCMD) tool cover -html=co
+	$(GOCMD) tool cover -html=cover.out
