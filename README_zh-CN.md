@@ -41,4 +41,46 @@ Swag将Go的注释转换为Swagger2.0文档。我们为流行的 [Go Web Framewo
     - [如何使用安全性注释](#如何使用安全性注释)
 - [项目相关](#项目相关)
 
-## 快速开
+## 快速开始
+
+1. 将注释添加到API源代码中，请参阅声明性注释格式。
+2. 使用如下命令下载swag：
+
+```bash
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+
+从源码开始构建的话，需要有Go环境（1.16及以上版本）。
+
+或者从github的release页面下载预编译好的二进制文件。
+
+3. 在包含`main.go`文件的项目根目录运行`swag init`。这将会解析注释并生成需要的文件（`docs`文件夹和`docs/docs.go`）。
+
+```bash
+swag init
+```
+
+确保导入了生成的`docs/docs.go`文件，这样特定的配置文件才会被初始化。如果通用API注释没有写在`main.go`中，可以使用`-g`标识符来告知swag。
+
+```bash
+swag init -g http/api.go
+```
+
+4. (可选) 使用`fmt`格式化 SWAG 注释。(请先升级到最新版本)
+
+```bash
+swag fmt
+```
+
+## swag cli
+
+```bash
+swag init -h
+NAME:
+   swag init - Create docs.go
+
+USAGE:
+   swag init [command options] [arguments...]
+
+OPTIONS:
+   --generalInfo valu
