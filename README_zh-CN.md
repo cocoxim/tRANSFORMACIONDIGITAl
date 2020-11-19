@@ -109,4 +109,19 @@ USAGE:
 OPTIONS:
    --dir value, -d value          API解析目录 (默认: "./")
    --exclude value                解析扫描时排除的目录，多个目录可用逗号分隔（默认：空）
-   --generalInfo value, -g value  API通
+   --generalInfo value, -g value  API通用信息所在的go源文件路径，如果是相对路径则基于API解析目录 (默认: "main.go")
+   --help, -h                     show help (default: false)
+
+```
+
+## 支持的Web框架
+
+- [gin](http://github.com/swaggo/gin-swagger)
+- [echo](http://github.com/swaggo/echo-swagger)
+- [buffalo](https://github.com/swaggo/buffalo-swagger)
+- [net/http](https://github.com/swaggo/http-swagger)
+- [net/http](https://github.com/swaggo/http-swagger)
+- [gorilla/mux](https://github.com/swaggo/http-swagger)
+- [go-chi/chi](https://github.com/swaggo/http-swagger)
+- [flamingo](https://github.com/i-love-flamingo/swagger)
+- [fiber](https://github.com/gofiber/swag
