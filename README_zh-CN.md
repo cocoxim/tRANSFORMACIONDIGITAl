@@ -124,4 +124,28 @@ OPTIONS:
 - [gorilla/mux](https://github.com/swaggo/http-swagger)
 - [go-chi/chi](https://github.com/swaggo/http-swagger)
 - [flamingo](https://github.com/i-love-flamingo/swagger)
-- [fiber](https://github.com/gofiber/swag
+- [fiber](https://github.com/gofiber/swagger)
+- [atreugo](https://github.com/Nerzal/atreugo-swagger)
+- [hertz](https://github.com/hertz-contrib/swagger)
+
+## 如何与Gin集成
+
+[点击此处](https://github.com/swaggo/swag/tree/master/example/celler)查看示例源代码。
+
+1. 使用`swag init`生成Swagger2.0文档后，导入如下代码包：
+
+```go
+import "github.com/swaggo/gin-swagger" // gin-swagger middleware
+import "github.com/swaggo/files" // swagger embed files
+```
+
+2. 在`main.go`源代码中添加通用的API注释：
+
+```go
+// @title           Swagger Example API
+// @version         1.0
+// @description     This is a sample server celler server.
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   API Support
+// @contact.url    http://www.swagger.
