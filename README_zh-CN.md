@@ -216,4 +216,34 @@ func main() {
 
     r := gin.New()
 
-    // use ginSwagger middleware to serve the
+    // use ginSwagger middleware to serve the API docs
+    r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+    r.Run()
+}
+```
+
+3. 在`controller`代码中添加API操作注释：
+
+```go
+package controller
+
+import (
+    "fmt"
+    "net/http"
+    "strconv"
+
+    "github.com/gin-gonic/gin"
+    "github.com/swaggo/swag/example/celler/httputil"
+    "github.com/swaggo/swag/example/celler/model"
+)
+
+// ShowAccount godoc
+// @Summary      Show an account
+// @Description  get string by ID
+// @Tags         accounts
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Account ID"
+// @Success      200  {object}  model.Account
+//
