@@ -280,4 +280,40 @@ func (c *Controller) ShowAccount(ctx *gin.Context) {
 func (c *Controller) ListAccounts(ctx *gin.Context) {
   q := ctx.Request.URL.Query().Get("q")
   accounts, err := model.AccountsAll(q)
-  if err
+  if err != nil {
+    httputil.NewError(ctx, http.StatusNotFound, err)
+    return
+  }
+  ctx.JSON(http.StatusOK, accounts)
+}
+//...
+```
+
+```bash
+swag init
+```
+
+4. 运行程序，然后在浏览器中访问 http://localhost:8080/swagger/index.html 。将看到Swagger 2.0 Api文档，如下所示：
+
+![swagger_index.html](https://raw.githubusercontent.com/swaggo/swag/master/assets/swagger-image.png)
+
+## 格式化说明
+
+可以针对Swag的注释自动格式化，就像`go fmt`。   
+此处查看格式化结果 [here](https://github.com/swaggo/swag/tree/master/example/celler).
+
+示例：
+```shell
+swag fmt
+```
+
+排除目录（不扫描）示例：
+```shell
+swag fmt -d ./ --exclude ./internal
+```
+
+## 开发现状
+
+[Swagger 2.0 文档](https://swagger.io/docs/specification/2-0/basic-structure/)
+
+- 
