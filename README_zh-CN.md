@@ -265,4 +265,19 @@ func (c *Controller) ShowAccount(ctx *gin.Context) {
   ctx.JSON(http.StatusOK, account)
 }
 
-// ListAccounts go
+// ListAccounts godoc
+// @Summary      List accounts
+// @Description  get accounts
+// @Tags         accounts
+// @Accept       json
+// @Produce      json
+// @Param        q    query     string  false  "name search by q"  Format(email)
+// @Success      200  {array}   model.Account
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /accounts [get]
+func (c *Controller) ListAccounts(ctx *gin.Context) {
+  q := ctx.Request.URL.Query().Get("q")
+  accounts, err := model.AccountsAll(q)
+  if err
