@@ -316,4 +316,26 @@ swag fmt -d ./ --exclude ./internal
 
 [Swagger 2.0 文档](https://swagger.io/docs/specification/2-0/basic-structure/)
 
-- 
+- [x] Basic Structure
+- [x] API Host and Base Path
+- [x] Paths and Operations
+- [x] Describing Parameters
+- [x] Describing Request Body
+- [x] Describing Responses
+- [x] MIME Types
+- [x] Authentication
+  - [x] Basic Authentication
+  - [x] API Keys
+- [x] Adding Examples
+- [x] File Upload
+- [x] Enums
+- [x] Grouping Operations With Tags
+- [ ] Swagger Extensions
+
+## 声明式注释格式
+
+## 通用API信息
+
+**示例** [`celler/main.go`](https://github.com/swaggo/swag/blob/master/example/celler/main.go)
+
+| 注释                    | 说明                                                                                 
