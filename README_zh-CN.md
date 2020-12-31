@@ -338,4 +338,8 @@ swag fmt -d ./ --exclude ./internal
 
 **示例** [`celler/main.go`](https://github.com/swaggo/swag/blob/master/example/celler/main.go)
 
-| 注释                    | 说明                                                                                 
+| 注释                    | 说明                                                                                            | 示例                                                            |
+| ----------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| title                   | **必填** 应用程序的名称。                                                                       | // @title Swagger Example API                                   |
+| version                 | **必填** 提供应用程序API的版本。                                                                | // @version 1.0                                                 |
+| description         
