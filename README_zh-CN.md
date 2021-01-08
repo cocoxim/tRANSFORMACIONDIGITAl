@@ -345,4 +345,7 @@ swag fmt -d ./ --exclude ./internal
 | description             | 应用程序的简短描述。                                                                            | // @description This is a sample server celler server.          |
 | tag.name                | 标签的名称。                                                                                    | // @tag.name This is the name of the tag                        |
 | tag.description         | 标签的描述。                                                                                    | // @tag.description Cool Description                            |
-| tag.docs.url            | 标签的外部文档的URL。                                                                           
+| tag.docs.url            | 标签的外部文档的URL。                                                                           | // @tag.docs.url https://example.com                            |
+| tag.docs.description    | 标签的外部文档说明。                                                                            | // @tag.docs.description Best example documentation             |
+| termsOfService          | API的服务条款。                                                                                 | // @termsOfService http://swagger.io/terms/                     |
+| contact.name            | 公开的API的联系信息。                                                                           | // @contact.name API Support                                   
