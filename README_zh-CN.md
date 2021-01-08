@@ -348,4 +348,8 @@ swag fmt -d ./ --exclude ./internal
 | tag.docs.url            | 标签的外部文档的URL。                                                                           | // @tag.docs.url https://example.com                            |
 | tag.docs.description    | 标签的外部文档说明。                                                                            | // @tag.docs.description Best example documentation             |
 | termsOfService          | API的服务条款。                                                                                 | // @termsOfService http://swagger.io/terms/                     |
-| contact.name            | 公开的API的联系信息。                                                                           | // @contact.name API Support                                   
+| contact.name            | 公开的API的联系信息。                                                                           | // @contact.name API Support                                    |
+| contact.url             | 联系信息的URL。 必须采用网址格式。                                                              | // @contact.url http://www.swagger.io/support                   |
+| contact.email           | 联系人/组织的电子邮件地址。 必须采用电子邮件地址的格式。                                        | // @contact.email support@swagger.io                            |
+| license.name            | **必填** 用于API的许可证名称。                                                                  | // @license.name Apache 2.0                                     |
+| license.url             | 用于API的许
