@@ -352,4 +352,7 @@ swag fmt -d ./ --exclude ./internal
 | contact.url             | 联系信息的URL。 必须采用网址格式。                                                              | // @contact.url http://www.swagger.io/support                   |
 | contact.email           | 联系人/组织的电子邮件地址。 必须采用电子邮件地址的格式。                                        | // @contact.email support@swagger.io                            |
 | license.name            | **必填** 用于API的许可证名称。                                                                  | // @license.name Apache 2.0                                     |
-| license.url             | 用于API的许
+| license.url             | 用于API的许可证的URL。 必须采用网址格式。                                                       | // @license.url http://www.apache.org/licenses/LICENSE-2.0.html |
+| host                    | 运行API的主机（主机名或IP地址）。                                                               | // @host localhost:8080                                         |
+| BasePath                | 运行API的基本路径。                                                                             | // @BasePath /api/v1                                            |
+| accept                  | API 可以使用的 MIME 类型列表。 请注意，Accept 仅影响具有请求正文的操作，例如 POST、PUT 和 PATCH。 值必须如“[Mime类型](#mime类型)”中所述。 
