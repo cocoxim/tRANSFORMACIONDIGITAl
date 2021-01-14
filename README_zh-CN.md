@@ -360,4 +360,12 @@ swag fmt -d ./ --exclude ./internal
 | query.collection.format | 请求URI query里数组参数的默认格式：csv，multi，pipes，tsv，ssv。 如果未设置，则默认为csv。 | // @query.collection.format multi                               |
 | schemes                 | 用空格分隔的请求的传输协议。                                                                    | // @schemes http https                                          |
 | externalDocs.description | Description of the external document. | // @externalDocs.description OpenAPI |
-| e
+| externalDocs.url         | URL of the external document. | // @externalDocs.url https://swagger.io/resources/open-api/ |
+| x-name                  | 扩展的键必须以x-开头，并且只能使用json值                                                        | // @x-example-key {"key": "value"}                              |
+
+### 使用Markdown描述
+
+如果文档中的短字符串不足以完整表达，或者需要展示图片，代码示例等类似的内容，则可能需要使用Markdown描述。要使用Markdown描述，请使用一下注释。
+
+| 注释                     | 说明                                                                                 | 示例                                                                              |
+| ------------------------ | ---------------------------------------------
