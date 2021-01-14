@@ -372,4 +372,12 @@ swag fmt -d ./ --exclude ./internal
 | title                    | **必填** 应用程序的名称。                                                            | // @title Swagger Example API                                                     |
 | version                  | **必填** 提供应用程序API的版本。                                                     | // @version 1.0                                                                   |
 | description.markdown     | 应用程序的简短描述。 从`api.md`文件中解析。 这是`@description`的替代用法。           | // @description.markdown No value needed, this parses the description from api.md |
-| tag.nam
+| tag.name                 | 标签的名称。                                                                         | // @tag.name This is the name of the tag                                          |
+| tag.description.markdown | 标签说明，这是`tag.description`的替代用法。 该描述将从名为`tagname.md的`文件中读取。 | // @tag.description.markdown                                                      |
+
+## API操作
+
+Example [celler/controller](https://github.com/swaggo/swag/tree/master/example/celler/controller)
+
+| 注释                 | 描述                                                                                                    |
+| ----------
