@@ -385,4 +385,9 @@ Example [celler/controller](https://github.com/swaggo/swag/tree/master/example/c
 | description.markdown | 应用程序的简短描述。该描述将从名为`endpointname.md`的文件中读取。                                       |
 | id                   | 用于标识操作的唯一字符串。在所有API操作中必须唯一。                                                     |
 | tags                 | 每个API操作的标签列表，以逗号分隔。                                                                     |
-| summary
+| summary              | 该操作的简短摘要。                                                                                      |
+| accept               | API 可以使用的 MIME 类型列表。 请注意，Accept 仅影响具有请求正文的操作，例如 POST、PUT 和 PATCH。 值必须如“[Mime类型](#mime类型)”中所述。                                  |
+| produce              | API可以生成的MIME类型的列表。值必须如“[Mime类型](#mime类型)”中所述。                                  |
+| param                | 用空格分隔的参数。`param name`,`param type`,`data type`,`is mandatory?`,`comment` `attribute(optional)` |
+| security             | 每个API操作的[安全性](#安全性)。                                                                      |
+| success        
