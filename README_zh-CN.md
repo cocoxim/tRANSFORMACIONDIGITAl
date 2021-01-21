@@ -408,4 +408,30 @@ Example [celler/controller](https://github.com/swaggo/swag/tree/master/example/c
 | plain                 | text/plain                        |
 | html                  | text/html                         |
 | mpfd                  | multipart/form-data               |
-| x-ww
+| x-www-form-urlencoded | application/x-www-form-urlencoded |
+| json-api              | application/vnd.api+json          |
+| json-stream           | application/x-json-stream         |
+| octet-stream          | application/octet-stream          |
+| png                   | image/png                         |
+| jpeg                  | image/jpeg                        |
+| gif                   | image/gif                         |
+
+## 参数类型
+
+- query
+- path
+- header
+- body
+- formData
+
+## 数据类型
+
+- string (string)
+- integer (int, uint, uint32, uint64)
+- number (float32)
+- boolean (bool)
+- user defined struct
+
+## 安全性
+
+|
