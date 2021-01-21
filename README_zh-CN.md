@@ -395,4 +395,17 @@ Example [celler/controller](https://github.com/swaggo/swag/tree/master/example/c
 | response             | 与success、failure作用相同                                                                               |
 | header               | 以空格分隔的头字段。 `return code`,`{param type}`,`data type`,`comment`                                 |
 | router               | 以空格分隔的路径定义。 `path`,`[httpMethod]`                                                            |
-| x-name               | 扩展字段必须以
+| x-name               | 扩展字段必须以`x-`开头，并且只能使用json值。                                                            |
+
+## Mime类型
+
+`swag` 接受所有格式正确的MIME类型, 即使匹配 `*/*`。除此之外，`swag`还接受某些MIME类型的别名，如下所示：
+
+| Alias                 | MIME Type                         |
+| --------------------- | --------------------------------- |
+| json                  | application/json                  |
+| xml                   | text/xml                          |
+| plain                 | text/plain                        |
+| html                  | text/html                         |
+| mpfd                  | multipart/form-data               |
+| x-ww
