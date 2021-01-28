@@ -436,4 +436,7 @@ Example [celler/controller](https://github.com/swaggo/swag/tree/master/example/c
 
 | 注释                                   | 描述                                                                                          | 参数                              | 示例                                                         |
 | -------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------- | ------------------------------------------------------------ |
-| securitydefinitions.basic              | [Basic](https://swagger.io/docs/specification/2-0/authentication/basic-authentication/) auth. |                                   | // @s
+| securitydefinitions.basic              | [Basic](https://swagger.io/docs/specification/2-0/authentication/basic-authentication/) auth. |                                   | // @securityDefinitions.basic BasicAuth                      |
+| securitydefinitions.apikey             | [API key](https://swagger.io/docs/specification/2-0/authentication/api-keys/) auth.           | in, name                          | // @securityDefinitions.apikey ApiKeyAuth                    |
+| securitydefinitions.oauth2.application | [OAuth2 application](https://swagger.io/docs/specification/authentication/oauth2/) auth.      | tokenUrl, scope                   | // @securitydefinitions.oauth2.application OAuth2Application |
+| securitydefinitions.oauth2.implicit    | [OAuth2 implicit](https:/
