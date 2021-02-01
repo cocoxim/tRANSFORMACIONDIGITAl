@@ -443,4 +443,16 @@ Example [celler/controller](https://github.com/swaggo/swag/tree/master/example/c
 | securitydefinitions.oauth2.password    | [OAuth2 password](https://swagger.io/docs/specification/authentication/oauth2/) auth.         | tokenUrl, scope                   | // @securitydefinitions.oauth2.password OAuth2Password       |
 | securitydefinitions.oauth2.accessCode  | [OAuth2 access code](https://swagger.io/docs/specification/authentication/oauth2/) auth.      | tokenUrl, authorizationUrl, scope | // @securitydefinitions.oauth2.accessCode OAuth2AccessCode   |
 
-| 参数注释         | 
+| 参数注释         | 示例                                                     |
+| ---------------- | -------------------------------------------------------- |
+| in               | // @in header                                            |
+| name             | // @name Authorization                                   |
+| tokenUrl         | // @tokenUrl https://example.com/oauth/token             |
+| authorizationurl | // @authorizationurl https://example.com/oauth/authorize |
+| scope.hoge       | // @scope.write Grants write access                      |
+
+## 属性
+
+```go
+// @Param   enumstring  query     string     false  "string enums"       Enums(A, B, C)
+// @Param   enumint     query     in
