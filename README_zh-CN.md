@@ -461,4 +461,20 @@ Example [celler/controller](https://github.com/swaggo/swag/tree/master/example/c
 // @Param   int         query     int        false  "int valid"          minimum(1)    maximum(10)
 // @Param   default     query     string     false  "string default"     default(A)
 // @Param   collection  query     []string   false  "string collection"  collectionFormat(multi)
-// @Param   extensions  query     []string   false  "string collection"  extensions(x-example=test
+// @Param   extensions  query     []string   false  "string collection"  extensions(x-example=test,x-nullable)
+```
+
+也适用于结构体字段：
+
+```go
+type Foo struct {
+    Bar string `minLength:"4" maxLength:"16"`
+    Baz int `minimum:"10" maximum:"20" default:"15"`
+    Qux []string `enums:"foo,bar,baz"`
+}
+```
+
+### 当前可用的
+
+| 字段名           | 类型      | 描述                                                                                                                                                                                                                                                                                                                                                                  |
+| ---------------- | --------- | ---------------
