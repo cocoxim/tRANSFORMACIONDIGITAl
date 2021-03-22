@@ -519,4 +519,33 @@ type Foo struct {
 package model
 
 type Account struct {
-    ID   in
+    ID   int    `json:"id" example:"1"`
+    Name string `json:"name" example:"account name"`
+}
+```
+
+### 响应对象中的模型组合
+
+```go
+// JSONResult的data字段类型将被proto.Order类型替换
+@success 200 {object} jsonresult.JSONResult{data=proto.Order} "desc"
+```
+
+```go
+type JSONResult struct {
+    Code    int          `json:"code" `
+    Message string       `json:"message"`
+    Data    interface{}  `json:"data"`
+}
+
+type Order struct { //in `proto` package
+    ...
+}
+```
+
+- 还支持对象数组和原始类型作为嵌套响应
+
+```go
+@success 200 {object} jsonresult.JSONResult{data=[]proto.Order} "desc"
+@success 200 {object} jsonresult.JSONResult{data=string} "desc"
+@success 200 {object} j
