@@ -493,4 +493,30 @@ type Foo struct {
 | ----------- | :-------: | ---------------------------------------------------------------------------------- |
 | multipleOf  | `number`  | See https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.1.1. |
 | pattern     | `string`  | See https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.2.3. |
-| maxItems    | `integer` | See h
+| maxItems    | `integer` | See https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.3.2. |
+| minItems    | `integer` | See https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.3.3. |
+| uniqueItems | `boolean` | See https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.3.4. |
+
+## 样例
+
+### 多行的描述
+
+可以在常规api描述或路由定义中添加跨越多行的描述，如下所示：
+
+```go
+// @description This is the first line
+// @description This is the second line
+// @description And so forth.
+```
+
+### 用户自定义的具有数组类型的结构
+
+```go
+// @Success 200 {array} model.Account <-- This is a user defined struct.
+```
+
+```go
+package model
+
+type Account struct {
+    ID   in
