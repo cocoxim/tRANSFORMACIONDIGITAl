@@ -548,4 +548,21 @@ type Order struct { //in `proto` package
 ```go
 @success 200 {object} jsonresult.JSONResult{data=[]proto.Order} "desc"
 @success 200 {object} jsonresult.JSONResult{data=string} "desc"
-@success 200 {object} j
+@success 200 {object} jsonresult.JSONResult{data=[]string} "desc"
+```
+
+- 替换多个字段的类型。如果某字段不存在，将添加该字段。
+
+```go
+@success 200 {object} jsonresult.JSONResult{data1=string,data2=[]string,data3=proto.Order,data4=[]proto.Order} "desc"
+```
+
+### 在响应中增加头字段
+
+```go
+// @Success      200              {string}  string    "ok"
+// @failure      400              {string}  string    "error"
+// @response     default          {string}  string    "other error"
+// @Header       200              {string}  Location  "/entity/1"
+// @Header       200,400,default  {string}  Token     "token"
+// @Header       all              {string}
