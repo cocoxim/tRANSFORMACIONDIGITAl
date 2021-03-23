@@ -565,4 +565,33 @@ type Order struct { //in `proto` package
 // @response     default          {string}  string    "other error"
 // @Header       200              {string}  Location  "/entity/1"
 // @Header       200,400,default  {string}  Token     "token"
-// @Header       all              {string}
+// @Header       all              {string}  Token2    "token2"
+```
+
+### 使用多路径参数
+
+```go
+/// ...
+// @Param  group_id    path  int  true  "Group ID"
+// @Param  account_id  path  int  true  "Account ID"
+// ...
+// @Router /examples/groups/{group_id}/accounts/{account_id} [get]
+```
+
+### 结构体的示例值
+
+```go
+type Account struct {
+    ID   int    `json:"id" example:"1"`
+    Name string `json:"name" example:"account name"`
+    PhotoUrls []string `json:"photo_urls" example:"http://test/image/1.jpg,http://test/image/2.jpg"`
+}
+```
+
+### 结构体描述
+
+```go
+type Account struct {
+    // ID this is userid
+    ID   int    `json:"id"`
+    Name stri
