@@ -594,4 +594,36 @@ type Account struct {
 type Account struct {
     // ID this is userid
     ID   int    `json:"id"`
-    Name stri
+    Name string `json:"name"` // This is Name
+}
+```
+
+### 使用`swaggertype`标签更改字段类型
+
+[#201](https://github.com/swaggo/swag/issues/201#issuecomment-475479409)
+
+```go
+type TimestampTime struct {
+    time.Time
+}
+
+///实现encoding.JSON.Marshaler接口
+func (t *TimestampTime) MarshalJSON() ([]byte, error) {
+    bin := make([]byte, 16)
+    bin = strconv.AppendInt(bin[:0], t.Time.Unix(), 10)
+    return bin, nil
+}
+
+///实现encoding.JSON.Unmarshaler接口
+func (t *TimestampTime) UnmarshalJSON(bin []byte) error {
+    v, err := strconv.ParseInt(string(bin), 10, 64)
+    if err != nil {
+        return err
+    }
+    t.Time = time.Unix(v, 0)
+    return nil
+}
+///
+
+type Account struct {
+    // 使用`sw
