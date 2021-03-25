@@ -626,4 +626,20 @@ func (t *TimestampTime) UnmarshalJSON(bin []byte) error {
 ///
 
 type Account struct {
-    // 使用`sw
+    // 使用`swaggertype`标签将别名类型更改为内置类型integer
+    ID     sql.NullInt64 `json:"id" swaggertype:"integer"`
+
+    // 使用`swaggertype`标签更改struct类型为内置类型integer
+    RegisterTime TimestampTime `json:"register_time" swaggertype:"primitive,integer"`
+
+    // Array types can be overridden using "array,<prim_type>" format
+    Coeffs []big.Float `json:"coeffs" swaggertype:"array,number"`
+}
+```
+
+[#379](https://github.com/swaggo/swag/issues/379)
+
+```go
+type CerticateKeyPair struct {
+    Crt []byte `json:"crt" swaggertype:"string" format:"base64" example:"U3dhZ2dlciByb2Nrcw=="`
+    Key []byte `json:"key" swaggertype:"string" format
