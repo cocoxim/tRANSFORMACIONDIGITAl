@@ -642,4 +642,42 @@ type Account struct {
 ```go
 type CerticateKeyPair struct {
     Crt []byte `json:"crt" swaggertype:"string" format:"base64" example:"U3dhZ2dlciByb2Nrcw=="`
-    Key []byte `json:"key" swaggertype:"string" format
+    Key []byte `json:"key" swaggertype:"string" format:"base64" example:"U3dhZ2dlciByb2Nrcw=="`
+}
+```
+
+生成的swagger文档如下：
+
+```go
+"api.MyBinding": {
+  "type":"object",
+  "properties":{
+    "crt":{
+      "type":"string",
+      "format":"base64",
+      "example":"U3dhZ2dlciByb2Nrcw=="
+    },
+    "key":{
+      "type":"string",
+      "format":"base64",
+      "example":"U3dhZ2dlciByb2Nrcw=="
+    }
+  }
+}
+```
+
+### 使用`swaggerignore`标签排除字段
+
+```go
+type Account struct {
+    ID   string    `json:"id"`
+    Name string     `json:"name"`
+    Ignored int     `swaggerignore:"true"`
+}
+```
+
+### 将扩展信息添加到结构字段
+
+```go
+type Account struct {
+    ID   string    `json:"id"   extensions:"x-nullable,x-a
