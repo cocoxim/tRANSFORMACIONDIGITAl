@@ -680,4 +680,42 @@ type Account struct {
 
 ```go
 type Account struct {
-    ID   string    `json:"id"   extensions:"x-nullable,x-a
+    ID   string    `json:"id"   extensions:"x-nullable,x-abc=def,!x-omitempty"` // 扩展字段必须以"x-"开头
+}
+```
+
+生成swagger文档，如下所示：
+
+```go
+"Account": {
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string",
+            "x-nullable": true,
+            "x-abc": "def",
+            "x-omitempty": false
+        }
+    }
+}
+```
+
+### 对展示的模型重命名
+
+```go
+type Resp struct {
+    Code int
+}//@name Response
+```
+
+### 如何使用安全性注释
+
+通用API信息。
+
+```go
+// @securityDefinitions.basic BasicAuth
+
+// @securitydefinitions.oauth2.application OAuth2Application
+// @tokenUrl https://example.com/oauth/token
+// @scope.write Grants write access
+// @scope.admin Grants read and write access t
