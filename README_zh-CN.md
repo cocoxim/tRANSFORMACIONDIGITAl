@@ -718,4 +718,26 @@ type Resp struct {
 // @securitydefinitions.oauth2.application OAuth2Application
 // @tokenUrl https://example.com/oauth/token
 // @scope.write Grants write access
-// @scope.admin Grants read and write access t
+// @scope.admin Grants read and write access to administrative information
+```
+
+每个API操作。
+
+```go
+// @Security ApiKeyAuth
+```
+
+使用AND条件。
+
+```go
+// @Security ApiKeyAuth
+// @Security OAuth2Application[write, admin]
+```
+
+## 项目相关
+
+This project was inspired by [yvasiyarov/swagger](https://github.com/yvasiyarov/swagger) but we simplified the usage and added support a variety of [web frameworks](#supported-web-frameworks). Gopher image source is [tenntenn/gopher-stickers](https://github.com/tenntenn/gopher-stickers). It has licenses [creative commons licensing](http://creativecommons.org/licenses/by/3.0/deed.en).
+
+## 贡献者
+
+This project exist
