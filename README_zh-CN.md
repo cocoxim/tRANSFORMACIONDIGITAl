@@ -740,4 +740,15 @@ This project was inspired by [yvasiyarov/swagger](https://github.com/yvasiyarov/
 
 ## 贡献者
 
-This project exist
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/swaggo/swag/graphs/contributors"><img src="https://opencollective.com/swag/contributors.svg?width=890&button=false" /></a>
+
+## 支持者
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/swag#backer)]
+
+<a href="https://opencollective.com/swag#backers" target="_blank"><img src="https://opencollective.com/swag/backers.svg?width=890"></a>
+
+## 赞助商
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com
