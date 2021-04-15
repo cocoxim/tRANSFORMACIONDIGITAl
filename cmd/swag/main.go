@@ -189,3 +189,52 @@ func initAction(ctx *cli.Context) error {
 func main() {
 	app := cli.NewApp()
 	app.Version = swag.Version
+	app.Usage = "Automatically generate RESTful API documentation with Swagger 2.0 for Go."
+	app.Commands = []*cli.Command{
+		{
+			Name:    "init",
+			Aliases: []string{"i"},
+			Usage:   "Create docs.go",
+			Action:  initAction,
+			Flags:   initFlags,
+		},
+		{
+			Name:    "fmt",
+			Aliases: []string{"f"},
+			Usage:   "format swag comments",
+			Action: func(c *cli.Context) error {
+				searchDir := c.String(searchDirFlag)
+				excludeDir := c.String(excludeFlag)
+				mainFile := c.String(generalInfoFlag)
+
+				return format.New().Build(&format.Config{
+					SearchDir: searchDir,
+					Excludes:  excludeDir,
+					MainFile:  mainFile,
+				})
+			},
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:    searchDirFlag,
+					Aliases: []string{"d"},
+					Value:   "./",
+					Usage:   "Directories you want to parse,comma separated and general-info file must be in the first one",
+				},
+				&cli.StringFlag{
+					Name:  excludeFlag,
+					Usage: "Exclude directories and files when searching, comma separated",
+				},
+				&cli.StringFlag{
+					Name:    generalInfoFlag,
+					Aliases: []string{"g"},
+					Value:   "main.go",
+					Usage:   "Go file path in which 'swagger general API Info' is written",
+				},
+			},
+		},
+	}
+
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
+}
