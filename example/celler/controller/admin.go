@@ -31,4 +31,12 @@ func (c *Controller) Auth(ctx *gin.Context) {
 		return
 	}
 	if authHeader != "admin" {
-		httputil.NewError(ctx, http.StatusUnauthorized, fmt.Errorf("this user isn't authorized to operation key=%s expected=admin", authHeader)
+		httputil.NewError(ctx, http.StatusUnauthorized, fmt.Errorf("this user isn't authorized to operation key=%s expected=admin", authHeader))
+		return
+	}
+	admin := model.Admin{
+		ID:   1,
+		Name: "admin",
+	}
+	ctx.JSON(http.StatusOK, admin)
+}
