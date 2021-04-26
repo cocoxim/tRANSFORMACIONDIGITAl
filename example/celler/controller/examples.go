@@ -37,4 +37,29 @@ func (c *Controller) PingExample(ctx *gin.Context) {
 //	@Success		200		{integer}	string	"answer"
 //	@Failure		400		{string}	string	"ok"
 //	@Failure		404		{string}	string	"ok"
-//	@
+//	@Failure		500		{string}	string	"ok"
+//	@Router			/examples/calc [get]
+func (c *Controller) CalcExample(ctx *gin.Context) {
+	val1, err := strconv.Atoi(ctx.Query("val1"))
+	if err != nil {
+		httputil.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	val2, err := strconv.Atoi(ctx.Query("val2"))
+	if err != nil {
+		httputil.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	ans := val1 + val2
+	ctx.String(http.StatusOK, "%d", ans)
+}
+
+// PathParamsExample godoc
+//
+//	@Summary		path params example
+//	@Description	path params
+//	@Tags			example
+//	@Accept			json
+//	@Produce		plain
+//	@Param			group_id	path		int		true	"Group ID"
+//	
