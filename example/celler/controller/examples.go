@@ -62,4 +62,21 @@ func (c *Controller) CalcExample(ctx *gin.Context) {
 //	@Accept			json
 //	@Produce		plain
 //	@Param			group_id	path		int		true	"Group ID"
-//	
+//	@Param			account_id	path		int		true	"Account ID"
+//	@Success		200			{string}	string	"answer"
+//	@Failure		400			{string}	string	"ok"
+//	@Failure		404			{string}	string	"ok"
+//	@Failure		500			{string}	string	"ok"
+//	@Router			/examples/groups/{group_id}/accounts/{account_id} [get]
+func (c *Controller) PathParamsExample(ctx *gin.Context) {
+	groupID, err := strconv.Atoi(ctx.Param("group_id"))
+	if err != nil {
+		httputil.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	accountID, err := strconv.Atoi(ctx.Param("account_id"))
+	if err != nil {
+		httputil.NewError(ctx, http.StatusBadRequest, err)
+		return
+	}
+	ctx.Str
