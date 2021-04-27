@@ -79,4 +79,21 @@ func (c *Controller) PathParamsExample(ctx *gin.Context) {
 		httputil.NewError(ctx, http.StatusBadRequest, err)
 		return
 	}
-	ctx.Str
+	ctx.String(http.StatusOK, "group_id=%d account_id=%d", groupID, accountID)
+}
+
+// HeaderExample godoc
+//
+//	@Summary		custome header example
+//	@Description	custome header
+//	@Tags			example
+//	@Accept			json
+//	@Produce		plain
+//	@Param			Authorization	header		string	true	"Authentication header"
+//	@Success		200				{string}	string	"answer"
+//	@Failure		400				{string}	string	"ok"
+//	@Failure		404				{string}	string	"ok"
+//	@Failure		500				{string}	string	"ok"
+//	@Router			/examples/header [get]
+func (c *Controller) HeaderExample(ctx *gin.Context) {
+	ctx.String(http.StatusOK, ctx.GetHeader("Authorization"))
