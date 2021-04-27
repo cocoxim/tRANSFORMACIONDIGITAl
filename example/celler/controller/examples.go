@@ -97,3 +97,26 @@ func (c *Controller) PathParamsExample(ctx *gin.Context) {
 //	@Router			/examples/header [get]
 func (c *Controller) HeaderExample(ctx *gin.Context) {
 	ctx.String(http.StatusOK, ctx.GetHeader("Authorization"))
+}
+
+// SecuritiesExample godoc
+//
+//	@Summary		custome header example
+//	@Description	custome header
+//	@Tags			example
+//	@Accept			json
+//	@Produce		json
+//	@Param			Authorization	header		string	true	"Authentication header"
+//	@Success		200				{string}	string	"answer"
+//	@Failure		400				{string}	string	"ok"
+//	@Failure		404				{string}	string	"ok"
+//	@Failure		500				{string}	string	"ok"
+//	@Security		ApiKeyAuth
+//	@Security		OAuth2Implicit[admin, write]
+//	@Router			/examples/securities [get]
+func (c *Controller) SecuritiesExample(ctx *gin.Context) {
+}
+
+// AttributeExample godoc
+//
+//	@Summary		attribute example
