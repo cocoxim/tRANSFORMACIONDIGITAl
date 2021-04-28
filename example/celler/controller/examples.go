@@ -153,4 +153,8 @@ func (c *Controller) AttributeExample(ctx *gin.Context) {
 //	@Accept			json
 //	@Produce		plain
 //	@Param			message	body		model.Account	true	"Account Info"
-/
+//	@Success		200		{string}	string			"success"
+//	@Failure		500		{string}	string			"fail"
+//	@Router			/examples/post [post]
+func (c *Controller) PostExample(ctx *gin.Context) {
+}
