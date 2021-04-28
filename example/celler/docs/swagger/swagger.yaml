@@ -1,0 +1,37 @@
+
+basePath: /api/v1
+definitions:
+  controller.Message:
+    properties:
+      message:
+        example: message
+        type: string
+    type: object
+  httputil.HTTPError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+    type: object
+  model.Account:
+    properties:
+      id:
+        example: 1
+        format: int64
+        type: integer
+      name:
+        example: account name
+        type: string
+      uuid:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        format: uuid
+        type: string
+    type: object
+  model.AddAccount:
+    properties:
+      name:
+        example: account name
+        type: string
