@@ -131,4 +131,26 @@ func (c *Controller) SecuritiesExample(ctx *gin.Context) {
 //	@Param			int			query		int		false	"int valid"			minimum(1)		maximum(10)
 //	@Param			default		query		string	false	"string default"	default(A)
 //	@Success		200			{string}	string	"answer"
-//	@Failure		400			{string}	string	"o
+//	@Failure		400			{string}	string	"ok"
+//	@Failure		404			{string}	string	"ok"
+//	@Failure		500			{string}	string	"ok"
+//	@Router			/examples/attribute [get]
+func (c *Controller) AttributeExample(ctx *gin.Context) {
+	ctx.String(http.StatusOK, fmt.Sprintf("enumstring=%s enumint=%s enumnumber=%s string=%s int=%s default=%s",
+		ctx.Query("enumstring"),
+		ctx.Query("enumint"),
+		ctx.Query("enumnumber"),
+		ctx.Query("string"),
+		ctx.Query("int"),
+		ctx.Query("default"),
+	))
+}
+
+// PostExample godoc
+//
+//	@Summary		post request example
+//	@Description	post request example
+//	@Accept			json
+//	@Produce		plain
+//	@Param			message	body		model.Account	true	"Account Info"
+/
