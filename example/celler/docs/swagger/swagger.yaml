@@ -684,3 +684,10 @@ securityDefinitions:
   OAuth2Password:
     flow: password
     scopes:
+      admin: '                          Grants read and write access to administrative
+        information'
+      read: '                           Grants read access'
+      write: '                          Grants write access'
+    tokenUrl: https://example.com/oauth/token
+    type: oauth2
+swagger: "2.0"
