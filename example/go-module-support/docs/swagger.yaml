@@ -1,0 +1,7 @@
+basePath: /v2
+host: petstore.swagger.io
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/suppo
