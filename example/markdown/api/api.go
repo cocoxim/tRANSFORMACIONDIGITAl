@@ -73,4 +73,8 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 //	@Param		message	body		api.User		true	"User Data"
 //	@Success	200		{string}	string			"ok"
 //	@Failure	400		{object}	api.APIError	"We need ID!!"
-//	@Failure	404		{obj
+//	@Failure	404		{object}	api.APIError	"Can not find ID"
+//	@Router		/admin/user/ [put]
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	// write your code
+}
