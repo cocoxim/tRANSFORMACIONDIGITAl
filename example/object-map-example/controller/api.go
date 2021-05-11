@@ -17,4 +17,10 @@ func (c *Controller) GetMap(ctx *gin.Context) {
 			"en": "Map",
 		},
 		CustomType: map[string]interface{}{
-			"key": "v
+			"key": "value",
+		},
+		Object: Data{
+			Text: "object text",
+		},
+	})
+}
