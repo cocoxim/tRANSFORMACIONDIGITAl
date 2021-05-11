@@ -31,4 +31,10 @@ func main() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/admin/user/", api.ListUsers).Methods("GET")
-	router.HandleFunc("/admin/user/{id}", api.GetUser).Methods("G
+	router.HandleFunc("/admin/user/{id}", api.GetUser).Methods("GET")
+	router.HandleFunc("/admin/user/", api.AddUser).Methods("POST")
+	router.HandleFunc("/admin/user/{id}", api.UpdateUser).Methods("PUT")
+
+	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+	http.ListenAndServe(":8080", router)
+}
