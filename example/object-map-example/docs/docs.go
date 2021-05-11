@@ -35,4 +35,26 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
-             
+                        "schema": {
+                            "$ref": "#/definitions/controller.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controller.Data": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "example": "Object data"
+                }
+            }
+        },
+        "controller.Response": {
+            "type": "object",
+            "properties": {
+                "map_data": {
+                    "type": "obj
