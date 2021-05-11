@@ -14,4 +14,25 @@ const docTemplate = `{
         "contact": {},
         "license": {
             "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "{{.Version}}"
+    },
+    "host": "{{.Host}}",
+    "basePath": "{{.BasePath}}",
+    "paths": {
+        "/test": {
+            "get": {
+                "description": "get map",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Map Example",
+                "operationId": "get-map",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+             
