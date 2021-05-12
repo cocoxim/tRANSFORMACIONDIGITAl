@@ -57,4 +57,23 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "map_data": {
-                    "type": "obj
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "example": {
+                        "key": "value",
+                        "key2": "value2"
+                    }
+                },
+                "object": {
+                    "$ref": "#/definitions/controller.Data"
+                },
+                "title": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "example": {
+                        "en": "Map",
+       
