@@ -61,4 +61,24 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
-                "st
+                "stock": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}`
+
+// SwaggerInfo holds exported Swagger Info so clients can modify it
+var SwaggerInfo = &swag.Spec{
+	Version:          "1.0",
+	Host:             "product_info.swagger.io",
+	BasePath:         "/v2",
+	Schemes:          []string{},
+	Title:            "Swagger Example API",
+	Description:      "This is a sample server for updating product information.",
+	InfoInstanceName: "swagger",
+	SwaggerTemplate:  docTem
