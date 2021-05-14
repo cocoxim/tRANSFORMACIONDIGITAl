@@ -40,4 +40,25 @@ const docTemplate = `{
                         "in": "path",
                         "required": true
                     },
-            
+                    {
+                        "description": " ",
+                        "name": "_",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.ProductUpdates"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        }
+    },
+    "definitions": {
+        "main.ProductUpdates": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "st
