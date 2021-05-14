@@ -23,4 +23,21 @@ const docTemplate = `{
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
-   
+    "basePath": "{{.BasePath}}",
+    "paths": {
+        "/testapi/update-product/{product_id}": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "summary": "Update product attributes",
+                "operationId": "update-product",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true
+                    },
+            
