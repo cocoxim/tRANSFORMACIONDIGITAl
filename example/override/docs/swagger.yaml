@@ -1,0 +1,21 @@
+basePath: /v2
+definitions:
+  main.ProductUpdates:
+    properties:
+      description:
+        type: string
+      stock:
+        type: integer
+      type:
+        type: string
+    type: object
+host: product_info.swagger.io
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server for updating product information.
+  license:
+    name: Apache 2.0
+    url: http://ww
