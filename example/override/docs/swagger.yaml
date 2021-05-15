@@ -18,4 +18,27 @@ info:
   description: This is a sample server for updating product information.
   license:
     name: Apache 2.0
-    url: http://ww
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /testapi/update-product/{product_id}:
+    post:
+      consumes:
+      - application/json
+      operationId: update-product
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: integer
+      - description: ' '
+        in: body
+        name: _
+        required: true
+        schema:
+          $ref: '#/definitions/main.ProductUpdates'
+      responses: {}
+      summary: Upda
