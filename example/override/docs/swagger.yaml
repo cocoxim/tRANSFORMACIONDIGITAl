@@ -41,4 +41,5 @@ paths:
         schema:
           $ref: '#/definitions/main.ProductUpdates'
       responses: {}
-      summary: Upda
+      summary: Update product attributes
+swagger: "2.0"
