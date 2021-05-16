@@ -21,4 +21,5 @@ import (
 
 func main() {
 	http.HandleFunc("/testapi/update-product", UpdateProduct)
-	http.Lis
+	http.ListenAndServe(":8080", nil)
+}
