@@ -156,4 +156,33 @@ type structField struct {
 	minItems     *int64
 	exampleValue interface{}
 	enums        []interface{}
-	enumVarName
+	enumVarNames []interface{}
+	unique       bool
+}
+
+// splitNotWrapped slices s into all substrings separated by sep if sep is not
+// wrapped by brackets and returns a slice of the substrings between those separators.
+func splitNotWrapped(s string, sep rune) []string {
+	openCloseMap := map[rune]rune{
+		'(': ')',
+		'[': ']',
+		'{': '}',
+	}
+
+	var (
+		result    = make([]string, 0)
+		current   = strings.Builder{}
+		openCount = 0
+		openChar  rune
+	)
+
+	for _, char := range s {
+		switch {
+		case openChar == 0 && openCloseMap[char] != 0:
+			openChar = char
+
+			openCount++
+
+			current.WriteRune(char)
+		case char == openChar:
+			openCo
