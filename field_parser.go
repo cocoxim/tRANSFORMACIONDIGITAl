@@ -65,4 +65,33 @@ func (ps *tagBaseFieldParser) ShouldSkip() bool {
 	return false
 }
 
-func (ps *tagBa
+func (ps *tagBaseFieldParser) FieldName() (string, error) {
+	var name string
+	if ps.field.Tag != nil {
+		// json:"tag,hoge"
+		name = strings.TrimSpace(strings.Split(ps.tag.Get(jsonTag), ",")[0])
+
+		if name != "" {
+			return name, nil
+		}
+	}
+
+	if ps.field.Names == nil {
+		return "", nil
+	}
+
+	switch ps.p.PropNamingStrategy {
+	case SnakeCase:
+		return toSnakeCase(ps.field.Names[0].Name), nil
+	case PascalCase:
+		return ps.field.Names[0].Name, nil
+	default:
+		return toLowerCamelCase(ps.field.Names[0].Name), nil
+	}
+}
+
+func toSnakeCase(in string) string {
+	var (
+		runes  = []rune(in)
+		length = len(runes)
+		o
