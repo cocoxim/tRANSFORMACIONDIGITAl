@@ -124,4 +124,36 @@ func toLowerCamelCase(in string) string {
 		}
 
 		out[i] = curr
-		flag = fals
+		flag = false
+	}
+
+	return string(out)
+}
+
+func (ps *tagBaseFieldParser) CustomSchema() (*spec.Schema, error) {
+	if ps.field.Tag == nil {
+		return nil, nil
+	}
+
+	typeTag := ps.tag.Get(swaggerTypeTag)
+	if typeTag != "" {
+		return BuildCustomSchema(strings.Split(typeTag, ","))
+	}
+
+	return nil, nil
+}
+
+type structField struct {
+	schemaType   string
+	arrayType    string
+	formatType   string
+	maximum      *float64
+	minimum      *float64
+	multipleOf   *float64
+	maxLength    *int64
+	minLength    *int64
+	maxItems     *int64
+	minItems     *int64
+	exampleValue interface{}
+	enums        []interface{}
+	enumVarName
