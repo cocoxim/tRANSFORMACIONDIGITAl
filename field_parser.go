@@ -185,4 +185,32 @@ func splitNotWrapped(s string, sep rune) []string {
 
 			current.WriteRune(char)
 		case char == openChar:
-			openCo
+			openCount++
+
+			current.WriteRune(char)
+		case openCount > 0 && char == openCloseMap[openChar]:
+			openCount--
+
+			current.WriteRune(char)
+		case openCount == 0 && char == sep:
+			result = append(result, current.String())
+
+			openChar = 0
+
+			current = strings.Builder{}
+		default:
+			current.WriteRune(char)
+		}
+	}
+
+	if current.String() != "" {
+		result = append(result, current.String())
+	}
+
+	return result
+}
+
+// ComplementSchema complement schema with field properties
+func (ps *tagBaseFieldParser) ComplementSchema(schema *spec.Schema) error {
+	types := ps.p.GetSchemaTypePath(schema, 2)
+	if len(t
