@@ -236,4 +236,32 @@ func (ps *tagBaseFieldParser) ComplementSchema(schema *spec.Schema) error {
 func (ps *tagBaseFieldParser) complementSchema(schema *spec.Schema, types []string) error {
 	if ps.field.Tag == nil {
 		if ps.field.Doc != nil {
-			schema.Description = strings.TrimSpace(ps.field.Doc.T
+			schema.Description = strings.TrimSpace(ps.field.Doc.Text())
+		}
+
+		if schema.Description == "" && ps.field.Comment != nil {
+			schema.Description = strings.TrimSpace(ps.field.Comment.Text())
+		}
+
+		return nil
+	}
+
+	field := &structField{
+		schemaType: types[0],
+		formatType: ps.tag.Get(formatTag),
+	}
+
+	if len(types) > 1 && (types[0] == ARRAY || types[0] == OBJECT) {
+		field.arrayType = types[1]
+	}
+
+	jsonTagValue := ps.tag.Get(jsonTag)
+
+	bindingTagValue := ps.tag.Get(bindingTag)
+	if bindingTagValue != "" {
+		parseValidTags(bindingTagValue, field)
+	}
+
+	validateTagValue := ps.tag.Get(validateTag)
+	if validateTagValue != "" {
+		parseValidT
