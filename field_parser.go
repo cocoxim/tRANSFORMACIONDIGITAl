@@ -300,4 +300,34 @@ func (ps *tagBaseFieldParser) complementSchema(schema *spec.Schema, types []stri
 		}
 
 		if multipleOf != nil {
-			field.multi
+			field.multipleOf = multipleOf
+		}
+	}
+
+	if field.schemaType == STRING || field.arrayType == STRING {
+		maxLength, err := getIntTag(ps.tag, maxLengthTag)
+		if err != nil {
+			return err
+		}
+
+		if maxLength != nil {
+			field.maxLength = maxLength
+		}
+
+		minLength, err := getIntTag(ps.tag, minLengthTag)
+		if err != nil {
+			return err
+		}
+
+		if minLength != nil {
+			field.minLength = minLength
+		}
+	}
+
+	// json:"name,string" or json:",string"
+	exampleTagValue, ok := ps.tag.Lookup(exampleTag)
+	if ok {
+		field.exampleValue = exampleTagValue
+
+		if !strings.Contains(jsonTagValue, ",string") {
+			example, err := defineTypeOfExamp
