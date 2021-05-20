@@ -264,4 +264,40 @@ func (ps *tagBaseFieldParser) complementSchema(schema *spec.Schema, types []stri
 
 	validateTagValue := ps.tag.Get(validateTag)
 	if validateTagValue != "" {
-		parseValidT
+		parseValidTags(validateTagValue, field)
+	}
+
+	enumsTagValue := ps.tag.Get(enumsTag)
+	if enumsTagValue != "" {
+		err := parseEnumTags(enumsTagValue, field)
+		if err != nil {
+			return err
+		}
+	}
+
+	if IsNumericType(field.schemaType) || IsNumericType(field.arrayType) {
+		maximum, err := getFloatTag(ps.tag, maximumTag)
+		if err != nil {
+			return err
+		}
+
+		if maximum != nil {
+			field.maximum = maximum
+		}
+
+		minimum, err := getFloatTag(ps.tag, minimumTag)
+		if err != nil {
+			return err
+		}
+
+		if minimum != nil {
+			field.minimum = minimum
+		}
+
+		multipleOf, err := getFloatTag(ps.tag, multipleOfTag)
+		if err != nil {
+			return err
+		}
+
+		if multipleOf != nil {
+			field.multi
