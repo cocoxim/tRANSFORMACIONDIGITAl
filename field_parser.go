@@ -330,4 +330,29 @@ func (ps *tagBaseFieldParser) complementSchema(schema *spec.Schema, types []stri
 		field.exampleValue = exampleTagValue
 
 		if !strings.Contains(jsonTagValue, ",string") {
-			example, err := defineTypeOfExamp
+			example, err := defineTypeOfExample(field.schemaType, field.arrayType, exampleTagValue)
+			if err != nil {
+				return err
+			}
+
+			field.exampleValue = example
+		}
+	}
+
+	// perform this after setting everything else (min, max, etc...)
+	if strings.Contains(jsonTagValue, ",string") {
+		// @encoding/json: "It applies only to fields of string, floating point, integer, or boolean types."
+		defaultValues := map[string]string{
+			// Zero Values as string
+			STRING:  "",
+			INTEGER: "0",
+			BOOLEAN: "false",
+			NUMBER:  "0",
+		}
+
+		defaultValue, ok := defaultValues[field.schemaType]
+		if ok {
+			field.schemaType = STRING
+			*schema = *PrimitiveSchema(field.schemaType)
+
+			if fiel
