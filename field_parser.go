@@ -423,4 +423,32 @@ func (ps *tagBaseFieldParser) complementSchema(schema *spec.Schema, types []stri
 		}
 	}
 
-	el
+	eleSchema := schema
+
+	if field.schemaType == ARRAY {
+		// For Array only
+		schema.MaxItems = field.maxItems
+		schema.MinItems = field.minItems
+		schema.UniqueItems = field.unique
+
+		eleSchema = schema.Items.Schema
+		eleSchema.Format = field.formatType
+	}
+
+	eleSchema.Maximum = field.maximum
+	eleSchema.Minimum = field.minimum
+	eleSchema.MultipleOf = field.multipleOf
+	eleSchema.MaxLength = field.maxLength
+	eleSchema.MinLength = field.minLength
+	eleSchema.Enum = field.enums
+
+	return nil
+}
+
+func getFloatTag(structTag reflect.StructTag, tagName string) (*float64, error) {
+	strValue := structTag.Get(tagName)
+	if strValue == "" {
+		return nil, nil
+	}
+
+	value, err := strcon
