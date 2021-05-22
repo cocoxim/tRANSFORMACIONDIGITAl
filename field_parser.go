@@ -376,4 +376,27 @@ func (ps *tagBaseFieldParser) complementSchema(schema *spec.Schema, types []stri
 
 	defaultTagValue := ps.tag.Get(defaultTag)
 	if defaultTagValue != "" {
-		value, err := defineType(field.schemaType, 
+		value, err := defineType(field.schemaType, defaultTagValue)
+		if err != nil {
+			return err
+		}
+
+		schema.Default = value
+	}
+
+	schema.Example = field.exampleValue
+
+	if field.schemaType != ARRAY {
+		schema.Format = field.formatType
+	}
+
+	extensionsTagValue := ps.tag.Get(extensionsTag)
+	if extensionsTagValue != "" {
+		schema.Extensions = setExtensionParam(extensionsTagValue)
+	}
+
+	varNamesTag := ps.tag.Get("x-enum-varnames")
+	if varNamesTag != "" {
+		varNames := strings.Split(varNamesTag, ",")
+		if len(varNames) != len(field.enums) {
+			return fmt.Errorf("invalid count of x-enum-varnames. expected %d, got %d", len(field.enums), len(varName
