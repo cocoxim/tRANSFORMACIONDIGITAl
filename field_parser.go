@@ -399,4 +399,28 @@ func (ps *tagBaseFieldParser) complementSchema(schema *spec.Schema, types []stri
 	if varNamesTag != "" {
 		varNames := strings.Split(varNamesTag, ",")
 		if len(varNames) != len(field.enums) {
-			return fmt.Errorf("invalid count of x-enum-varnames. expected %d, got %d", len(field.enums), len(varName
+			return fmt.Errorf("invalid count of x-enum-varnames. expected %d, got %d", len(field.enums), len(varNames))
+		}
+
+		field.enumVarNames = nil
+
+		for _, v := range varNames {
+			field.enumVarNames = append(field.enumVarNames, v)
+		}
+
+		if field.schemaType == ARRAY {
+			// Add the var names in the items schema
+			if schema.Items.Schema.Extensions == nil {
+				schema.Items.Schema.Extensions = map[string]interface{}{}
+			}
+			schema.Items.Schema.Extensions[enumVarNamesExtension] = field.enumVarNames
+		} else {
+			// Add to top level schema
+			if schema.Extensions == nil {
+				schema.Extensions = map[string]interface{}{}
+			}
+			schema.Extensions[enumVarNamesExtension] = field.enumVarNames
+		}
+	}
+
+	el
