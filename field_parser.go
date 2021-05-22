@@ -355,4 +355,25 @@ func (ps *tagBaseFieldParser) complementSchema(schema *spec.Schema, types []stri
 			field.schemaType = STRING
 			*schema = *PrimitiveSchema(field.schemaType)
 
-			if fiel
+			if field.exampleValue == nil {
+				// if exampleValue is not defined by the user,
+				// we will force an example with a correct value
+				// (eg: int->"0", bool:"false")
+				field.exampleValue = defaultValue
+			}
+		}
+	}
+
+	if ps.field.Doc != nil {
+		schema.Description = strings.TrimSpace(ps.field.Doc.Text())
+	}
+
+	if schema.Description == "" && ps.field.Comment != nil {
+		schema.Description = strings.TrimSpace(ps.field.Comment.Text())
+	}
+
+	schema.ReadOnly = ps.tag.Get(readOnlyTag) == "true"
+
+	defaultTagValue := ps.tag.Get(defaultTag)
+	if defaultTagValue != "" {
+		value, err := defineType(field.schemaType, 
