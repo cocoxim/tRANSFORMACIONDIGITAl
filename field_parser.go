@@ -451,4 +451,32 @@ func getFloatTag(structTag reflect.StructTag, tagName string) (*float64, error) 
 		return nil, nil
 	}
 
-	value, err := strcon
+	value, err := strconv.ParseFloat(strValue, 64)
+	if err != nil {
+		return nil, fmt.Errorf("can't parse numeric value of %q tag: %v", tagName, err)
+	}
+
+	return &value, nil
+}
+
+func getIntTag(structTag reflect.StructTag, tagName string) (*int64, error) {
+	strValue := structTag.Get(tagName)
+	if strValue == "" {
+		return nil, nil
+	}
+
+	value, err := strconv.ParseInt(strValue, 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("can't parse numeric value of %q tag: %v", tagName, err)
+	}
+
+	return &value, nil
+}
+
+func (ps *tagBaseFieldParser) IsRequired() (bool, error) {
+	if ps.field.Tag == nil {
+		return false, nil
+	}
+
+	bindingTag := ps.tag.Get(bindingTag)
+	if bindin
