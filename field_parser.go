@@ -508,4 +508,38 @@ func (ps *tagBaseFieldParser) IsRequired() (bool, error) {
 func parseValidTags(validTag string, sf *structField) {
 	// `validate:"required,max=10,min=1"`
 	// ps. required checked by IsRequired().
-	for _, val := range strings.Spli
+	for _, val := range strings.Split(validTag, ",") {
+		var (
+			valValue string
+			keyVal   = strings.Split(val, "=")
+		)
+
+		switch len(keyVal) {
+		case 1:
+		case 2:
+			valValue = strings.ReplaceAll(strings.ReplaceAll(keyVal[1], utf8HexComma, ","), utf8Pipe, "|")
+		default:
+			continue
+		}
+
+		switch keyVal[0] {
+		case "max", "lte":
+			sf.setMax(valValue)
+		case "min", "gte":
+			sf.setMin(valValue)
+		case "oneof":
+			sf.setOneOf(valValue)
+		case "unique":
+			if sf.schemaType == ARRAY {
+				sf.unique = true
+			}
+		case "dive":
+			// ignore dive
+			return
+		default:
+			continue
+		}
+	}
+}
+
+fu
