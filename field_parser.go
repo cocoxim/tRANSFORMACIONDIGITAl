@@ -574,4 +574,40 @@ func (sf *structField) setOneOf(valValue string) {
 
 	valValues := parseOneOfParam2(valValue)
 	for i := range valValues {
-		value, err := defineType(enumType, valValu
+		value, err := defineType(enumType, valValues[i])
+		if err != nil {
+			continue
+		}
+
+		sf.enums = append(sf.enums, value)
+	}
+}
+
+func (sf *structField) setMin(valValue string) {
+	value, err := strconv.ParseFloat(valValue, 64)
+	if err != nil {
+		return
+	}
+
+	switch sf.schemaType {
+	case INTEGER, NUMBER:
+		sf.minimum = &value
+	case STRING:
+		intValue := int64(value)
+		sf.minLength = &intValue
+	case ARRAY:
+		intValue := int64(value)
+		sf.minItems = &intValue
+	}
+}
+
+func (sf *structField) setMax(valValue string) {
+	value, err := strconv.ParseFloat(valValue, 64)
+	if err != nil {
+		return
+	}
+
+	switch sf.schemaType {
+	case INTEGER, NUMBER:
+		sf.maximum = &value
+	case STRING:
