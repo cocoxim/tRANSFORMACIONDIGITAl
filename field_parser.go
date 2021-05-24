@@ -542,4 +542,36 @@ func parseValidTags(validTag string, sf *structField) {
 	}
 }
 
-fu
+func parseEnumTags(enumTag string, field *structField) error {
+	enumType := field.schemaType
+	if field.schemaType == ARRAY {
+		enumType = field.arrayType
+	}
+
+	field.enums = nil
+
+	for _, e := range strings.Split(enumTag, ",") {
+		value, err := defineType(enumType, e)
+		if err != nil {
+			return err
+		}
+
+		field.enums = append(field.enums, value)
+	}
+
+	return nil
+}
+
+func (sf *structField) setOneOf(valValue string) {
+	if len(sf.enums) != 0 {
+		return
+	}
+
+	enumType := sf.schemaType
+	if sf.schemaType == ARRAY {
+		enumType = sf.arrayType
+	}
+
+	valValues := parseOneOfParam2(valValue)
+	for i := range valValues {
+		value, err := defineType(enumType, valValu
