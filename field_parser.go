@@ -638,4 +638,18 @@ func parseOneOfParam2(param string) []string {
 
 	if !ok {
 		oneofValsCacheRWLock.Lock()
-	
+		values = splitParamsRegex.FindAllString(param, -1)
+
+		for i := 0; i < len(values); i++ {
+			values[i] = strings.ReplaceAll(values[i], "'", "")
+		}
+
+		oneofValsCache[param] = values
+
+		oneofValsCacheRWLock.Unlock()
+	}
+
+	return values
+}
+
+// ---.
