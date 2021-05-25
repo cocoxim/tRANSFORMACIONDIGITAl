@@ -611,3 +611,31 @@ func (sf *structField) setMax(valValue string) {
 	case INTEGER, NUMBER:
 		sf.maximum = &value
 	case STRING:
+		intValue := int64(value)
+		sf.maxLength = &intValue
+	case ARRAY:
+		intValue := int64(value)
+		sf.maxItems = &intValue
+	}
+}
+
+const (
+	utf8HexComma = "0x2C"
+	utf8Pipe     = "0x7C"
+)
+
+// These code copy from
+// https://github.com/go-playground/validator/blob/d4271985b44b735c6f76abc7a06532ee997f9476/baked_in.go#L207
+// ---.
+var oneofValsCache = map[string][]string{}
+var oneofValsCacheRWLock = sync.RWMutex{}
+var splitParamsRegex = regexp.MustCompile(`'[^']*'|\S+`)
+
+func parseOneOfParam2(param string) []string {
+	oneofValsCacheRWLock.RLock()
+	values, ok := oneofValsCache[param]
+	oneofValsCacheRWLock.RUnlock()
+
+	if !ok {
+		oneofValsCacheRWLock.Lock()
+	
