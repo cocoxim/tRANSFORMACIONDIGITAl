@@ -34,4 +34,25 @@ func TestFormat_ExcludeFile(t *testing.T) {
 	assert.False(t, fx.isFormatted("main.go"))
 }
 
-func TestFormat_DefaultExcludes(t *testing.T)
+func TestFormat_DefaultExcludes(t *testing.T) {
+	fx := setup(t)
+	assert.NoError(t, New().Build(&Config{SearchDir: fx.basedir}))
+	assert.False(t, fx.isFormatted("api/api_test.go"))
+	assert.False(t, fx.isFormatted("docs/docs.go"))
+}
+
+func TestFormat_ParseError(t *testing.T) {
+	fx := setup(t)
+	os.WriteFile(filepath.Join(fx.basedir, "parse_error.go"), []byte(`package main
+		func invalid() {`), 0644)
+	assert.Error(t, New().Build(&Config{SearchDir: fx.basedir}))
+}
+
+func TestFormat_ReadError(t *testing.T) {
+	fx := setup(t)
+	os.Chmod(filepath.Join(fx.basedir, "main.go"), 0)
+	assert.Error(t, New().Build(&Config{SearchDir: fx.basedir}))
+}
+
+func TestFormat_WriteError(t *testing.T) {
+	fx := set
