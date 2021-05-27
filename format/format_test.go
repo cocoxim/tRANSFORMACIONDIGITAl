@@ -78,4 +78,32 @@ func setup(t *testing.T) *fixture {
 	}
 	for filename, contents := range testFiles {
 		fullpath := filepath.Join(fx.basedir, filepath.Clean(filename))
-		if err := os.MkdirAll(filepath.Dir(fullpath),
+		if err := os.MkdirAll(filepath.Dir(fullpath), 0755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(fullpath, contents, 0644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	return fx
+}
+
+func (fx *fixture) isFormatted(file string) bool {
+	contents, err := os.ReadFile(filepath.Join(fx.basedir, filepath.Clean(file)))
+	if err != nil {
+		fx.t.Fatal(err)
+	}
+	return !bytes.Equal(testFiles[file], contents)
+}
+
+var testFiles = map[string][]byte{
+	"api/api.go": []byte(`package api
+
+		import "net/http"
+
+		// @Summary Add a new pet to the store
+		// @Description get string by ID
+		func GetStringByInt(w http.ResponseWriter, r *http.Request) {
+			//write your code
+		}`),
+	"api/api_test.go": []
