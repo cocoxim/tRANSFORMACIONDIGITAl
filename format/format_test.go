@@ -55,4 +55,27 @@ func TestFormat_ReadError(t *testing.T) {
 }
 
 func TestFormat_WriteError(t *testing.T) {
-	fx := set
+	fx := setup(t)
+	os.Chmod(fx.basedir, 0555)
+	assert.Error(t, New().Build(&Config{SearchDir: fx.basedir}))
+	os.Chmod(fx.basedir, 0755)
+}
+
+func TestFormat_InvalidSearchDir(t *testing.T) {
+	formatter := New()
+	assert.Error(t, formatter.Build(&Config{SearchDir: "no_such_dir"}))
+}
+
+type fixture struct {
+	t       *testing.T
+	basedir string
+}
+
+func setup(t *testing.T) *fixture {
+	fx := &fixture{
+		t:       t,
+		basedir: t.TempDir(),
+	}
+	for filename, contents := range testFiles {
+		fullpath := filepath.Join(fx.basedir, filepath.Clean(filename))
+		if err := os.MkdirAll(filepath.Dir(fullpath),
