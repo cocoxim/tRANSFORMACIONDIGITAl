@@ -106,4 +106,25 @@ var testFiles = map[string][]byte{
 		func GetStringByInt(w http.ResponseWriter, r *http.Request) {
 			//write your code
 		}`),
-	"api/api_test.go": []
+	"api/api_test.go": []byte(`package api
+		// @Summary API Test
+		// @Description Should not be formatted
+		func TestApi(t *testing.T) {}`),
+	"docs/docs.go": []byte(`package docs
+		// @Summary Documentation package
+		// @Description Should not be formatted`),
+	"main.go": []byte(`package main
+
+		import (
+			"net/http"
+
+			"github.com/swaggo/swag/format/testdata/api"
+		)
+
+		// @title Swagger Example API
+		// @version 1.0
+		func main() {
+			http.HandleFunc("/testapi/get-string-by-int/", api.GetStringByInt)
+		}`),
+	"README.md": []byte(`# Format test`),
+}
