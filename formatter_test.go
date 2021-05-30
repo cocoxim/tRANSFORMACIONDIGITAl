@@ -93,4 +93,17 @@ func Test_FormatMain(t *testing.T) {
 	//	@securitydefinitions.oauth2.implicit	OAuth2Implicit
 	//	@authorizationurl						https://example.com/oauth/authorize
 	//	@scope.write							Grants write access
-	//	@scope.ad
+	//	@scope.admin							Grants read and write access to administrative information
+
+	//	@securitydefinitions.oauth2.password	OAuth2Password
+	//	@tokenUrl								https://example.com/oauth/token
+	//	@scope.read								Grants read access
+	//	@scope.write							Grants write access
+	//	@scope.admin							Grants read and write access to administrative information
+
+	//	@securitydefinitions.oauth2.accessCode	OAuth2AccessCode
+	//	@tokenUrl								https://example.com/oauth/token
+	//	@authorizationurl						https://example.com/oauth/authorize
+	//	@scope.admin							Grants read and write access to administrative information
+	func main() {}`
+	testFormat
