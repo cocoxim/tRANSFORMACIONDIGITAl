@@ -226,4 +226,33 @@ func Test_SyntaxError(t *testing.T) {
 }
 
 func Test_splitComment2(t *testing.T) {
-	type ar
+	type args struct {
+		attr string
+		body string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			"test_splitComment2_1",
+			args{
+				attr: "@param",
+				body: "   data body web.GenericBodyMulti[[]types.Post, [][]types.Post]",
+			},
+			"\tdata\tbody\tweb.GenericBodyMulti[[]types.Post, [][]types.Post]",
+		},
+		{
+			"test_splitComment2_2",
+			args{
+				attr: "@param",
+				body: `   some_id      path   int     true  "Some ID" Format(int64)`,
+			},
+			"\tsome_id\tpath\tint\ttrue\t\"Some ID\"\tFormat(int64)",
+		},
+		{
+			"test_splitComment2_3",
+			args{
+				attr: "@param",
+				body: `   @Param   some_id      body web.Pet true  "Some ID
