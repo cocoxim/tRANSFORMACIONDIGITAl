@@ -174,4 +174,29 @@ func Test_FormatApi(t *testing.T) {
 	//	@Router			/testapi/get-string-by-int/{some_id} [get]
 	func GetStringByInt(w http.ResponseWriter, r *http.Request) {}`
 
-	testFormat(
+	testFormat(t, "api.go", contents, want)
+}
+
+func Test_NonSwagComment(t *testing.T) {
+	contents := `package api
+	// @Summary Add a new pet to the store
+	// @Description get string by ID
+	// @ID get-string-by-int
+	// @ Accept json
+	// This is not a @swag comment`
+	want := `package api
+	//	@Summary		Add a new pet to the store
+	//	@Description	get string by ID
+	//	@ID				get-string-by-int
+	// @ Accept json
+	// This is not a @swag comment`
+
+	testFormat(t, "non_swag.go", contents, want)
+}
+
+func Test_EmptyComment(t *testing.T) {
+	contents := `package empty
+	// @Summary Add a new pet to the store
+	// @Description  `
+	want := `package empty
+	//	@Summary	Add a new pe
