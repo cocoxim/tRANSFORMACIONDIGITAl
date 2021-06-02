@@ -199,4 +199,31 @@ func Test_EmptyComment(t *testing.T) {
 	// @Summary Add a new pet to the store
 	// @Description  `
 	want := `package empty
-	//	@Summary	Add a new pe
+	//	@Summary	Add a new pet to the store
+	//	@Description`
+
+	testFormat(t, "empty.go", contents, want)
+}
+
+func Test_AlignAttribute(t *testing.T) {
+	contents := `package align
+	// @Summary Add a new pet to the store
+	//  @Description Description`
+	want := `package align
+	//	@Summary		Add a new pet to the store
+	//	@Description	Description`
+
+	testFormat(t, "align.go", contents, want)
+
+}
+
+func Test_SyntaxError(t *testing.T) {
+	contents := []byte(`package invalid
+	func invalid() {`)
+
+	_, err := NewFormatter().Format("invalid.go", contents)
+	assert.Error(t, err)
+}
+
+func Test_splitComment2(t *testing.T) {
+	type ar
