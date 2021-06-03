@@ -255,4 +255,14 @@ func Test_splitComment2(t *testing.T) {
 			"test_splitComment2_3",
 			args{
 				attr: "@param",
-				body: `   @Param   some_id      body web.Pet true  "Some ID
+				body: `   @Param   some_id      body web.Pet true  "Some ID"`,
+			},
+			"\t@Param\tsome_id\tbody\tweb.Pet\ttrue\t\"Some ID\"",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, splitComment2(tt.args.attr, tt.args.body), "splitComment2(%v, %v)", tt.args.attr, tt.args.body)
+		})
+	}
+}
