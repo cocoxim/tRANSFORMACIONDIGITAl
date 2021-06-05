@@ -45,4 +45,29 @@ type Debugger interface {
 func New() *Gen {
 	gen := Gen{
 		json: json.Marshal,
-		jsonIndent: func(data interface{}) (
+		jsonIndent: func(data interface{}) ([]byte, error) {
+			return json.MarshalIndent(data, "", "    ")
+		},
+		jsonToYAML: yaml.JSONToYAML,
+		debug:      log.New(os.Stdout, "", log.LstdFlags),
+	}
+
+	gen.outputTypeMap = map[string]genTypeWriter{
+		"go":   gen.writeDocSwagger,
+		"json": gen.writeJSONSwagger,
+		"yaml": gen.writeYAMLSwagger,
+		"yml":  gen.writeYAMLSwagger,
+	}
+
+	return &gen
+}
+
+// Config presents Gen configurations.
+type Config struct {
+	Debugger swag.Debugger
+
+	// SearchDir the swag would parse,comma separated if multiple
+	SearchDir string
+
+	// excludes dirs and files in SearchDir,comma separated
+	Exclu
