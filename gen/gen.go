@@ -131,4 +131,23 @@ type Config struct {
 // Build builds swagger json file  for given searchDir and mainAPIFile. Returns json.
 func (g *Gen) Build(config *Config) error {
 	if config.Debugger != nil {
-		g.debug = config.De
+		g.debug = config.Debugger
+	}
+	if config.InstanceName == "" {
+		config.InstanceName = swag.Name
+	}
+
+	searchDirs := strings.Split(config.SearchDir, ",")
+	for _, searchDir := range searchDirs {
+		if _, err := os.Stat(searchDir); os.IsNotExist(err) {
+			return fmt.Errorf("dir: %s does not exist", searchDir)
+		}
+	}
+
+	var overrides map[string]string
+
+	if config.OverridesFile != "" {
+		overridesFile, err := open(config.OverridesFile)
+		if err != nil {
+			// Don't bother reporting if the default file is missing; assume there are no overrides
+			if !(config.OverridesFile == DefaultOv
