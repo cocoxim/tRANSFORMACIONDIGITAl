@@ -70,4 +70,24 @@ type Config struct {
 	SearchDir string
 
 	// excludes dirs and files in SearchDir,comma separated
-	Exclu
+	Excludes string
+
+	// outputs only specific extension
+	ParseExtension string
+
+	// OutputDir represents the output directory for all the generated files
+	OutputDir string
+
+	// OutputTypes define types of files which should be generated
+	OutputTypes []string
+
+	// MainAPIFile the Go file path in which 'swagger general API Info' is written
+	MainAPIFile string
+
+	// PropNamingStrategy represents property naming strategy like snake case,camel case,pascal case
+	PropNamingStrategy string
+
+	// MarkdownFilesDir used to find markdown files, which can be used for tag descriptions
+	MarkdownFilesDir string
+
+	// CodeExampleFilesDir used to find code example files, which can be used for x-cod
