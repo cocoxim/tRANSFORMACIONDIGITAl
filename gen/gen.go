@@ -90,4 +90,24 @@ type Config struct {
 	// MarkdownFilesDir used to find markdown files, which can be used for tag descriptions
 	MarkdownFilesDir string
 
-	// CodeExampleFilesDir used to find code example files, which can be used for x-cod
+	// CodeExampleFilesDir used to find code example files, which can be used for x-codeSamples
+	CodeExampleFilesDir string
+
+	// InstanceName is used to get distinct names for different swagger documents in the
+	// same project. The default value is "swagger".
+	InstanceName string
+
+	// ParseDepth dependency parse depth
+	ParseDepth int
+
+	// ParseVendor whether swag should be parse vendor folder
+	ParseVendor bool
+
+	// ParseDependencies whether swag should be parse outside dependency folder
+	ParseDependency bool
+
+	// ParseInternal whether swag should parse internal packages
+	ParseInternal bool
+
+	// Strict whether swag should error or warn when it detects cases which are most likely user errors
+	Strict bool
