@@ -111,3 +111,24 @@ type Config struct {
 
 	// Strict whether swag should error or warn when it detects cases which are most likely user errors
 	Strict bool
+
+	// GeneratedTime whether swag should generate the timestamp at the top of docs.go
+	GeneratedTime bool
+
+	// RequiredByDefault set validation required for all fields by default
+	RequiredByDefault bool
+
+	// OverridesFile defines global type overrides.
+	OverridesFile string
+
+	// ParseGoList whether swag use go list to parse dependency
+	ParseGoList bool
+
+	// include only tags mentioned when searching, comma separated
+	Tags string
+}
+
+// Build builds swagger json file  for given searchDir and mainAPIFile. Returns json.
+func (g *Gen) Build(config *Config) error {
+	if config.Debugger != nil {
+		g.debug = config.De
