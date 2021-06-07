@@ -171,4 +171,27 @@ func (g *Gen) Build(config *Config) error {
 		swag.SetDebugger(config.Debugger),
 		swag.SetExcludedDirsAndFiles(config.Excludes),
 		swag.SetParseExtension(config.ParseExtension),
-		swag.SetCodeExamplesDirectory(config.CodeExampleF
+		swag.SetCodeExamplesDirectory(config.CodeExampleFilesDir),
+		swag.SetStrict(config.Strict),
+		swag.SetOverrides(overrides),
+		swag.ParseUsingGoList(config.ParseGoList),
+		swag.SetTags(config.Tags),
+	)
+
+	p.PropNamingStrategy = config.PropNamingStrategy
+	p.ParseVendor = config.ParseVendor
+	p.ParseInternal = config.ParseInternal
+	p.RequiredByDefault = config.RequiredByDefault
+
+	if err := p.ParseAPIMultiSearchDir(searchDirs, config.MainAPIFile, config.ParseDepth); err != nil {
+		return err
+	}
+
+	swagger := p.GetSwagger()
+
+	if err := os.MkdirAll(config.OutputDir, os.ModePerm); err != nil {
+		return err
+	}
+
+	for _, outputType := range config.OutputTypes {
+		outputType = strings.ToLowe
