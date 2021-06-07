@@ -194,4 +194,31 @@ func (g *Gen) Build(config *Config) error {
 	}
 
 	for _, outputType := range config.OutputTypes {
-		outputType = strings.ToLowe
+		outputType = strings.ToLower(strings.TrimSpace(outputType))
+		if typeWriter, ok := g.outputTypeMap[outputType]; ok {
+			if err := typeWriter(config, swagger); err != nil {
+				return err
+			}
+		} else {
+			log.Printf("output type '%s' not supported", outputType)
+		}
+	}
+
+	return nil
+}
+
+func (g *Gen) writeDocSwagger(config *Config, swagger *spec.Swagger) error {
+	var filename = "docs.go"
+
+	if config.InstanceName != swag.Name {
+		filename = config.InstanceName + "_" + filename
+	}
+
+	docFileName := path.Join(config.OutputDir, filename)
+
+	absOutputDir, err := filepath.Abs(config.OutputDir)
+	if err != nil {
+		return err
+	}
+
+	packageName :=
