@@ -150,4 +150,25 @@ func (g *Gen) Build(config *Config) error {
 		overridesFile, err := open(config.OverridesFile)
 		if err != nil {
 			// Don't bother reporting if the default file is missing; assume there are no overrides
-			if !(config.OverridesFile == DefaultOv
+			if !(config.OverridesFile == DefaultOverridesFile && os.IsNotExist(err)) {
+				return fmt.Errorf("could not open overrides file: %w", err)
+			}
+		} else {
+			g.debug.Printf("Using overrides from %s", config.OverridesFile)
+
+			overrides, err = parseOverrides(overridesFile)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	g.debug.Printf("Generate swagger docs....")
+
+	p := swag.New(
+		swag.SetParseDependency(config.ParseDependency),
+		swag.SetMarkdownFileDirectory(config.MarkdownFilesDir),
+		swag.SetDebugger(config.Debugger),
+		swag.SetExcludedDirsAndFiles(config.Excludes),
+		swag.SetParseExtension(config.ParseExtension),
+		swag.SetCodeExamplesDirectory(config.CodeExampleF
