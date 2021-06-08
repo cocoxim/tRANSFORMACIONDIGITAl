@@ -221,4 +221,39 @@ func (g *Gen) writeDocSwagger(config *Config, swagger *spec.Swagger) error {
 		return err
 	}
 
-	packageName :=
+	packageName := filepath.Base(absOutputDir)
+
+	docs, err := os.Create(docFileName)
+	if err != nil {
+		return err
+	}
+	defer docs.Close()
+
+	// Write doc
+	err = g.writeGoDoc(packageName, docs, swagger, config)
+	if err != nil {
+		return err
+	}
+
+	g.debug.Printf("create docs.go at %+v", docFileName)
+
+	return nil
+}
+
+func (g *Gen) writeJSONSwagger(config *Config, swagger *spec.Swagger) error {
+	var filename = "swagger.json"
+
+	if config.InstanceName != swag.Name {
+		filename = config.InstanceName + "_" + filename
+	}
+
+	jsonFileName := path.Join(config.OutputDir, filename)
+
+	b, err := g.jsonIndent(swagger)
+	if err != nil {
+		return err
+	}
+
+	err = g.writeFile(b, jsonFileName)
+	if err != nil {
+		return 
