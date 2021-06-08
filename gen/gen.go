@@ -256,4 +256,38 @@ func (g *Gen) writeJSONSwagger(config *Config, swagger *spec.Swagger) error {
 
 	err = g.writeFile(b, jsonFileName)
 	if err != nil {
-		return 
+		return err
+	}
+
+	g.debug.Printf("create swagger.json at %+v", jsonFileName)
+
+	return nil
+}
+
+func (g *Gen) writeYAMLSwagger(config *Config, swagger *spec.Swagger) error {
+	var filename = "swagger.yaml"
+
+	if config.InstanceName != swag.Name {
+		filename = config.InstanceName + "_" + filename
+	}
+
+	yamlFileName := path.Join(config.OutputDir, filename)
+
+	b, err := g.json(swagger)
+	if err != nil {
+		return err
+	}
+
+	y, err := g.jsonToYAML(b)
+	if err != nil {
+		return fmt.Errorf("cannot covert json to yaml error: %s", err)
+	}
+
+	err = g.writeFile(y, yamlFileName)
+	if err != nil {
+		return err
+	}
+
+	g.debug.Printf("create swagger.yaml at %+v", yamlFileName)
+
+	return nil
