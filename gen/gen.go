@@ -291,3 +291,37 @@ func (g *Gen) writeYAMLSwagger(config *Config, swagger *spec.Swagger) error {
 	g.debug.Printf("create swagger.yaml at %+v", yamlFileName)
 
 	return nil
+}
+
+func (g *Gen) writeFile(b []byte, file string) error {
+	f, err := os.Create(file)
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+
+	_, err = f.Write(b)
+
+	return err
+}
+
+func (g *Gen) formatSource(src []byte) []byte {
+	code, err := format.Source(src)
+	if err != nil {
+		code = src // Formatter failed, return original code.
+	}
+
+	return code
+}
+
+// Read and parse the overrides file.
+func parseOverrides(r io.Reader) (map[string]string, error) {
+	overrides := make(map[string]string)
+	scanner := bufio.NewScanner(r)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		// Skip comments
+		if len(line) > 1 && line[0:
