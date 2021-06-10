@@ -324,4 +324,34 @@ func parseOverrides(r io.Reader) (map[string]string, error) {
 		line := scanner.Text()
 
 		// Skip comments
-		if len(line) > 1 && line[0:
+		if len(line) > 1 && line[0:2] == "//" {
+			continue
+		}
+
+		parts := strings.Fields(line)
+
+		switch len(parts) {
+		case 0:
+			// only whitespace
+			continue
+		case 2:
+			// either a skip or malformed
+			if parts[0] != "skip" {
+				return nil, fmt.Errorf("could not parse override: '%s'", line)
+			}
+
+			overrides[parts[1]] = ""
+		case 3:
+			// either a replace or malformed
+			if parts[0] != "replace" {
+				return nil, fmt.Errorf("could not parse override: '%s'", line)
+			}
+
+			overrides[parts[1]] = parts[2]
+		default:
+			return nil, fmt.Errorf("could not parse override: '%s'", line)
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, fm
