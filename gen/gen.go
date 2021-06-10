@@ -375,4 +375,22 @@ func (g *Gen) writeGoDoc(packageName string, output io.Writer, swagger *spec.Swa
 
 	swaggerSpec := &spec.Swagger{
 		VendorExtensible: swagger.VendorExtensible,
-		SwaggerProp
+		SwaggerProps: spec.SwaggerProps{
+			ID:       swagger.ID,
+			Consumes: swagger.Consumes,
+			Produces: swagger.Produces,
+			Swagger:  swagger.Swagger,
+			Info: &spec.Info{
+				VendorExtensible: swagger.Info.VendorExtensible,
+				InfoProps: spec.InfoProps{
+					Description:    "{{escape .Description}}",
+					Title:          "{{.Title}}",
+					TermsOfService: swagger.Info.TermsOfService,
+					Contact:        swagger.Info.Contact,
+					License:        swagger.Info.License,
+					Version:        "{{.Version}}",
+				},
+			},
+			Host:                "{{.Host}}",
+			BasePath:            "{{.BasePath}}",
+			Paths:
