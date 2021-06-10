@@ -354,4 +354,25 @@ func parseOverrides(r io.Reader) (map[string]string, error) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return nil, fm
+		return nil, fmt.Errorf("error reading overrides file: %w", err)
+	}
+
+	return overrides, nil
+}
+
+func (g *Gen) writeGoDoc(packageName string, output io.Writer, swagger *spec.Swagger, config *Config) error {
+	generator, err := template.New("swagger_info").Funcs(template.FuncMap{
+		"printDoc": func(v string) string {
+			// Add schemes
+			v = "{\n    \"schemes\": {{ marshal .Schemes }}," + v[1:]
+			// Sanitize backticks
+			return strings.Replace(v, "`", "`+\"`\"+`", -1)
+		},
+	}).Parse(packageTemplate)
+	if err != nil {
+		return err
+	}
+
+	swaggerSpec := &spec.Swagger{
+		VendorExtensible: swagger.VendorExtensible,
+		SwaggerProp
