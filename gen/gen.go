@@ -417,4 +417,28 @@ func (g *Gen) writeGoDoc(packageName string, output io.Writer, swagger *spec.Swa
 		Doc           string
 		Host          string
 		PackageName   string
-	
+		BasePath      string
+		Title         string
+		Description   string
+		Version       string
+		InstanceName  string
+		Schemes       []string
+		GeneratedTime bool
+	}{
+		Timestamp:     time.Now(),
+		GeneratedTime: config.GeneratedTime,
+		Doc:           string(buf),
+		Host:          swagger.Host,
+		PackageName:   packageName,
+		BasePath:      swagger.BasePath,
+		Schemes:       swagger.Schemes,
+		Title:         swagger.Info.Title,
+		Description:   swagger.Info.Description,
+		Version:       swagger.Info.Version,
+		InstanceName:  config.InstanceName,
+	})
+	if err != nil {
+		return err
+	}
+
+	code := g.formatSource(buffer.
