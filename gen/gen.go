@@ -393,4 +393,28 @@ func (g *Gen) writeGoDoc(packageName string, output io.Writer, swagger *spec.Swa
 			},
 			Host:                "{{.Host}}",
 			BasePath:            "{{.BasePath}}",
-			Paths:
+			Paths:               swagger.Paths,
+			Definitions:         swagger.Definitions,
+			Parameters:          swagger.Parameters,
+			Responses:           swagger.Responses,
+			SecurityDefinitions: swagger.SecurityDefinitions,
+			Security:            swagger.Security,
+			Tags:                swagger.Tags,
+			ExternalDocs:        swagger.ExternalDocs,
+		},
+	}
+
+	// crafted docs.json
+	buf, err := g.jsonIndent(swaggerSpec)
+	if err != nil {
+		return err
+	}
+
+	buffer := &bytes.Buffer{}
+
+	err = generator.Execute(buffer, struct {
+		Timestamp     time.Time
+		Doc           string
+		Host          string
+		PackageName   string
+	
