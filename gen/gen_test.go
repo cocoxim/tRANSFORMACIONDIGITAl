@@ -543,3 +543,295 @@ func TestGen_writeGoDoc(t *testing.T) {
 		&mockWriter{
 			hook: func(data []byte) {
 				assert.Equal(t, "Fake Time", string(data))
+			},
+		}, swagger, &Config{GeneratedTime: true})
+	assert.NoError(t, err)
+
+	err = gen.writeGoDoc("docs",
+		&mockWriter{
+			hook: func(data []byte) {
+				assert.Equal(t, "", string(data))
+			},
+		}, swagger, &Config{GeneratedTime: false})
+	assert.NoError(t, err)
+
+	packageTemplate = swapTemplate
+}
+
+func TestGen_GeneratedDoc(t *testing.T) {
+	config := &Config{
+		SearchDir:          searchDir,
+		MainAPIFile:        "./main.go",
+		OutputDir:          "../testdata/simple/docs",
+		OutputTypes:        outputTypes,
+		PropNamingStrategy: "",
+	}
+
+	assert.NoError(t, New().Build(config))
+
+	goCMD, err := exec.LookPath("go")
+	assert.NoError(t, err)
+
+	cmd := exec.Command(goCMD, "build", filepath.Join(config.OutputDir, "docs.go"))
+
+	cmd.Stdout = os.Stdout
+
+	cmd.Stderr = os.Stderr
+
+	assert.NoError(t, cmd.Run())
+
+	expectedFiles := []string{
+		filepath.Join(config.OutputDir, "docs.go"),
+		filepath.Join(config.OutputDir, "swagger.json"),
+		filepath.Join(config.OutputDir, "swagger.yaml"),
+	}
+	for _, expectedFile := range expectedFiles {
+		if _, err := os.Stat(expectedFile); os.IsNotExist(err) {
+			require.NoError(t, err)
+		}
+
+		_ = os.Remove(expectedFile)
+	}
+}
+
+func TestGen_cgoImports(t *testing.T) {
+	config := &Config{
+		SearchDir:          "../testdata/simple_cgo",
+		MainAPIFile:        "./main.go",
+		OutputDir:          "../testdata/simple_cgo/docs",
+		OutputTypes:        outputTypes,
+		PropNamingStrategy: "",
+		ParseDependency:    true,
+	}
+
+	assert.NoError(t, New().Build(config))
+
+	expectedFiles := []string{
+		filepath.Join(config.OutputDir, "docs.go"),
+		filepath.Join(config.OutputDir, "swagger.json"),
+		filepath.Join(config.OutputDir, "swagger.yaml"),
+	}
+	for _, expectedFile := range expectedFiles {
+		if _, err := os.Stat(expectedFile); os.IsNotExist(err) {
+			require.NoError(t, err)
+		}
+
+		_ = os.Remove(expectedFile)
+	}
+}
+
+func TestGen_parseOverrides(t *testing.T) {
+	testCases := []struct {
+		Name          string
+		Data          string
+		Expected      map[string]string
+		ExpectedError error
+	}{
+		{
+			Name: "replace",
+			Data: `replace github.com/foo/bar baz`,
+			Expected: map[string]string{
+				"github.com/foo/bar": "baz",
+			},
+		},
+		{
+			Name: "skip",
+			Data: `skip github.com/foo/bar`,
+			Expected: map[string]string{
+				"github.com/foo/bar": "",
+			},
+		},
+		{
+			Name: "generic-simple",
+			Data: `replace types.Field[string] string`,
+			Expected: map[string]string{
+				"types.Field[string]": "string",
+			},
+		},
+		{
+			Name: "generic-double",
+			Data: `replace types.Field[string,string] string`,
+			Expected: map[string]string{
+				"types.Field[string,string]": "string",
+			},
+		},
+		{
+			Name: "comment",
+			Data: `// this is a comment
+			replace foo bar`,
+			Expected: map[string]string{
+				"foo": "bar",
+			},
+		},
+		{
+			Name: "ignore whitespace",
+			Data: `
+
+			replace foo bar`,
+			Expected: map[string]string{
+				"foo": "bar",
+			},
+		},
+		{
+			Name:          "unknown directive",
+			Data:          `foo`,
+			ExpectedError: fmt.Errorf("could not parse override: 'foo'"),
+		},
+	}
+
+	for _, tc := range testCases {
+		tc := tc
+		t.Run(tc.Name, func(t *testing.T) {
+			t.Parallel()
+
+			overrides, err := parseOverrides(strings.NewReader(tc.Data))
+			assert.Equal(t, tc.Expected, overrides)
+			assert.Equal(t, tc.ExpectedError, err)
+		})
+	}
+}
+
+func TestGen_TypeOverridesFile(t *testing.T) {
+	customPath := "/foo/bar/baz"
+
+	tmp, err := os.CreateTemp("", "")
+	require.NoError(t, err)
+
+	defer os.Remove(tmp.Name())
+
+	config := &Config{
+		SearchDir:          searchDir,
+		MainAPIFile:        "./main.go",
+		OutputDir:          "../testdata/simple/docs",
+		PropNamingStrategy: "",
+	}
+
+	t.Run("Default file is missing", func(t *testing.T) {
+		open = func(path string) (*os.File, error) {
+			assert.Equal(t, DefaultOverridesFile, path)
+
+			return nil, os.ErrNotExist
+		}
+		defer func() {
+			open = os.Open
+		}()
+
+		config.OverridesFile = DefaultOverridesFile
+		err := New().Build(config)
+		assert.NoError(t, err)
+	})
+
+	t.Run("Default file is present", func(t *testing.T) {
+		open = func(path string) (*os.File, error) {
+			assert.Equal(t, DefaultOverridesFile, path)
+
+			return tmp, nil
+		}
+		defer func() {
+			open = os.Open
+		}()
+
+		config.OverridesFile = DefaultOverridesFile
+		err := New().Build(config)
+		assert.NoError(t, err)
+	})
+
+	t.Run("Different file is missing", func(t *testing.T) {
+		open = func(path string) (*os.File, error) {
+			assert.Equal(t, customPath, path)
+
+			return nil, os.ErrNotExist
+		}
+		defer func() {
+			open = os.Open
+		}()
+
+		config.OverridesFile = customPath
+		err := New().Build(config)
+		assert.EqualError(t, err, "could not open overrides file: file does not exist")
+	})
+
+	t.Run("Different file is present", func(t *testing.T) {
+		open = func(path string) (*os.File, error) {
+			assert.Equal(t, customPath, path)
+
+			return tmp, nil
+		}
+		defer func() {
+			open = os.Open
+		}()
+
+		config.OverridesFile = customPath
+		err := New().Build(config)
+		assert.NoError(t, err)
+	})
+}
+func TestGen_Debugger(t *testing.T) {
+	var buf bytes.Buffer
+	config := &Config{
+		SearchDir:          searchDir,
+		MainAPIFile:        "./main.go",
+		OutputDir:          "../testdata/simple/docs",
+		OutputTypes:        outputTypes,
+		PropNamingStrategy: "",
+		Debugger:           log.New(&buf, "", log.LstdFlags),
+	}
+	assert.True(t, buf.Len() == 0)
+	assert.NoError(t, New().Build(config))
+	assert.True(t, buf.Len() > 0)
+
+	expectedFiles := []string{
+		filepath.Join(config.OutputDir, "docs.go"),
+		filepath.Join(config.OutputDir, "swagger.json"),
+		filepath.Join(config.OutputDir, "swagger.yaml"),
+	}
+	for _, expectedFile := range expectedFiles {
+		if _, err := os.Stat(expectedFile); os.IsNotExist(err) {
+			require.NoError(t, err)
+		}
+
+		_ = os.Remove(expectedFile)
+	}
+}
+
+func TestGen_ErrorAndInterface(t *testing.T) {
+	config := &Config{
+		SearchDir:          "../testdata/error",
+		MainAPIFile:        "./main.go",
+		OutputDir:          "../testdata/error/docs",
+		OutputTypes:        outputTypes,
+		PropNamingStrategy: "",
+	}
+
+	assert.NoError(t, New().Build(config))
+
+	expectedFiles := []string{
+		filepath.Join(config.OutputDir, "docs.go"),
+		filepath.Join(config.OutputDir, "swagger.json"),
+		filepath.Join(config.OutputDir, "swagger.yaml"),
+	}
+	t.Cleanup(func() {
+		for _, expectedFile := range expectedFiles {
+			_ = os.Remove(expectedFile)
+		}
+	})
+
+	// check files
+	for _, expectedFile := range expectedFiles {
+		if _, err := os.Stat(expectedFile); os.IsNotExist(err) {
+			require.NoError(t, err)
+		}
+	}
+
+	// check content
+	jsonOutput, err := os.ReadFile(filepath.Join(config.OutputDir, "swagger.json"))
+	if err != nil {
+		require.NoError(t, err)
+	}
+	expectedJSON, err := os.ReadFile(filepath.Join(config.SearchDir, "expected.json"))
+	if err != nil {
+		require.NoError(t, err)
+	}
+
+	assert.JSONEq(t, string(expectedJSON), string(jsonOutput))
+}
