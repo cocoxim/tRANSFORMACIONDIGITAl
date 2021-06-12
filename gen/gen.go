@@ -469,4 +469,6 @@ var SwaggerInfo{{ if ne .InstanceName "swagger" }}{{ .InstanceName }} {{- end }}
 }
 
 func init() {
-	swag.Register(SwaggerInfo{{ if ne .InstanceName "swagger" }}{{ .InstanceName }} {{- end }}.Insta
+	swag.Register(SwaggerInfo{{ if ne .InstanceName "swagger" }}{{ .InstanceName }} {{- end }}.InstanceName(), SwaggerInfo{{ if ne .InstanceName "swagger" }}{{ .InstanceName }} {{- end }})
+}
+`
