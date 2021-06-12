@@ -458,4 +458,15 @@ const docTemplate{{ if ne .InstanceName "swagger" }}{{ .InstanceName }} {{- end 
 
 // SwaggerInfo{{ if ne .InstanceName "swagger" }}{{ .InstanceName }} {{- end }} holds exported Swagger Info so clients can modify it
 var SwaggerInfo{{ if ne .InstanceName "swagger" }}{{ .InstanceName }} {{- end }} = &swag.Spec{
-	Version:     {{ printf "%q" .Vers
+	Version:     {{ printf "%q" .Version}},
+	Host:        {{ printf "%q" .Host}},
+	BasePath:    {{ printf "%q" .BasePath}},
+	Schemes:     []string{ {{ range $index, $schema := .Schemes}}{{if gt $index 0}},{{end}}{{printf "%q" $schema}}{{end}} },
+	Title:       {{ printf "%q" .Title}},
+	Description: {{ printf "%q" .Description}},
+	InfoInstanceName: {{ printf "%q" .InstanceName }},
+	SwaggerTemplate: docTemplate{{ if ne .InstanceName "swagger" }}{{ .InstanceName }} {{- end }},
+}
+
+func init() {
+	swag.Register(SwaggerInfo{{ if ne .InstanceName "swagger" }}{{ .InstanceName }} {{- end }}.Insta
