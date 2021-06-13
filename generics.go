@@ -89,4 +89,24 @@ func (pkgDefs *PackagesDefinitions) parametrizeGenericType(file *ast.File, origi
 	parametrizedTypeSpec := &TypeSpecDef{
 		File:    original.File,
 		PkgPath: original.PkgPath,
-		TypeSpec
+		TypeSpec: &ast.TypeSpec{
+			Name: &ast.Ident{
+				Name:    name,
+				NamePos: original.TypeSpec.Name.NamePos,
+				Obj:     original.TypeSpec.Name.Obj,
+			},
+			Doc:    original.TypeSpec.Doc,
+			Assign: original.TypeSpec.Assign,
+		},
+	}
+	pkgDefs.uniqueDefinitions[name] = parametrizedTypeSpec
+
+	parametrizedTypeSpec.TypeSpec.Type = pkgDefs.resolveGenericType(original.File, original.TypeSpec.Type, genericParamTypeDefs)
+
+	return parametrizedTypeSpec
+}
+
+// splitGenericsTypeName splits a generic struct name in his parts
+func splitGenericsTypeName(fullGenericForm string) (string, []string) {
+	//remove all spaces character
+	f
