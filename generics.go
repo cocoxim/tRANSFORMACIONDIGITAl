@@ -67,4 +67,26 @@ func (pkgDefs *PackagesDefinitions) parametrizeGenericType(file *ast.File, origi
 	}
 
 	name = fmt.Sprintf("%s%s-", string(IgnoreNameOverridePrefix), original.TypeName())
-	var nameParts []strin
+	var nameParts []string
+	for _, def := range original.TypeSpec.TypeParams.List {
+		if specDef, ok := genericParamTypeDefs[def.Names[0].Name]; ok {
+			var prefix = ""
+			if specDef.ArrayDepth == 1 {
+				prefix = "array_"
+			} else if specDef.ArrayDepth > 1 {
+				prefix = fmt.Sprintf("array%d_", specDef.ArrayDepth)
+			}
+			nameParts = append(nameParts, prefix+specDef.TypeName())
+		}
+	}
+
+	name += strings.Replace(strings.Join(nameParts, "-"), ".", "_", -1)
+
+	if typeSpec, ok := pkgDefs.uniqueDefinitions[name]; ok {
+		return typeSpec
+	}
+
+	parametrizedTypeSpec := &TypeSpecDef{
+		File:    original.File,
+		PkgPath: original.PkgPath,
+		TypeSpec
