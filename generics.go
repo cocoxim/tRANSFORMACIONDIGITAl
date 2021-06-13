@@ -44,4 +44,27 @@ func (pkgDefs *PackagesDefinitions) parametrizeGenericType(file *ast.File, origi
 	for i, genericParam := range genericParams {
 		arrayDepth := 0
 		for {
-			if len(genericParam) <= 2 || genericParam[:2
+			if len(genericParam) <= 2 || genericParam[:2] != "[]" {
+				break
+			}
+			genericParam = genericParam[2:]
+			arrayDepth++
+		}
+
+		typeDef := pkgDefs.FindTypeSpec(genericParam, file)
+		if typeDef != nil {
+			genericParam = typeDef.TypeName()
+			if _, ok := pkgDefs.uniqueDefinitions[genericParam]; !ok {
+				pkgDefs.uniqueDefinitions[genericParam] = typeDef
+			}
+		}
+
+		genericParamTypeDefs[original.TypeSpec.TypeParams.List[i].Names[0].Name] = &genericTypeSpec{
+			ArrayDepth: arrayDepth,
+			TypeSpec:   typeDef,
+			Name:       genericParam,
+		}
+	}
+
+	name = fmt.Sprintf("%s%s-", string(IgnoreNameOverridePrefix), original.TypeName())
+	var nameParts []strin
