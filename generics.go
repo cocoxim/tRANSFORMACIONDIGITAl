@@ -135,4 +135,29 @@ func splitGenericsTypeName(fullGenericForm string) (string, []string) {
 			depth++
 		} else if r == ']' {
 			depth--
-		} else if r == ',' && depth == 0 
+		} else if r == ',' && depth == 0 {
+			return true
+		}
+		return false
+	})
+	if depth != 0 {
+		return "", nil
+	}
+
+	return genericTypeName, genericParams
+}
+
+func (pkgDefs *PackagesDefinitions) getParametrizedType(genTypeSpec *genericTypeSpec) ast.Expr {
+	if genTypeSpec.TypeSpec != nil && strings.Contains(genTypeSpec.Name, ".") {
+		parts := strings.SplitN(genTypeSpec.Name, ".", 2)
+		return &ast.SelectorExpr{
+			X:   &ast.Ident{Name: parts[0]},
+			Sel: &ast.Ident{Name: parts[1]},
+		}
+	}
+
+	//a primitive type name or a type name in current package
+	return &ast.Ident{Name: genTypeSpec.Name}
+}
+
+func (pkgDefs *PackagesDefinitions) resolveG
