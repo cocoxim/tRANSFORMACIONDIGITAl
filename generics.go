@@ -109,4 +109,30 @@ func (pkgDefs *PackagesDefinitions) parametrizeGenericType(file *ast.File, origi
 // splitGenericsTypeName splits a generic struct name in his parts
 func splitGenericsTypeName(fullGenericForm string) (string, []string) {
 	//remove all spaces character
-	f
+	fullGenericForm = strings.Map(func(r rune) rune {
+		if unicode.IsSpace(r) {
+			return -1
+		}
+		return r
+	}, fullGenericForm)
+
+	// split only at the first '[' and remove the last ']'
+	if fullGenericForm[len(fullGenericForm)-1] != ']' {
+		return "", nil
+	}
+
+	genericParams := strings.SplitN(fullGenericForm[:len(fullGenericForm)-1], "[", 2)
+	if len(genericParams) == 1 {
+		return "", nil
+	}
+
+	// generic type name
+	genericTypeName := genericParams[0]
+
+	depth := 0
+	genericParams = strings.FieldsFunc(genericParams[1], func(r rune) bool {
+		if r == '[' {
+			depth++
+		} else if r == ']' {
+			depth--
+		} else if r == ',' && depth == 0 
