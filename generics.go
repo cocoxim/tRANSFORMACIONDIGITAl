@@ -160,4 +160,21 @@ func (pkgDefs *PackagesDefinitions) getParametrizedType(genTypeSpec *genericType
 	return &ast.Ident{Name: genTypeSpec.Name}
 }
 
-func (pkgDefs *PackagesDefinitions) resolveG
+func (pkgDefs *PackagesDefinitions) resolveGenericType(file *ast.File, expr ast.Expr, genericParamTypeDefs map[string]*genericTypeSpec) ast.Expr {
+	switch astExpr := expr.(type) {
+	case *ast.Ident:
+		if genTypeSpec, ok := genericParamTypeDefs[astExpr.Name]; ok {
+			retType := pkgDefs.getParametrizedType(genTypeSpec)
+			for i := 0; i < genTypeSpec.ArrayDepth; i++ {
+				retType = &ast.ArrayType{Elt: retType}
+			}
+			return retType
+		}
+	case *ast.ArrayType:
+		return &ast.ArrayType{
+			Elt:    pkgDefs.resolveGenericType(file, astExpr.Elt, genericParamTypeDefs),
+			Len:    astExpr.Len,
+			Lbrack: astExpr.Lbrack,
+		}
+	case *ast.StarExpr:
+		re
