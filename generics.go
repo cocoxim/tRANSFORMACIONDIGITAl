@@ -217,4 +217,26 @@ func (pkgDefs *PackagesDefinitions) resolveGenericType(file *ast.File, expr ast.
 
 func getExtendedGenericFieldType(file *ast.File, field ast.Expr, genericParamTypeDefs map[string]*genericTypeSpec) (string, error) {
 	switch fieldType := field.(type) {
-	case *ast.ArrayTy
+	case *ast.ArrayType:
+		fieldName, err := getExtendedGenericFieldType(file, fieldType.Elt, genericParamTypeDefs)
+		return "[]" + fieldName, err
+	case *ast.StarExpr:
+		return getExtendedGenericFieldType(file, fieldType.X, genericParamTypeDefs)
+	case *ast.Ident:
+		if genericParamTypeDefs != nil {
+			if typeSpec, ok := genericParamTypeDefs[fieldType.Name]; ok {
+				return typeSpec.Name, nil
+			}
+		}
+		if fieldType.Obj == nil {
+			return fieldType.Name, nil
+		}
+
+		tSpec := &TypeSpecDef{
+			File:     file,
+			TypeSpec: fieldType.Obj.Decl.(*ast.TypeSpec),
+			PkgPath:  file.Name.Name,
+		}
+		return tSpec.TypeName(), nil
+	default:
+		return getFie
