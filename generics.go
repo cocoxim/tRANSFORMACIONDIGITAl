@@ -239,4 +239,29 @@ func getExtendedGenericFieldType(file *ast.File, field ast.Expr, genericParamTyp
 		}
 		return tSpec.TypeName(), nil
 	default:
-		return getFie
+		return getFieldType(file, field, genericParamTypeDefs)
+	}
+}
+
+func getGenericFieldType(file *ast.File, field ast.Expr, genericParamTypeDefs map[string]*genericTypeSpec) (string, error) {
+	var fullName string
+	var baseName string
+	var err error
+	switch fieldType := field.(type) {
+	case *ast.IndexListExpr:
+		baseName, err = getGenericTypeName(file, fieldType.X)
+		if err != nil {
+			return "", err
+		}
+		fullName = baseName + "["
+
+		for _, index := range fieldType.Indices {
+			fieldName, err := getExtendedGenericFieldType(file, index, genericParamTypeDefs)
+			if err != nil {
+				return "", err
+			}
+
+			fullName += fieldName + ","
+		}
+
+		fullName = s
