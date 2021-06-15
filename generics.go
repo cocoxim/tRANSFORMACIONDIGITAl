@@ -177,4 +177,22 @@ func (pkgDefs *PackagesDefinitions) resolveGenericType(file *ast.File, expr ast.
 			Lbrack: astExpr.Lbrack,
 		}
 	case *ast.StarExpr:
-		re
+		return &ast.StarExpr{
+			Star: astExpr.Star,
+			X:    pkgDefs.resolveGenericType(file, astExpr.X, genericParamTypeDefs),
+		}
+	case *ast.IndexExpr, *ast.IndexListExpr:
+		fullGenericName, _ := getGenericFieldType(file, expr, genericParamTypeDefs)
+		typeDef := pkgDefs.FindTypeSpec(fullGenericName, file)
+		if typeDef != nil {
+			return typeDef.TypeSpec.Name
+		}
+	case *ast.StructType:
+		newStructTypeDef := &ast.StructType{
+			Struct:     astExpr.Struct,
+			Incomplete: astExpr.Incomplete,
+			Fields: &ast.FieldList{
+				Opening: astExpr.Fields.Opening,
+				Closing: astExpr.Fields.Closing,
+			},
+		
