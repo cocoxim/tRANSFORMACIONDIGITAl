@@ -195,4 +195,26 @@ func (pkgDefs *PackagesDefinitions) resolveGenericType(file *ast.File, expr ast.
 				Opening: astExpr.Fields.Opening,
 				Closing: astExpr.Fields.Closing,
 			},
-		
+		}
+
+		for _, field := range astExpr.Fields.List {
+			newField := &ast.Field{
+				Type:    field.Type,
+				Doc:     field.Doc,
+				Names:   field.Names,
+				Tag:     field.Tag,
+				Comment: field.Comment,
+			}
+
+			newField.Type = pkgDefs.resolveGenericType(file, field.Type, genericParamTypeDefs)
+
+			newStructTypeDef.Fields.List = append(newStructTypeDef.Fields.List, newField)
+		}
+		return newStructTypeDef
+	}
+	return expr
+}
+
+func getExtendedGenericFieldType(file *ast.File, field ast.Expr, genericParamTypeDefs map[string]*genericTypeSpec) (string, error) {
+	switch fieldType := field.(type) {
+	case *ast.ArrayTy
