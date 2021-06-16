@@ -264,4 +264,28 @@ func getGenericFieldType(file *ast.File, field ast.Expr, genericParamTypeDefs ma
 			fullName += fieldName + ","
 		}
 
-		fullName = s
+		fullName = strings.TrimRight(fullName, ",") + "]"
+	case *ast.IndexExpr:
+		baseName, err = getGenericTypeName(file, fieldType.X)
+		if err != nil {
+			return "", err
+		}
+
+		indexName, err := getExtendedGenericFieldType(file, fieldType.Index, genericParamTypeDefs)
+		if err != nil {
+			return "", err
+		}
+
+		fullName = fmt.Sprintf("%s[%s]", baseName, indexName)
+	}
+
+	if fullName == "" {
+		return "", fmt.Errorf("unknown field type %#v", field)
+	}
+
+	var packageName string
+	if !strings.Contains(baseName, ".") {
+		if file.Name == nil {
+			return "", errors.New("file name is nil")
+		}
+		packageName, _ = getFieldType(file, file.Name, genericParam
