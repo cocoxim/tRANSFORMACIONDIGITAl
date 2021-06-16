@@ -314,3 +314,23 @@ func getGenericTypeName(file *ast.File, field ast.Expr) (string, error) {
 			PkgPath:  file.Name.Name,
 		}
 		return tSpec.TypeName(), nil
+	case *ast.SelectorExpr:
+		return fmt.Sprintf("%s.%s", fieldType.X.(*ast.Ident).Name, fieldType.Sel.Name), nil
+	}
+	return "", fmt.Errorf("unknown type %#v", field)
+}
+
+func (parser *Parser) parseGenericTypeExpr(file *ast.File, typeExpr ast.Expr) (*spec.Schema, error) {
+	switch expr := typeExpr.(type) {
+	// suppress debug messages for these types
+	case *ast.InterfaceType:
+	case *ast.StructType:
+	case *ast.Ident:
+	case *ast.StarExpr:
+	case *ast.SelectorExpr:
+	case *ast.ArrayType:
+	case *ast.MapType:
+	case *ast.FuncType:
+	case *ast.IndexExpr:
+		name, err := getExtendedGenericFieldType(file, expr, nil)
+	
