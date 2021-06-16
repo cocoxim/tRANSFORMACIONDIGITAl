@@ -288,4 +288,29 @@ func getGenericFieldType(file *ast.File, field ast.Expr, genericParamTypeDefs ma
 		if file.Name == nil {
 			return "", errors.New("file name is nil")
 		}
-		packageName, _ = getFieldType(file, file.Name, genericParam
+		packageName, _ = getFieldType(file, file.Name, genericParamTypeDefs)
+	}
+
+	return strings.TrimLeft(fmt.Sprintf("%s.%s", packageName, fullName), "."), nil
+}
+
+func getGenericTypeName(file *ast.File, field ast.Expr) (string, error) {
+	switch fieldType := field.(type) {
+	case *ast.Ident:
+		if fieldType.Obj == nil {
+			return fieldType.Name, nil
+		}
+
+		tSpec := &TypeSpecDef{
+			File:     file,
+			TypeSpec: fieldType.Obj.Decl.(*ast.TypeSpec),
+			PkgPath:  file.Name.Name,
+		}
+		return tSpec.TypeName(), nil
+	case *ast.ArrayType:
+		tSpec := &TypeSpecDef{
+			File:     file,
+			TypeSpec: fieldType.Elt.(*ast.Ident).Obj.Decl.(*ast.TypeSpec),
+			PkgPath:  file.Name.Name,
+		}
+		return tSpec.TypeName(), nil
