@@ -34,4 +34,25 @@ func TestParseGenericsBasic(t *testing.T) {
 	p.Overrides = map[string]string{
 		"types.Field[string]":               "string",
 		"types.DoubleField[string,string]":  "[]string",
-		"types.TrippleField[string
+		"types.TrippleField[string,string]": "[][]string",
+	}
+
+	err = p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+	b, err := json.MarshalIndent(p.swagger, "", "    ")
+	assert.NoError(t, err)
+	assert.Equal(t, string(expected), string(b))
+}
+
+func TestParseGenericsArrays(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/generics_arrays"
+	expected, err := os.ReadFile(filepath.Join(searchDir, "expected.json"))
+	assert.NoError(t, err)
+
+	p := New()
+	err = p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+	b, err := json.MarshalIndent(p.swagger, "", "    ")
+	assert.NoError(t,
