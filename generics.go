@@ -333,4 +333,16 @@ func (parser *Parser) parseGenericTypeExpr(file *ast.File, typeExpr ast.Expr) (*
 	case *ast.FuncType:
 	case *ast.IndexExpr:
 		name, err := getExtendedGenericFieldType(file, expr, nil)
-	
+		if err == nil {
+			if schema, err := parser.getTypeSchema(name, file, false); err == nil {
+				return schema, nil
+			}
+		}
+
+		parser.debug.Printf("Type definition of type '%T' is not supported yet. Using 'object' instead. (%s)\n", typeExpr, err)
+	default:
+		parser.debug.Printf("Type definition of type '%T' is not supported yet. Using 'object' instead.\n", typeExpr)
+	}
+
+	return PrimitiveSchema(OBJECT), nil
+}
