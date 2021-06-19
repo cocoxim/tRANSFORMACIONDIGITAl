@@ -78,4 +78,23 @@ func TestParseGenericsMultiLevelNesting(t *testing.T) {
 	t.Parallel()
 
 	searchDir := "testdata/generics_multi_level_nesting"
-	expected, err := os.ReadFi
+	expected, err := os.ReadFile(filepath.Join(searchDir, "expected.json"))
+	assert.NoError(t, err)
+
+	p := New()
+	err = p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+	b, err := json.MarshalIndent(p.swagger, "", "    ")
+	assert.NoError(t, err)
+	assert.Equal(t, string(expected), string(b))
+}
+
+func TestParseGenericsProperty(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/generics_property"
+	expected, err := os.ReadFile(filepath.Join(searchDir, "expected.json"))
+	assert.NoError(t, err)
+
+	p := New()
+	err = p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
