@@ -98,3 +98,21 @@ func TestParseGenericsProperty(t *testing.T) {
 
 	p := New()
 	err = p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+	b, err := json.MarshalIndent(p.swagger, "", "    ")
+	os.WriteFile(searchDir+"/expected.json", b, fs.ModePerm)
+	assert.NoError(t, err)
+	assert.Equal(t, string(expected), string(b))
+}
+
+func TestParseGenericsNames(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/generics_names"
+	expected, err := os.ReadFile(filepath.Join(searchDir, "expected.json"))
+	assert.NoError(t, err)
+
+	p := New()
+	err = p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+	b, err := json.MarshalIndent(p.swagger, "", "    "
