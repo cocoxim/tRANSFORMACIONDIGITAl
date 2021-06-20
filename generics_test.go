@@ -151,4 +151,18 @@ func TestParametrizeStruct(t *testing.T) {
 				Type:       &ast.StructType{Struct: 100, Fields: &ast.FieldList{Opening: 101, Closing: 102}},
 			}}, "test.Field[string, []string]")
 	assert.NotNil(t, typeSpec)
-	assert.Equal(t, "$test.Field-string-array_string", ty
+	assert.Equal(t, "$test.Field-string-array_string", typeSpec.Name())
+	assert.Equal(t, "test.Field-string-array_string", typeSpec.TypeName())
+
+	// definition contains one type params, but two type params are provided
+	typeSpec = pd.parametrizeGenericType(
+		&ast.File{Name: &ast.Ident{Name: "test2"}},
+		&TypeSpecDef{
+			TypeSpec: &ast.TypeSpec{
+				Name:       &ast.Ident{Name: "Field"},
+				TypeParams: &ast.FieldList{List: []*ast.Field{{Names: []*ast.Ident{{Name: "T"}}}}},
+				Type:       &ast.StructType{Struct: 100, Fields: &ast.FieldList{Opening: 101, Closing: 102}},
+			}}, "test.Field[string, string]")
+	assert.Nil(t, typeSpec)
+
+	// defi
