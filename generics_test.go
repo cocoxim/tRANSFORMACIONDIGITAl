@@ -115,4 +115,26 @@ func TestParseGenericsNames(t *testing.T) {
 	p := New()
 	err = p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
 	assert.NoError(t, err)
-	b, err := json.MarshalIndent(p.swagger, "", "    "
+	b, err := json.MarshalIndent(p.swagger, "", "    ")
+	assert.NoError(t, err)
+	assert.Equal(t, string(expected), string(b))
+}
+
+func TestParseGenericsPackageAlias(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/generics_package_alias/internal"
+	expected, err := os.ReadFile(filepath.Join(searchDir, "expected.json"))
+	assert.NoError(t, err)
+
+	p := New(SetParseDependency(true))
+	err = p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+	b, err := json.MarshalIndent(p.swagger, "", "    ")
+	assert.NoError(t, err)
+	assert.Equal(t, string(expected), string(b))
+}
+
+func TestParametrizeStruct(t *testing.T) {
+	pd := PackagesDefinitions{
+		packages:          ma
