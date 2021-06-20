@@ -137,4 +137,18 @@ func TestParseGenericsPackageAlias(t *testing.T) {
 
 func TestParametrizeStruct(t *testing.T) {
 	pd := PackagesDefinitions{
-		packages:          ma
+		packages:          make(map[string]*PackageDefinitions),
+		uniqueDefinitions: make(map[string]*TypeSpecDef),
+	}
+	// valid
+	typeSpec := pd.parametrizeGenericType(
+		&ast.File{Name: &ast.Ident{Name: "test2"}},
+		&TypeSpecDef{
+			File: &ast.File{Name: &ast.Ident{Name: "test"}},
+			TypeSpec: &ast.TypeSpec{
+				Name:       &ast.Ident{Name: "Field"},
+				TypeParams: &ast.FieldList{List: []*ast.Field{{Names: []*ast.Ident{{Name: "T"}}}, {Names: []*ast.Ident{{Name: "T2"}}}}},
+				Type:       &ast.StructType{Struct: 100, Fields: &ast.FieldList{Opening: 101, Closing: 102}},
+			}}, "test.Field[string, []string]")
+	assert.NotNil(t, typeSpec)
+	assert.Equal(t, "$test.Field-string-array_string", ty
