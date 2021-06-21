@@ -192,4 +192,15 @@ func TestParametrizeStruct(t *testing.T) {
 		&TypeSpecDef{
 			TypeSpec: &ast.TypeSpec{
 				Name:       &ast.Ident{Name: "Field"},
-				TypeParams: &ast.FieldList{List: []*ast.Field{
+				TypeParams: &ast.FieldList{List: []*ast.Field{{Names: []*ast.Ident{{Name: "T"}}}, {Names: []*ast.Ident{{Name: "T2"}}}}},
+				Type:       &ast.StructType{Struct: 100, Fields: &ast.FieldList{Opening: 101, Closing: 102}},
+			}}, "test.Field[string, [string]")
+	assert.Nil(t, typeSpec)
+
+	typeSpec = pd.parametrizeGenericType(
+		&ast.File{Name: &ast.Ident{Name: "test2"}},
+		&TypeSpecDef{
+			TypeSpec: &ast.TypeSpec{
+				Name:       &ast.Ident{Name: "Field"},
+				TypeParams: &ast.FieldList{List: []*ast.Field{{Names: []*ast.Ident{{Name: "T"}}}, {Names: []*ast.Ident{{Name: "T2"}}}}},
+				Type:       &ast.StructType{Struct: 100, Fields: &ast.FieldList{Opening: 101, Cl
