@@ -203,4 +203,28 @@ func TestParametrizeStruct(t *testing.T) {
 			TypeSpec: &ast.TypeSpec{
 				Name:       &ast.Ident{Name: "Field"},
 				TypeParams: &ast.FieldList{List: []*ast.Field{{Names: []*ast.Ident{{Name: "T"}}}, {Names: []*ast.Ident{{Name: "T2"}}}}},
-				Type:       &ast.StructType{Struct: 100, Fields: &ast.FieldList{Opening: 101, Cl
+				Type:       &ast.StructType{Struct: 100, Fields: &ast.FieldList{Opening: 101, Closing: 102}},
+			}}, "test.Field[string, ]string]")
+	assert.Nil(t, typeSpec)
+}
+
+func TestSplitGenericsTypeNames(t *testing.T) {
+	t.Parallel()
+
+	field, params := splitGenericsTypeName("test.Field")
+	assert.Empty(t, field)
+	assert.Nil(t, params)
+
+	field, params = splitGenericsTypeName("test.Field]")
+	assert.Empty(t, field)
+	assert.Nil(t, params)
+
+	field, params = splitGenericsTypeName("test.Field[string")
+	assert.Empty(t, field)
+	assert.Nil(t, params)
+
+	field, params = splitGenericsTypeName("test.Field[string] ")
+	assert.Equal(t, "test.Field", field)
+	assert.Equal(t, []string{"string"}, params)
+
+	field, params = s
