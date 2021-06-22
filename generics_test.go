@@ -227,4 +227,18 @@ func TestSplitGenericsTypeNames(t *testing.T) {
 	assert.Equal(t, "test.Field", field)
 	assert.Equal(t, []string{"string"}, params)
 
-	field, params = s
+	field, params = splitGenericsTypeName("test.Field[string, []string]")
+	assert.Equal(t, "test.Field", field)
+	assert.Equal(t, []string{"string", "[]string"}, params)
+
+	field, params = splitGenericsTypeName("test.Field[test.Field[ string, []string] ]")
+	assert.Equal(t, "test.Field", field)
+	assert.Equal(t, []string{"test.Field[string,[]string]"}, params)
+}
+
+func TestGetGenericFieldType(t *testing.T) {
+	field, err := getFieldType(
+		&ast.File{Name: &ast.Ident{Name: "test"}},
+		&ast.IndexListExpr{
+			X:       &ast.Ident{Name: "types", Obj: &ast.Object{Decl: &ast.TypeSpec{Name: &ast.Ident{Name: "Field"}}}},
+			Indices: []ast.Expr{&ast.Ident{
