@@ -325,4 +325,26 @@ func TestGetGenericFieldType(t *testing.T) {
 
 	field, err = getFieldType(
 		&ast.File{Name: &ast.Ident{Name: "test"}},
-		&ast.IndexExpr{X: &ast.Ident{Name: "Field"}, I
+		&ast.IndexExpr{X: &ast.Ident{Name: "Field"}, Index: &ast.BadExpr{}},
+		nil,
+	)
+	assert.Error(t, err)
+
+	field, err = getFieldType(
+		&ast.File{Name: &ast.Ident{Name: "test"}},
+		&ast.IndexExpr{X: &ast.SelectorExpr{X: &ast.Ident{Name: "field"}, Sel: &ast.Ident{Name: "Name"}}, Index: &ast.Ident{Name: "string"}},
+		nil,
+	)
+	assert.NoError(t, err)
+	assert.Equal(t, "field.Name[string]", field)
+}
+
+func TestGetGenericTypeName(t *testing.T) {
+	field, err := getGenericTypeName(
+		&ast.File{Name: &ast.Ident{Name: "test"}},
+		&ast.Ident{Name: "types", Obj: &ast.Object{Decl: &ast.TypeSpec{Name: &ast.Ident{Name: "Field"}}}},
+	)
+	assert.NoError(t, err)
+	assert.Equal(t, "test.Field", field)
+
+	field, err = ge
