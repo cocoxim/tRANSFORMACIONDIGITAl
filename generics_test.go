@@ -368,4 +368,21 @@ func TestGetGenericTypeName(t *testing.T) {
 	assert.Error(t, err)
 }
 
-fu
+func TestParseGenericTypeExpr(t *testing.T) {
+	t.Parallel()
+
+	parser := New()
+	logger := &testLogger{}
+	SetDebugger(logger)(parser)
+
+	_, _ = parser.parseGenericTypeExpr(&ast.File{}, &ast.InterfaceType{})
+	assert.Empty(t, logger.Messages)
+	_, _ = parser.parseGenericTypeExpr(&ast.File{}, &ast.StructType{})
+	assert.Empty(t, logger.Messages)
+	_, _ = parser.parseGenericTypeExpr(&ast.File{}, &ast.Ident{})
+	assert.Empty(t, logger.Messages)
+	_, _ = parser.parseGenericTypeExpr(&ast.File{}, &ast.StarExpr{})
+	assert.Empty(t, logger.Messages)
+	_, _ = parser.parseGenericTypeExpr(&ast.File{}, &ast.SelectorExpr{})
+	assert.Empty(t, logger.Messages)
+	_, _ = parser.parse
