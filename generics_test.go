@@ -414,4 +414,22 @@ func TestParseGenericTypeExpr(t *testing.T) {
 	logger.Messages = []string{}
 	spec, err = parser.parseTypeExpr(
 		&ast.File{Name: &ast.Ident{Name: "test"}},
-		&ast.IndexExpr{X: &ast.BadExpr{}, Index: &ast.Ident{Name: "
+		&ast.IndexExpr{X: &ast.BadExpr{}, Index: &ast.Ident{Name: "string"}},
+		false,
+	)
+	assert.NotNil(t, spec)
+	assert.Equal(t, "object", spec.SchemaProps.Type[0])
+	assert.NotEmpty(t, logger.Messages)
+	assert.Len(t, logger.Messages, 1)
+
+	logger.Messages = []string{}
+	spec, err = parser.parseTypeExpr(
+		&ast.File{Name: &ast.Ident{Name: "test"}},
+		&ast.BadExpr{},
+		false,
+	)
+	assert.NotNil(t, spec)
+	assert.Equal(t, "object", spec.SchemaProps.Type[0])
+	assert.NotEmpty(t, logger.Messages)
+	assert.Len(t, logger.Messages, 1)
+}
