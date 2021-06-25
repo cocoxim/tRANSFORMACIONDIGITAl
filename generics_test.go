@@ -398,4 +398,20 @@ func TestParseGenericTypeExpr(t *testing.T) {
 	parser.packages.uniqueDefinitions["field.Name[string]"] = &TypeSpecDef{
 		File: &ast.File{Name: &ast.Ident{Name: "test"}},
 		TypeSpec: &ast.TypeSpec{
-			Name:       &ast.Ident{Name: "F
+			Name:       &ast.Ident{Name: "Field"},
+			TypeParams: &ast.FieldList{List: []*ast.Field{{Names: []*ast.Ident{{Name: "T"}}}}},
+			Type:       &ast.StructType{Struct: 100, Fields: &ast.FieldList{Opening: 101, Closing: 102}},
+		},
+	}
+	spec, err := parser.parseTypeExpr(
+		&ast.File{Name: &ast.Ident{Name: "test"}},
+		&ast.IndexExpr{X: &ast.SelectorExpr{X: &ast.Ident{Name: "field"}, Sel: &ast.Ident{Name: "Name"}}, Index: &ast.Ident{Name: "string"}},
+		false,
+	)
+	assert.NotNil(t, spec)
+	assert.NoError(t, err)
+
+	logger.Messages = []string{}
+	spec, err = parser.parseTypeExpr(
+		&ast.File{Name: &ast.Ident{Name: "test"}},
+		&ast.IndexExpr{X: &ast.BadExpr{}, Index: &ast.Ident{Name: "
