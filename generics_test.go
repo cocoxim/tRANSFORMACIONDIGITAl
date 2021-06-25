@@ -385,4 +385,17 @@ func TestParseGenericTypeExpr(t *testing.T) {
 	assert.Empty(t, logger.Messages)
 	_, _ = parser.parseGenericTypeExpr(&ast.File{}, &ast.SelectorExpr{})
 	assert.Empty(t, logger.Messages)
-	_, _ = parser.parse
+	_, _ = parser.parseGenericTypeExpr(&ast.File{}, &ast.ArrayType{})
+	assert.Empty(t, logger.Messages)
+	_, _ = parser.parseGenericTypeExpr(&ast.File{}, &ast.MapType{})
+	assert.Empty(t, logger.Messages)
+	_, _ = parser.parseGenericTypeExpr(&ast.File{}, &ast.FuncType{})
+	assert.Empty(t, logger.Messages)
+	_, _ = parser.parseGenericTypeExpr(&ast.File{}, &ast.BadExpr{})
+	assert.NotEmpty(t, logger.Messages)
+	assert.Len(t, logger.Messages, 1)
+
+	parser.packages.uniqueDefinitions["field.Name[string]"] = &TypeSpecDef{
+		File: &ast.File{Name: &ast.Ident{Name: "test"}},
+		TypeSpec: &ast.TypeSpec{
+			Name:       &ast.Ident{Name: "F
