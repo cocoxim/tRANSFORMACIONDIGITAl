@@ -41,4 +41,27 @@ func listPackages(ctx context.Context, dir string, env []string, args ...string)
 		pkgs = append(pkgs, &pkg)
 	}
 	err = cmd.Wait()
-	if err != n
+	if err != nil {
+		return nil, err
+	}
+	return pkgs, nil
+}
+
+func (parser *Parser) getAllGoFileInfoFromDepsByList(pkg *build.Package) error {
+	ignoreInternal := pkg.Goroot && !parser.ParseInternal
+	if ignoreInternal { // ignored internal
+		return nil
+	}
+
+	srcDir := pkg.Dir
+	var err error
+	for i := range pkg.GoFiles {
+		err = parser.parseFile(pkg.ImportPath, filepath.Join(srcDir, pkg.GoFiles[i]), nil, ParseModels)
+		if err != nil {
+			return err
+		}
+	}
+
+	// parse .go source files that import "C"
+	for i := range pkg.CgoFiles {
+		err = parser.parseFile(pkg.ImportPath, filepath.Join(srcDir, pkg.CgoFiles[i]), nil, ParseModels)
