@@ -65,3 +65,10 @@ func (parser *Parser) getAllGoFileInfoFromDepsByList(pkg *build.Package) error {
 	// parse .go source files that import "C"
 	for i := range pkg.CgoFiles {
 		err = parser.parseFile(pkg.ImportPath, filepath.Join(srcDir, pkg.CgoFiles[i]), nil, ParseModels)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
