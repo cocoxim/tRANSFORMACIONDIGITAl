@@ -625,3 +625,578 @@ func defineType(schemaType string, value string) (v interface{}, err error) {
 			return nil, fmt.Errorf("enum value %s can't convert to %s err: %s", value, schemaType, err)
 		}
 	default:
+		return nil, fmt.Errorf("%s is unsupported type in enum value %s", schemaType, value)
+	}
+
+	return v, nil
+}
+
+// ParseTagsComment parses comment for given `tag` comment string.
+func (operation *Operation) ParseTagsComment(commentLine string) {
+	for _, tag := range strings.Split(commentLine, ",") {
+		operation.Tags = append(operation.Tags, strings.TrimSpace(tag))
+	}
+}
+
+// ParseAcceptComment parses comment for given `accept` comment string.
+func (operation *Operation) ParseAcceptComment(commentLine string) error {
+	return parseMimeTypeList(commentLine, &operation.Consumes, "%v accept type can't be accepted")
+}
+
+// ParseProduceComment parses comment for given `produce` comment string.
+func (operation *Operation) ParseProduceComment(commentLine string) error {
+	return parseMimeTypeList(commentLine, &operation.Produces, "%v produce type can't be accepted")
+}
+
+// parseMimeTypeList parses a list of MIME Types for a comment like
+// `produce` (`Content-Type:` response header) or
+// `accept` (`Accept:` request header).
+func parseMimeTypeList(mimeTypeList string, typeList *[]string, format string) error {
+	for _, typeName := range strings.Split(mimeTypeList, ",") {
+		if mimeTypePattern.MatchString(typeName) {
+			*typeList = append(*typeList, typeName)
+
+			continue
+		}
+
+		aliasMimeType, ok := mimeTypeAliases[typeName]
+		if !ok {
+			return fmt.Errorf(format, typeName)
+		}
+
+		*typeList = append(*typeList, aliasMimeType)
+	}
+
+	return nil
+}
+
+var routerPattern = regexp.MustCompile(`^(/[\w./\-{}+:$]*)[[:blank:]]+\[(\w+)]`)
+
+// ParseRouterComment parses comment for given `router` comment string.
+func (operation *Operation) ParseRouterComment(commentLine string) error {
+	matches := routerPattern.FindStringSubmatch(commentLine)
+	if len(matches) != 3 {
+		return fmt.Errorf("can not parse router comment \"%s\"", commentLine)
+	}
+
+	signature := RouteProperties{
+		Path:       matches[1],
+		HTTPMethod: strings.ToUpper(matches[2]),
+	}
+
+	if _, ok := allMethod[signature.HTTPMethod]; !ok {
+		return fmt.Errorf("invalid method: %s", signature.HTTPMethod)
+	}
+
+	operation.RouterProperties = append(operation.RouterProperties, signature)
+
+	return nil
+}
+
+// ParseSecurityComment parses comment for given `security` comment string.
+func (operation *Operation) ParseSecurityComment(commentLine string) error {
+	var (
+		securityMap    = make(map[string][]string)
+		securitySource = commentLine[strings.Index(commentLine, "@Security")+1:]
+	)
+
+	for _, securityOption := range strings.Split(securitySource, "||") {
+		securityOption = strings.TrimSpace(securityOption)
+
+		left, right := strings.Index(securityOption, "["), strings.Index(securityOption, "]")
+
+		if !(left == -1 && right == -1) {
+			scopes := securityOption[left+1 : right]
+
+			var options []string
+
+			for _, scope := range strings.Split(scopes, ",") {
+				options = append(options, strings.TrimSpace(scope))
+			}
+
+			securityKey := securityOption[0:left]
+			securityMap[securityKey] = append(securityMap[securityKey], options...)
+		} else {
+			securityKey := strings.TrimSpace(securityOption)
+			securityMap[securityKey] = []string{}
+		}
+	}
+
+	operation.Security = append(operation.Security, securityMap)
+
+	return nil
+}
+
+// findTypeDef attempts to find the *ast.TypeSpec for a specific type given the
+// type's name and the package's import path.
+// TODO: improve finding external pkg.
+func findTypeDef(importPath, typeName string) (*ast.TypeSpec, error) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return nil, err
+	}
+
+	conf := loader.Config{
+		ParserMode: goparser.SpuriousErrors,
+		Cwd:        cwd,
+	}
+
+	conf.Import(importPath)
+
+	lprog, err := conf.Load()
+	if err != nil {
+		return nil, err
+	}
+
+	// If the pkg is vendored, the actual pkg path is going to resemble
+	// something like "{importPath}/vendor/{importPath}"
+	for k := range lprog.AllPackages {
+		realPkgPath := k.Path()
+
+		if strings.Contains(realPkgPath, "vendor/"+importPath) {
+			importPath = realPkgPath
+		}
+	}
+
+	pkgInfo := lprog.Package(importPath)
+
+	if pkgInfo == nil {
+		return nil, fmt.Errorf("package was nil")
+	}
+
+	// TODO: possibly cache pkgInfo since it's an expensive operation
+	for i := range pkgInfo.Files {
+		for _, astDeclaration := range pkgInfo.Files[i].Decls {
+			generalDeclaration, ok := astDeclaration.(*ast.GenDecl)
+			if ok && generalDeclaration.Tok == token.TYPE {
+				for _, astSpec := range generalDeclaration.Specs {
+					typeSpec, ok := astSpec.(*ast.TypeSpec)
+					if ok {
+						if typeSpec.Name.String() == typeName {
+							return typeSpec, nil
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return nil, fmt.Errorf("type spec not found")
+}
+
+var responsePattern = regexp.MustCompile(`^([\w,]+)\s+([\w{}]+)\s+([\w\-.\\{}=,\[\s\]]+)\s*(".*)?`)
+
+// ResponseType{data1=Type1,data2=Type2}.
+var combinedPattern = regexp.MustCompile(`^([\w\-./\[\]]+){(.*)}$`)
+
+func (operation *Operation) parseObjectSchema(refType string, astFile *ast.File) (*spec.Schema, error) {
+	return parseObjectSchema(operation.parser, refType, astFile)
+}
+
+func parseObjectSchema(parser *Parser, refType string, astFile *ast.File) (*spec.Schema, error) {
+	switch {
+	case refType == NIL:
+		return nil, nil
+	case refType == INTERFACE:
+		return PrimitiveSchema(OBJECT), nil
+	case refType == ANY:
+		return PrimitiveSchema(OBJECT), nil
+	case IsGolangPrimitiveType(refType):
+		refType = TransToValidSchemeType(refType)
+
+		return PrimitiveSchema(refType), nil
+	case IsPrimitiveType(refType):
+		return PrimitiveSchema(refType), nil
+	case strings.HasPrefix(refType, "[]"):
+		schema, err := parseObjectSchema(parser, refType[2:], astFile)
+		if err != nil {
+			return nil, err
+		}
+
+		return spec.ArrayProperty(schema), nil
+	case strings.HasPrefix(refType, "map["):
+		// ignore key type
+		idx := strings.Index(refType, "]")
+		if idx < 0 {
+			return nil, fmt.Errorf("invalid type: %s", refType)
+		}
+
+		refType = refType[idx+1:]
+		if refType == INTERFACE || refType == ANY {
+			return spec.MapProperty(nil), nil
+		}
+
+		schema, err := parseObjectSchema(parser, refType, astFile)
+		if err != nil {
+			return nil, err
+		}
+
+		return spec.MapProperty(schema), nil
+	case strings.Contains(refType, "{"):
+		return parseCombinedObjectSchema(parser, refType, astFile)
+	default:
+		if parser != nil { // checking refType has existing in 'TypeDefinitions'
+			schema, err := parser.getTypeSchema(refType, astFile, true)
+			if err != nil {
+				return nil, err
+			}
+
+			return schema, nil
+		}
+
+		return RefSchema(refType), nil
+	}
+}
+
+func parseFields(s string) []string {
+	nestLevel := 0
+
+	return strings.FieldsFunc(s, func(char rune) bool {
+		if char == '{' {
+			nestLevel++
+
+			return false
+		} else if char == '}' {
+			nestLevel--
+
+			return false
+		}
+
+		return char == ',' && nestLevel == 0
+	})
+}
+
+func parseCombinedObjectSchema(parser *Parser, refType string, astFile *ast.File) (*spec.Schema, error) {
+	matches := combinedPattern.FindStringSubmatch(refType)
+	if len(matches) != 3 {
+		return nil, fmt.Errorf("invalid type: %s", refType)
+	}
+
+	schema, err := parseObjectSchema(parser, matches[1], astFile)
+	if err != nil {
+		return nil, err
+	}
+
+	fields, props := parseFields(matches[2]), map[string]spec.Schema{}
+
+	for _, field := range fields {
+		keyVal := strings.SplitN(field, "=", 2)
+		if len(keyVal) == 2 {
+			schema, err := parseObjectSchema(parser, keyVal[1], astFile)
+			if err != nil {
+				return nil, err
+			}
+
+			props[keyVal[0]] = *schema
+		}
+	}
+
+	if len(props) == 0 {
+		return schema, nil
+	}
+
+	if schema.Ref.GetURL() == nil && len(schema.Type) > 0 && schema.Type[0] == OBJECT && len(schema.Properties) == 0 && schema.AdditionalProperties == nil {
+		schema.Properties = props
+		return schema, nil
+	}
+
+	return spec.ComposedSchema(*schema, spec.Schema{
+		SchemaProps: spec.SchemaProps{
+			Type:       []string{OBJECT},
+			Properties: props,
+		},
+	}), nil
+}
+
+func (operation *Operation) parseAPIObjectSchema(commentLine, schemaType, refType string, astFile *ast.File) (*spec.Schema, error) {
+	if strings.HasSuffix(refType, ",") && strings.Contains(refType, "[") {
+		// regexp may have broken generic syntax. find closing bracket and add it back
+		allMatchesLenOffset := strings.Index(commentLine, refType) + len(refType)
+		lostPartEndIdx := strings.Index(commentLine[allMatchesLenOffset:], "]")
+		if lostPartEndIdx >= 0 {
+			refType += commentLine[allMatchesLenOffset : allMatchesLenOffset+lostPartEndIdx+1]
+		}
+	}
+
+	switch schemaType {
+	case OBJECT:
+		if !strings.HasPrefix(refType, "[]") {
+			return operation.parseObjectSchema(refType, astFile)
+		}
+
+		refType = refType[2:]
+
+		fallthrough
+	case ARRAY:
+		schema, err := operation.parseObjectSchema(refType, astFile)
+		if err != nil {
+			return nil, err
+		}
+
+		return spec.ArrayProperty(schema), nil
+	default:
+		return PrimitiveSchema(schemaType), nil
+	}
+}
+
+// ParseResponseComment parses comment for given `response` comment string.
+func (operation *Operation) ParseResponseComment(commentLine string, astFile *ast.File) error {
+	matches := responsePattern.FindStringSubmatch(commentLine)
+	if len(matches) != 5 {
+		err := operation.ParseEmptyResponseComment(commentLine)
+		if err != nil {
+			return operation.ParseEmptyResponseOnly(commentLine)
+		}
+
+		return err
+	}
+
+	description := strings.Trim(matches[4], "\"")
+
+	schema, err := operation.parseAPIObjectSchema(commentLine, strings.Trim(matches[2], "{}"), strings.TrimSpace(matches[3]), astFile)
+	if err != nil {
+		return err
+	}
+
+	for _, codeStr := range strings.Split(matches[1], ",") {
+		if strings.EqualFold(codeStr, defaultTag) {
+			operation.DefaultResponse().WithSchema(schema).WithDescription(description)
+
+			continue
+		}
+
+		code, err := strconv.Atoi(codeStr)
+		if err != nil {
+			return fmt.Errorf("can not parse response comment \"%s\"", commentLine)
+		}
+
+		resp := spec.NewResponse().WithSchema(schema).WithDescription(description)
+		if description == "" {
+			resp.WithDescription(http.StatusText(code))
+		}
+
+		operation.AddResponse(code, resp)
+	}
+
+	return nil
+}
+
+func newHeaderSpec(schemaType, description string) spec.Header {
+	return spec.Header{
+		SimpleSchema: spec.SimpleSchema{
+			Type: schemaType,
+		},
+		HeaderProps: spec.HeaderProps{
+			Description: description,
+		},
+		VendorExtensible: spec.VendorExtensible{
+			Extensions: nil,
+		},
+		CommonValidations: spec.CommonValidations{
+			Maximum:          nil,
+			ExclusiveMaximum: false,
+			Minimum:          nil,
+			ExclusiveMinimum: false,
+			MaxLength:        nil,
+			MinLength:        nil,
+			Pattern:          "",
+			MaxItems:         nil,
+			MinItems:         nil,
+			UniqueItems:      false,
+			MultipleOf:       nil,
+			Enum:             nil,
+		},
+	}
+}
+
+// ParseResponseHeaderComment parses comment for given `response header` comment string.
+func (operation *Operation) ParseResponseHeaderComment(commentLine string, _ *ast.File) error {
+	matches := responsePattern.FindStringSubmatch(commentLine)
+	if len(matches) != 5 {
+		return fmt.Errorf("can not parse response comment \"%s\"", commentLine)
+	}
+
+	header := newHeaderSpec(strings.Trim(matches[2], "{}"), strings.Trim(matches[4], "\""))
+
+	headerKey := strings.TrimSpace(matches[3])
+
+	if strings.EqualFold(matches[1], "all") {
+		if operation.Responses.Default != nil {
+			operation.Responses.Default.Headers[headerKey] = header
+		}
+
+		if operation.Responses.StatusCodeResponses != nil {
+			for code, response := range operation.Responses.StatusCodeResponses {
+				response.Headers[headerKey] = header
+				operation.Responses.StatusCodeResponses[code] = response
+			}
+		}
+
+		return nil
+	}
+
+	for _, codeStr := range strings.Split(matches[1], ",") {
+		if strings.EqualFold(codeStr, defaultTag) {
+			if operation.Responses.Default != nil {
+				operation.Responses.Default.Headers[headerKey] = header
+			}
+
+			continue
+		}
+
+		code, err := strconv.Atoi(codeStr)
+		if err != nil {
+			return fmt.Errorf("can not parse response comment \"%s\"", commentLine)
+		}
+
+		if operation.Responses.StatusCodeResponses != nil {
+			response, responseExist := operation.Responses.StatusCodeResponses[code]
+			if responseExist {
+				response.Headers[headerKey] = header
+
+				operation.Responses.StatusCodeResponses[code] = response
+			}
+		}
+	}
+
+	return nil
+}
+
+var emptyResponsePattern = regexp.MustCompile(`([\w,]+)\s+"(.*)"`)
+
+// ParseEmptyResponseComment parse only comment out status code and description,eg: @Success 200 "it's ok".
+func (operation *Operation) ParseEmptyResponseComment(commentLine string) error {
+	matches := emptyResponsePattern.FindStringSubmatch(commentLine)
+	if len(matches) != 3 {
+		return fmt.Errorf("can not parse response comment \"%s\"", commentLine)
+	}
+
+	description := strings.Trim(matches[2], "\"")
+
+	for _, codeStr := range strings.Split(matches[1], ",") {
+		if strings.EqualFold(codeStr, defaultTag) {
+			operation.DefaultResponse().WithDescription(description)
+
+			continue
+		}
+
+		code, err := strconv.Atoi(codeStr)
+		if err != nil {
+			return fmt.Errorf("can not parse response comment \"%s\"", commentLine)
+		}
+
+		operation.AddResponse(code, spec.NewResponse().WithDescription(description))
+	}
+
+	return nil
+}
+
+// ParseEmptyResponseOnly parse only comment out status code ,eg: @Success 200.
+func (operation *Operation) ParseEmptyResponseOnly(commentLine string) error {
+	for _, codeStr := range strings.Split(commentLine, ",") {
+		if strings.EqualFold(codeStr, defaultTag) {
+			_ = operation.DefaultResponse()
+
+			continue
+		}
+
+		code, err := strconv.Atoi(codeStr)
+		if err != nil {
+			return fmt.Errorf("can not parse response comment \"%s\"", commentLine)
+		}
+
+		operation.AddResponse(code, spec.NewResponse().WithDescription(http.StatusText(code)))
+	}
+
+	return nil
+}
+
+// DefaultResponse return the default response member pointer.
+func (operation *Operation) DefaultResponse() *spec.Response {
+	if operation.Responses.Default == nil {
+		operation.Responses.Default = &spec.Response{
+			ResponseProps: spec.ResponseProps{
+				Description: "",
+				Headers:     make(map[string]spec.Header),
+			},
+		}
+	}
+
+	return operation.Responses.Default
+}
+
+// AddResponse add a response for a code.
+func (operation *Operation) AddResponse(code int, response *spec.Response) {
+	if response.Headers == nil {
+		response.Headers = make(map[string]spec.Header)
+	}
+
+	operation.Responses.StatusCodeResponses[code] = *response
+}
+
+// createParameter returns swagger spec.Parameter for given  paramType, description, paramName, schemaType, required.
+func createParameter(paramType, description, paramName, objectType, schemaType string, required bool, enums []interface{}, collectionFormat string) spec.Parameter {
+	// //five possible parameter types. 	query, path, body, header, form
+	result := spec.Parameter{
+		ParamProps: spec.ParamProps{
+			Name:        paramName,
+			Description: description,
+			Required:    required,
+			In:          paramType,
+		},
+	}
+
+	if paramType == "body" {
+		return result
+	}
+
+	switch objectType {
+	case ARRAY:
+		result.Type = objectType
+		result.CollectionFormat = collectionFormat
+		result.Items = &spec.Items{
+			CommonValidations: spec.CommonValidations{
+				Enum: enums,
+			},
+			SimpleSchema: spec.SimpleSchema{
+				Type: schemaType,
+			},
+		}
+	case PRIMITIVE, OBJECT:
+		result.Type = schemaType
+		result.Enum = enums
+	}
+	return result
+}
+
+func getCodeExampleForSummary(summaryName string, dirPath string) ([]byte, error) {
+	dirEntries, err := os.ReadDir(dirPath)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, entry := range dirEntries {
+		if entry.IsDir() {
+			continue
+		}
+
+		fileName := entry.Name()
+
+		if !strings.Contains(fileName, ".json") {
+			continue
+		}
+
+		if strings.Contains(fileName, summaryName) {
+			fullPath := filepath.Join(dirPath, fileName)
+
+			commentInfo, err := os.ReadFile(fullPath)
+			if err != nil {
+				return nil, fmt.Errorf("Failed to read code example file %s error: %s ", fullPath, err)
+			}
+
+			return commentInfo, nil
+		}
+	}
+
+	return nil, fmt.Errorf("unable to find code example file for tag %s in the given directory", summaryName)
+}
