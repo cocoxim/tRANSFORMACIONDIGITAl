@@ -90,4 +90,27 @@ func TestGetAllGoFileInfoFromDepsByList(t *testing.T) {
 			except: errors.New("file not exist"),
 		},
 		{
-			name: "c
+			name: "cgofiles error",
+			buildPackage: &build.Package{
+				Dir:      "testdata/golist_not_exist",
+				CgoFiles: []string{"main.go"},
+			},
+			except: errors.New("file not exist"),
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if c.ignoreInternal {
+				p.ParseInternal = false
+			}
+			c.buildPackage.Dir = filepath.Join(pwd, c.buildPackage.Dir)
+			err := p.getAllGoFileInfoFromDepsByList(c.buildPackage)
+			if c.except != nil {
+				assert.NotNil(t, err)
+			} else {
+				assert.Nil(t, err)
+			}
+		})
+	}
+}
