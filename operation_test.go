@@ -83,4 +83,23 @@ func TestParseProduceComment(t *testing.T) {
 		"application/health+json"
     ]
 }`
-	comment := `/
+	comment := `/@Produce json,xml,plain,html,mpfd,x-www-form-urlencoded,json-api,json-stream,octet-stream,png,jpeg,gif,application/health+json`
+	operation := new(Operation)
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err, "ParseComment should not fail")
+	b, _ := json.MarshalIndent(operation, "", "    ")
+	assert.JSONEq(t, expected, string(b))
+}
+
+func TestParseProduceCommentErr(t *testing.T) {
+	t.Parallel()
+
+	operation := new(Operation)
+	err := operation.ParseComment("/@Produce foo", nil)
+	assert.Error(t, err)
+}
+
+func TestParseRouterComment(t *testing.T) {
+	t.Parallel()
+
+	comment := `/@Router /customer/
