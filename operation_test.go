@@ -102,4 +102,21 @@ func TestParseProduceCommentErr(t *testing.T) {
 func TestParseRouterComment(t *testing.T) {
 	t.Parallel()
 
-	comment := `/@Router /customer/
+	comment := `/@Router /customer/get-wishlist/{wishlist_id} [get]`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+	assert.Len(t, operation.RouterProperties, 1)
+	assert.Equal(t, "/customer/get-wishlist/{wishlist_id}", operation.RouterProperties[0].Path)
+	assert.Equal(t, "GET", operation.RouterProperties[0].HTTPMethod)
+
+	comment = `/@Router /customer/get-wishlist/{wishlist_id} [unknown]`
+	operation = NewOperation(nil)
+	err = operation.ParseComment(comment, nil)
+	assert.Error(t, err)
+}
+
+func TestParseRouterMultipleComments(t *testing.T) {
+	t.Parallel()
+
+	comment := `/@Router /customer/get-wishlist/{wi
