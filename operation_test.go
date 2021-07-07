@@ -32,4 +32,23 @@ func TestParseTagsComment(t *testing.T) {
 func TestParseAcceptComment(t *testing.T) {
 	t.Parallel()
 
-	comment := `/@Accept json,xml,plain,html,mpfd,x-www-form-urlencoded,js
+	comment := `/@Accept json,xml,plain,html,mpfd,x-www-form-urlencoded,json-api,json-stream,octet-stream,png,jpeg,gif,application/xhtml+xml,application/health+json`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+	assert.Equal(t,
+		operation.Consumes,
+		[]string{"application/json",
+			"text/xml",
+			"text/plain",
+			"text/html",
+			"multipart/form-data",
+			"application/x-www-form-urlencoded",
+			"application/vnd.api+json",
+			"application/x-json-stream",
+			"application/octet-stream",
+			"image/png",
+			"image/jpeg",
+			"image/gif",
+			"application/xhtml+xml",
+			"application/health+json"}
