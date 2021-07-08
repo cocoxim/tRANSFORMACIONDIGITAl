@@ -153,4 +153,19 @@ func TestParseRouterCommentWithPlusSign(t *testing.T) {
 
 	comment := `/@Router /customer/get-wishlist/{proxy+} [post]`
 	operation := NewOperation(nil)
-	err := operation.ParseComment(comment
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+	assert.Len(t, operation.RouterProperties, 1)
+	assert.Equal(t, "/customer/get-wishlist/{proxy+}", operation.RouterProperties[0].Path)
+	assert.Equal(t, "POST", operation.RouterProperties[0].HTTPMethod)
+}
+
+func TestParseRouterCommentWithDollarSign(t *testing.T) {
+	t.Parallel()
+
+	comment := `/@Router /customer/get-wishlist/{wishlist_id}$move [post]`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+	assert.Len(t, operation.RouterProperties, 1)
+	assert.Equal(t, "/customer/get-wishlist/{wishlist_id}$move", operation.RouterProperties[0].Path
