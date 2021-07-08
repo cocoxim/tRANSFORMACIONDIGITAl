@@ -133,4 +133,24 @@ func TestParseRouterMultipleComments(t *testing.T) {
 	assert.Equal(t, "/customer/get-wishlist/{wishlist_id}", operation.RouterProperties[0].Path)
 	assert.Equal(t, "GET", operation.RouterProperties[0].HTTPMethod)
 	assert.Equal(t, "/customer/get-the-wishlist/{wishlist_id}", operation.RouterProperties[1].Path)
-	assert.Equal(t, "POST", operation.Rou
+	assert.Equal(t, "POST", operation.RouterProperties[1].HTTPMethod)
+}
+
+func TestParseRouterOnlySlash(t *testing.T) {
+	t.Parallel()
+
+	comment := `// @Router / [get]`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+	assert.Len(t, operation.RouterProperties, 1)
+	assert.Equal(t, "/", operation.RouterProperties[0].Path)
+	assert.Equal(t, "GET", operation.RouterProperties[0].HTTPMethod)
+}
+
+func TestParseRouterCommentWithPlusSign(t *testing.T) {
+	t.Parallel()
+
+	comment := `/@Router /customer/get-wishlist/{proxy+} [post]`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment
