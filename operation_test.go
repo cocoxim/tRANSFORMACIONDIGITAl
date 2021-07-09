@@ -188,4 +188,24 @@ func TestParseRouterCommentWithColonSign(t *testing.T) {
 	operation := NewOperation(nil)
 	err := operation.ParseComment(comment, nil)
 	assert.NoError(t, err)
-	assert.Len(t, operation.RouterPro
+	assert.Len(t, operation.RouterProperties, 1)
+	assert.Equal(t, "/customer/get-wishlist/{wishlist_id}:move", operation.RouterProperties[0].Path)
+	assert.Equal(t, "POST", operation.RouterProperties[0].HTTPMethod)
+}
+
+func TestParseRouterCommentNoColonSignAtPathStartErr(t *testing.T) {
+	t.Parallel()
+
+	comment := `/@Router :customer/get-wishlist/{wishlist_id}:move [post]`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+	assert.Error(t, err)
+}
+
+func TestParseRouterCommentMethodSeparationErr(t *testing.T) {
+	t.Parallel()
+
+	comment := `/@Router /api/{id}|,*[get`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+	assert.Error(t
