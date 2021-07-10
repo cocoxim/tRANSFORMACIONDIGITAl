@@ -277,4 +277,26 @@ func TestParseResponseFailureCommentWithEmptyResponse(t *testing.T) {
 	expected := `{
     "responses": {
         "500": {
-            "description": "Int
+            "description": "Internal Server Error"
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseResponseCommentWithObjectType(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Success 200 {object} model.OrderRow "Error message, if code != 200`
+	operation := NewOperation(nil)
+	operation.parser.addTestType("model.OrderRow")
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	response := operation.Responses.StatusCodeResponses[200]
+	assert.Equal(t, `Error message, if code != 200`, response.Description)
+
+	b, _ := json.MarshalIndent(operation, "", "    ")
+
+	expected 
