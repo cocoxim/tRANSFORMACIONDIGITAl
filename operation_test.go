@@ -299,4 +299,28 @@ func TestParseResponseCommentWithObjectType(t *testing.T) {
 
 	b, _ := json.MarshalIndent(operation, "", "    ")
 
-	expected 
+	expected := `{
+    "responses": {
+        "200": {
+            "description": "Error message, if code != 200",
+            "schema": {
+                "$ref": "#/definitions/model.OrderRow"
+            }
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseResponseCommentWithNestedPrimitiveType(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Success 200 {object} model.CommonHeader{data=string,data2=int} "Error message, if code != 200`
+	operation := NewOperation(nil)
+
+	operation.parser.addTestType("model.CommonHeader")
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	response := operation.Responses.StatusCodeRe
