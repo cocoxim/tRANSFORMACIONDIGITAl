@@ -251,4 +251,30 @@ func TestParseResponseSuccessCommentWithEmptyResponse(t *testing.T) {
 	assert.NoError(t, err)
 
 	response := operation.Responses.StatusCodeResponses[200]
-	asse
+	assert.Equal(t, `An empty response`, response.Description)
+
+	b, _ := json.MarshalIndent(operation, "", "    ")
+	expected := `{
+    "responses": {
+        "200": {
+            "description": "An empty response"
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseResponseFailureCommentWithEmptyResponse(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Failure 500 {object} nil`
+	operation := NewOperation(nil)
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(operation, "", "    ")
+	expected := `{
+    "responses": {
+        "500": {
+            "description": "Int
