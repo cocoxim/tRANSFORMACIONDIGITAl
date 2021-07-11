@@ -342,4 +342,26 @@ func TestParseResponseCommentWithNestedPrimitiveType(t *testing.T) {
                         "properties": {
                             "data": {
                                 "type": "string"
-                     
+                            },
+                            "data2": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseResponseCommentWithNestedPrimitiveArrayType(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Success 200 {object} model.CommonHeader{data=[]string,data2=[]int} "Error message, if code != 200`
+	operation := NewOperation(nil)
+
+	operation.parser.addTestType("model.CommonHeader")
+
+	err := operation.Pars
