@@ -384,4 +384,26 @@ func TestParseResponseCommentWithNestedPrimitiveArrayType(t *testing.T) {
                     {
                         "type": "object",
                         "properties": {
-                            "data"
+                            "data": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "data2": {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseRespons
