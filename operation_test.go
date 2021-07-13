@@ -406,4 +406,22 @@ func TestParseResponseCommentWithNestedPrimitiveArrayType(t *testing.T) {
 	assert.Equal(t, expected, string(b))
 }
 
-func TestParseRespons
+func TestParseResponseCommentWithNestedObjectType(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Success 200 {object} model.CommonHeader{data=model.Payload,data2=model.Payload2} "Error message, if code != 200`
+	operation := NewOperation(nil)
+	operation.parser.addTestType("model.CommonHeader")
+	operation.parser.addTestType("model.Payload")
+	operation.parser.addTestType("model.Payload2")
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	response := operation.Responses.StatusCodeResponses[200]
+	assert.Equal(t, `Error message, if code != 200`, response.Description)
+
+	b, _ := json.MarshalIndent(operation, "", "    ")
+
+	expected := `{
+    "responses": {
