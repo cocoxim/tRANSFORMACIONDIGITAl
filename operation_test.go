@@ -441,4 +441,27 @@ func TestParseResponseCommentWithNestedObjectType(t *testing.T) {
                             "data2": {
                                 "$ref": "#/definitions/model.Payload2"
                             }
-             
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseResponseCommentWithNestedArrayObjectType(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Success 200 {object} model.CommonHeader{data=[]model.Payload,data2=[]model.Payload2} "Error message, if code != 200`
+	operation := NewOperation(nil)
+
+	operation.parser.addTestType("model.CommonHeader")
+	operation.parser.addTestType("model.Payload")
+	operation.parser.addTestType("model.Payload2")
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	response := operation.Responses.S
