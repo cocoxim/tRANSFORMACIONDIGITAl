@@ -483,4 +483,25 @@ func TestParseResponseCommentWithNestedArrayObjectType(t *testing.T) {
                         "properties": {
                             "data": {
                                 "type": "array",
-              
+                                "items": {
+                                    "$ref": "#/definitions/model.Payload"
+                                }
+                            },
+                            "data2": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/model.Payload2"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseResponseCommentWithNestedFields(t *testing.T) {
+	t.Parallel()
