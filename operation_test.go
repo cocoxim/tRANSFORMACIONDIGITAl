@@ -523,4 +523,20 @@ func TestParseResponseCommentWithNestedFields(t *testing.T) {
 	expected := `{
     "responses": {
         "200": {
-            "description": "Error 
+            "description": "Error message, if code != 200",
+            "schema": {
+                "allOf": [
+                    {
+                        "$ref": "#/definitions/model.CommonHeader"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "data1": {
+                                "type": "integer"
+                            },
+                            "data2": {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                }
