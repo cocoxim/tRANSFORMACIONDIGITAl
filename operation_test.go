@@ -505,3 +505,22 @@ func TestParseResponseCommentWithNestedArrayObjectType(t *testing.T) {
 
 func TestParseResponseCommentWithNestedFields(t *testing.T) {
 	t.Parallel()
+
+	comment := `@Success 200 {object} model.CommonHeader{data1=int,data2=[]int,data3=model.Payload,data4=[]model.Payload} "Error message, if code != 200`
+	operation := NewOperation(nil)
+
+	operation.parser.addTestType("model.CommonHeader")
+	operation.parser.addTestType("model.Payload")
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	response := operation.Responses.StatusCodeResponses[200]
+	assert.Equal(t, `Error message, if code != 200`, response.Description)
+
+	b, _ := json.MarshalIndent(operation, "", "    ")
+
+	expected := `{
+    "responses": {
+        "200": {
+            "description": "Error 
