@@ -560,4 +560,20 @@ func TestParseResponseCommentWithNestedFields(t *testing.T) {
 	assert.Equal(t, expected, string(b))
 }
 
-func TestParseResponseCommentWithDeepNestedFields(t *t
+func TestParseResponseCommentWithDeepNestedFields(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Success 200 {object} model.CommonHeader{data1=int,data2=[]int,data3=model.Payload{data1=int,data2=model.DeepPayload},data4=[]model.Payload{data1=[]int,data2=[]model.DeepPayload}} "Error message, if code != 200`
+	operation := NewOperation(nil)
+
+	operation.parser.addTestType("model.CommonHeader")
+	operation.parser.addTestType("model.Payload")
+	operation.parser.addTestType("model.DeepPayload")
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	response := operation.Responses.StatusCodeResponses[200]
+	assert.Equal(t, `Error message, if code != 200`, response.Description)
+
+	b, 
