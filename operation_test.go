@@ -540,3 +540,24 @@ func TestParseResponseCommentWithNestedFields(t *testing.T) {
                                 "items": {
                                     "type": "integer"
                                 }
+                            },
+                            "data3": {
+                                "$ref": "#/definitions/model.Payload"
+                            },
+                            "data4": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/model.Payload"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseResponseCommentWithDeepNestedFields(t *t
