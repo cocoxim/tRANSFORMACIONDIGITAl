@@ -607,4 +607,18 @@ func TestParseResponseCommentWithDeepNestedFields(t *testing.T) {
                                         "type": "object",
                                         "properties": {
                                             "data1": {
-                                      
+                                                "type": "integer"
+                                            },
+                                            "data2": {
+                                                "$ref": "#/definitions/model.DeepPayload"
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            "data4": {
+                                "type": "array",
+                                "items": {
+                                    "allOf": [
+                                        {
+         
