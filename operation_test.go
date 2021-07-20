@@ -684,4 +684,16 @@ func TestParseResponseCommentWithNestedArrayMapFields(t *testing.T) {
                             },
                             {
                                 "type": "object",
-      
+                                "properties": {
+                                    "data1": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "$ref": "#/definitions/model.Payload"
+                                            }
+                                        }
+                                    },
+                                    "data2": {
+                                        "type": "object",
+             
