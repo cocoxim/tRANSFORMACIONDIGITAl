@@ -666,4 +666,22 @@ func TestParseResponseCommentWithNestedArrayMapFields(t *testing.T) {
 	assert.NoError(t, err)
 
 	response := operation.Responses.StatusCodeResponses[200]
-	assert.Equal(t, `Error message, 
+	assert.Equal(t, `Error message, if code != 200`, response.Description)
+
+	b, _ := json.MarshalIndent(operation, "", "    ")
+	expected := `{
+    "responses": {
+        "200": {
+            "description": "Error message, if code != 200",
+            "schema": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "allOf": [
+                            {
+                                "$ref": "#/definitions/model.CommonHeader"
+                            },
+                            {
+                                "type": "object",
+      
