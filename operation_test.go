@@ -696,4 +696,23 @@ func TestParseResponseCommentWithNestedArrayMapFields(t *testing.T) {
                                     },
                                     "data2": {
                                         "type": "object",
-             
+                                        "additionalProperties": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseResponseCommentWithObjectTypeInSameF
