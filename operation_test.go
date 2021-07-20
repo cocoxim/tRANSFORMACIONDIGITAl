@@ -715,4 +715,26 @@ func TestParseResponseCommentWithNestedArrayMapFields(t *testing.T) {
 	assert.Equal(t, expected, string(b))
 }
 
-func TestParseResponseCommentWithObjectTypeInSameF
+func TestParseResponseCommentWithObjectTypeInSameFile(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Success 200 {object} testOwner "Error message, if code != 200"`
+	operation := NewOperation(nil)
+
+	operation.parser.addTestType("swag.testOwner")
+
+	fset := token.NewFileSet()
+	astFile, err := goparser.ParseFile(fset, "operation_test.go", `package swag
+	type testOwner struct {
+
+	}
+	`, goparser.ParseComments)
+	assert.NoError(t, err)
+
+	err = operation.ParseComment(comment, astFile)
+	assert.NoError(t, err)
+
+	response := operation.Responses.StatusCodeResponses[200]
+	assert.Equal(t, `Error message, if code != 200`, response.Description)
+
+	b, _ := json.MarshalIndent(operation, "",
