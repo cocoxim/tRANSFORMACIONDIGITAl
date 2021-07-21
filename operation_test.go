@@ -764,4 +764,24 @@ func TestParseResponseCommentWithObjectTypeErr(t *testing.T) {
 
 	operation.parser.addTestType("model.notexist")
 
-	err := operation
+	err := operation.ParseComment(comment, nil)
+	assert.Error(t, err)
+}
+
+func TestParseResponseCommentWithArrayType(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Success 200 {array} model.OrderRow "Error message, if code != 200`
+	operation := NewOperation(nil)
+	operation.parser.addTestType("model.OrderRow")
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+	response := operation.Responses.StatusCodeResponses[200]
+	assert.Equal(t, `Error message, if code != 200`, response.Description)
+	assert.Equal(t, spec.StringOrArray{"array"}, response.Schema.Type)
+
+	b, _ := json.MarshalIndent(operation, "", "    ")
+
+	expected := `{
+    "responses": {
+        "200": {
