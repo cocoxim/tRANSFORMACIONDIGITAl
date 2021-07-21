@@ -737,4 +737,31 @@ func TestParseResponseCommentWithObjectTypeInSameFile(t *testing.T) {
 	response := operation.Responses.StatusCodeResponses[200]
 	assert.Equal(t, `Error message, if code != 200`, response.Description)
 
-	b, _ := json.MarshalIndent(operation, "",
+	b, _ := json.MarshalIndent(operation, "", "    ")
+
+	expected := `{
+    "responses": {
+        "200": {
+            "description": "Error message, if code != 200",
+            "schema": {
+                "$ref": "#/definitions/swag.testOwner"
+            }
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseResponseCommentWithObjectTypeAnonymousField(t *testing.T) {
+	//TODO: test Anonymous
+}
+
+func TestParseResponseCommentWithObjectTypeErr(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Success 200 {object} model.OrderRow "Error message, if code != 200"`
+	operation := NewOperation(nil)
+
+	operation.parser.addTestType("model.notexist")
+
+	err := operation
