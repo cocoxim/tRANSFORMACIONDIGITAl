@@ -785,3 +785,27 @@ func TestParseResponseCommentWithArrayType(t *testing.T) {
 	expected := `{
     "responses": {
         "200": {
+            "description": "Error message, if code != 200",
+            "schema": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/definitions/model.OrderRow"
+                }
+            }
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseResponseCommentWithBasicType(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Success 200 {string} string "it's ok'"`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err, "ParseComment should not fail")
+	b, _ := json.MarshalIndent(operation, "", "    ")
+
+	expected := `{
+    "respo
