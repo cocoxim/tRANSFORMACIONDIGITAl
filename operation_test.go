@@ -834,4 +834,32 @@ func TestParseResponseCommentWithBasicTypeAndCodes(t *testing.T) {
         "200": {
             "description": "it's ok",
             "schema": {
-     
+                "type": "string"
+            }
+        },
+        "201": {
+            "description": "it's ok",
+            "schema": {
+                "type": "string"
+            }
+        },
+        "default": {
+            "description": "it's ok",
+            "schema": {
+                "type": "string"
+            }
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseEmptyResponseComment(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Success 200 "it is ok"`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err, "ParseComment should not fail")
+
+	b, _ := json.MarshalIndent(o
