@@ -892,4 +892,28 @@ func TestParseEmptyResponseCommentWithCodes(t *testing.T) {
         "201": {
             "description": "it is ok"
         },
-        "default
+        "default": {
+            "description": "it is ok"
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseResponseCommentWithHeader(t *testing.T) {
+	t.Parallel()
+
+	operation := NewOperation(nil)
+	err := operation.ParseComment(`@Success 200 "it's ok"`, nil)
+	assert.NoError(t, err, "ParseComment should not fail")
+
+	err = operation.ParseComment(`@Header 200 {string} Token "qwerty"`, nil)
+	assert.NoError(t, err, "ParseComment should not fail")
+
+	b, err := json.MarshalIndent(operation, "", "    ")
+	assert.NoError(t, err)
+
+	expected := `{
+    "responses": {
+        "200": {
+            "de
