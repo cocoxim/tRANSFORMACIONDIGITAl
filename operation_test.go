@@ -916,4 +916,26 @@ func TestParseResponseCommentWithHeader(t *testing.T) {
 	expected := `{
     "responses": {
         "200": {
-            "de
+            "description": "it's ok",
+            "headers": {
+                "Token": {
+                    "type": "string",
+                    "description": "qwerty"
+                }
+            }
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+
+	err = operation.ParseComment(`@Header 200 "Mallformed"`, nil)
+	assert.Error(t, err, "ParseComment should not fail")
+
+	err = operation.ParseComment(`@Header 200,asdsd {string} Token "qwerty"`, nil)
+	assert.Error(t, err, "ParseComment should not fail")
+}
+
+func TestParseResponseCommentWithHeaderForCodes(t *testing.T) {
+	t.Parallel()
+
+	operation := NewOperation(
