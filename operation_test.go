@@ -979,4 +979,30 @@ func TestParseResponseCommentWithHeaderForCodes(t *testing.T) {
                 },
                 "Token2": {
                     "type": "string",
-                    "description": "qwe
+                    "description": "qwerty"
+                }
+            }
+        },
+        "default": {
+            "description": "it's ok",
+            "headers": {
+                "Token": {
+                    "type": "string",
+                    "description": "qwerty"
+                },
+                "Token2": {
+                    "type": "string",
+                    "description": "qwerty"
+                }
+            }
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+
+	comment = `@Header 200 "Mallformed"`
+	err = operation.ParseComment(comment, nil)
+	assert.Error(t, err, "ParseComment should not fail")
+}
+
+func TestParseResponseCommentWithHeade
