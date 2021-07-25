@@ -959,4 +959,24 @@ func TestParseResponseCommentWithHeaderForCodes(t *testing.T) {
     "responses": {
         "200": {
             "description": "it's ok",
-            "headers": 
+            "headers": {
+                "Token": {
+                    "type": "string",
+                    "description": "qwerty"
+                },
+                "Token2": {
+                    "type": "string",
+                    "description": "qwerty"
+                }
+            }
+        },
+        "201": {
+            "description": "it's ok",
+            "headers": {
+                "Token": {
+                    "type": "string",
+                    "description": "qwerty"
+                },
+                "Token2": {
+                    "type": "string",
+                    "description": "qwe
