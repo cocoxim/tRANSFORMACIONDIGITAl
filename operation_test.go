@@ -1027,4 +1027,31 @@ func TestParseResponseCommentWithHeaderOnlyAll(t *testing.T) {
             "description": "it's ok",
             "headers": {
                 "Token": {
-               
+                    "type": "string",
+                    "description": "qwerty"
+                }
+            }
+        },
+        "201": {
+            "description": "it's ok",
+            "headers": {
+                "Token": {
+                    "type": "string",
+                    "description": "qwerty"
+                }
+            }
+        },
+        "default": {
+            "description": "it's ok",
+            "headers": {
+                "Token": {
+                    "type": "string",
+                    "description": "qwerty"
+                }
+            }
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+
+	co
