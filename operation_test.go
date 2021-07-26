@@ -1005,4 +1005,26 @@ func TestParseResponseCommentWithHeaderForCodes(t *testing.T) {
 	assert.Error(t, err, "ParseComment should not fail")
 }
 
-func TestParseResponseCommentWithHeade
+func TestParseResponseCommentWithHeaderOnlyAll(t *testing.T) {
+	t.Parallel()
+
+	operation := NewOperation(nil)
+
+	comment := `@Success 200,201,default "it's ok"`
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err, "ParseComment should not fail")
+
+	comment = `@Header all {string} Token "qwerty"`
+	err = operation.ParseComment(comment, nil)
+	assert.NoError(t, err, "ParseComment should not fail")
+
+	b, err := json.MarshalIndent(operation, "", "    ")
+	assert.NoError(t, err)
+
+	expected := `{
+    "responses": {
+        "200": {
+            "description": "it's ok",
+            "headers": {
+                "Token": {
+               
