@@ -1082,4 +1082,32 @@ func TestParseEmptyResponseOnlyCodes(t *testing.T) {
 	t.Parallel()
 
 	comment := `@Success 200,201,default`
-	ope
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err, "ParseComment should not fail")
+
+	b, _ := json.MarshalIndent(operation, "", "    ")
+
+	expected := `{
+    "responses": {
+        "200": {
+            "description": "OK"
+        },
+        "201": {
+            "description": "Created"
+        },
+        "default": {
+            "description": ""
+        }
+    }
+}`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseResponseCommentParamMissing(t *testing.T) {
+	t.Parallel()
+
+	operation := NewOperation(nil)
+
+	paramLenErrComment := `@Success notIntCode`
+	paramLenErr
