@@ -1110,4 +1110,16 @@ func TestParseResponseCommentParamMissing(t *testing.T) {
 	operation := NewOperation(nil)
 
 	paramLenErrComment := `@Success notIntCode`
-	paramLenErr
+	paramLenErr := operation.ParseComment(paramLenErrComment, nil)
+	assert.EqualError(t, paramLenErr, `can not parse response comment "notIntCode"`)
+
+	paramLenErrComment = `@Success notIntCode {string} string "it ok"`
+	paramLenErr = operation.ParseComment(paramLenErrComment, nil)
+	assert.EqualError(t, paramLenErr, `can not parse response comment "notIntCode {string} string "it ok""`)
+
+	paramLenErrComment = `@Success notIntCode "it ok"`
+	paramLenErr = operation.ParseComment(paramLenErrComment, nil)
+	assert.EqualError(t, paramLenErr, `can not parse response comment "notIntCode "it ok""`)
+}
+
+func TestOpe
