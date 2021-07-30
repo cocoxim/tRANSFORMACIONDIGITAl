@@ -1122,4 +1122,22 @@ func TestParseResponseCommentParamMissing(t *testing.T) {
 	assert.EqualError(t, paramLenErr, `can not parse response comment "notIntCode "it ok""`)
 }
 
-func TestOpe
+func TestOperation_ParseParamComment(t *testing.T) {
+	t.Parallel()
+
+	t.Run("integer", func(t *testing.T) {
+		t.Parallel()
+		for _, paramType := range []string{"header", "path", "query", "formData"} {
+			t.Run(paramType, func(t *testing.T) {
+				o := NewOperation(nil)
+				err := o.ParseComment(`@Param some_id `+paramType+` int true "Some ID"`, nil)
+
+				assert.NoError(t, err)
+				assert.Equal(t, o.Parameters, []spec.Parameter{{
+					SimpleSchema: spec.SimpleSchema{
+						Type: "integer",
+					},
+					ParamProps: spec.ParamProps{
+						Name:        "some_id",
+						Description: "Some ID",
+						In:  
