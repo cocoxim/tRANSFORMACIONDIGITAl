@@ -1163,4 +1163,29 @@ func TestOperation_ParseParamComment(t *testing.T) {
 					ParamProps: spec.ParamProps{
 						Name:        "some_string",
 						Description: "Some String",
-						In:        
+						In:          paramType,
+						Required:    true,
+					},
+				}})
+			})
+		}
+	})
+
+	t.Run("object", func(t *testing.T) {
+		t.Parallel()
+		for _, paramType := range []string{"header", "path", "query", "formData"} {
+			t.Run(paramType, func(t *testing.T) {
+				assert.Error(t, NewOperation(nil).ParseComment(`@Param some_object `+paramType+` main.Object true "Some Object"`, nil))
+			})
+		}
+	})
+
+}
+
+// Test ParseParamComment Query Params
+func TestParseParamCommentBodyArray(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param names body []string true "Users List"`
+	o := NewOperation(nil)
+	err := 
