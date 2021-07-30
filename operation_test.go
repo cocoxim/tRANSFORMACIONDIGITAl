@@ -1140,4 +1140,27 @@ func TestOperation_ParseParamComment(t *testing.T) {
 					ParamProps: spec.ParamProps{
 						Name:        "some_id",
 						Description: "Some ID",
-						In:  
+						In:          paramType,
+						Required:    true,
+					},
+				}})
+			})
+		}
+	})
+
+	t.Run("string", func(t *testing.T) {
+		t.Parallel()
+		for _, paramType := range []string{"header", "path", "query", "formData"} {
+			t.Run(paramType, func(t *testing.T) {
+				o := NewOperation(nil)
+				err := o.ParseComment(`@Param some_string `+paramType+` string true "Some String"`, nil)
+
+				assert.NoError(t, err)
+				assert.Equal(t, o.Parameters, []spec.Parameter{{
+					SimpleSchema: spec.SimpleSchema{
+						Type: "string",
+					},
+					ParamProps: spec.ParamProps{
+						Name:        "some_string",
+						Description: "Some String",
+						In:        
