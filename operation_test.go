@@ -1188,4 +1188,30 @@ func TestParseParamCommentBodyArray(t *testing.T) {
 
 	comment := `@Param names body []string true "Users List"`
 	o := NewOperation(nil)
-	err := 
+	err := o.ParseComment(comment, nil)
+	assert.NoError(t, err)
+	assert.Equal(t, o.Parameters, []spec.Parameter{{
+		ParamProps: spec.ParamProps{
+			Name:        "names",
+			Description: "Users List",
+			In:          "body",
+			Required:    true,
+			Schema: &spec.Schema{
+				SchemaProps: spec.SchemaProps{
+					Type: []string{"array"},
+					Items: &spec.SchemaOrArray{
+						Schema: &spec.Schema{
+							SchemaProps: spec.SchemaProps{
+								Type: []string{"string"},
+							},
+						},
+					},
+				},
+			},
+		},
+	}})
+}
+
+// Test ParseParamComment Params
+func TestParseParamCommentArray(t *testing.T) {
+	paramTypes := []string{"header
