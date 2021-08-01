@@ -1263,4 +1263,25 @@ func TestParseParamCommentDefaultValue(t *testing.T) {
         "required": true
     }
 ]`
-	ass
+	assert.Equal(t, expected, string(b))
+}
+
+// Test ParseParamComment Query Params
+func TestParseParamCommentQueryArrayFormat(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param names query []string true "Users List" collectionFormat(multi)`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "type": "array",
+        "items": {
+            "type": "string"
+        },
+        "collectionFormat": "multi",
+        "description": "Users List",
+        "n
