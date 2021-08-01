@@ -1238,4 +1238,29 @@ func TestParseParamCommentArray(t *testing.T) {
 ]`
 			assert.Equal(t, expected, string(b))
 
-			err = operation.ParseComment(`@Param names `+paramType+` []model
+			err = operation.ParseComment(`@Param names `+paramType+` []model.User true "Users List"`, nil)
+			assert.Error(t, err)
+		})
+	}
+}
+
+// Test TestParseParamCommentDefaultValue Query Params
+func TestParseParamCommentDefaultValue(t *testing.T) {
+	t.Parallel()
+
+	operation := NewOperation(nil)
+	err := operation.ParseComment(`@Param names query string true "Users List" default(test)`, nil)
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "type": "string",
+        "default": "test",
+        "description": "Users List",
+        "name": "names",
+        "in": "query",
+        "required": true
+    }
+]`
+	ass
