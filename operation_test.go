@@ -1214,4 +1214,28 @@ func TestParseParamCommentBodyArray(t *testing.T) {
 
 // Test ParseParamComment Params
 func TestParseParamCommentArray(t *testing.T) {
-	paramTypes := []string{"header
+	paramTypes := []string{"header", "path", "query"}
+
+	for _, paramType := range paramTypes {
+		t.Run(paramType, func(t *testing.T) {
+			operation := NewOperation(nil)
+			err := operation.ParseComment(`@Param names `+paramType+` []string true "Users List"`, nil)
+
+			assert.NoError(t, err)
+
+			b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+			expected := `[
+    {
+        "type": "array",
+        "items": {
+            "type": "string"
+        },
+        "description": "Users List",
+        "name": "names",
+        "in": "` + paramType + `",
+        "required": true
+    }
+]`
+			assert.Equal(t, expected, string(b))
+
+			err = operation.ParseComment(`@Param names `+paramType+` []model
