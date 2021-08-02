@@ -1284,4 +1284,33 @@ func TestParseParamCommentQueryArrayFormat(t *testing.T) {
         },
         "collectionFormat": "multi",
         "description": "Users List",
-        "n
+        "name": "names",
+        "in": "query",
+        "required": true
+    }
+]`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseParamCommentByID(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param unsafe_id[lte] query int true "Unsafe query param"`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "type": "integer",
+        "description": "Unsafe query param",
+        "name": "unsafe_id[lte]",
+        "in": "query",
+        "required": true
+    }
+]`
+	assert.Equal(t, expected, string(b))
+}
+
+fu
