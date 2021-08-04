@@ -1313,4 +1313,28 @@ func TestParseParamCommentByID(t *testing.T) {
 	assert.Equal(t, expected, string(b))
 }
 
-fu
+func TestParseParamCommentByQueryType(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param some_id query int true "Some ID"`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "type": "integer",
+        "description": "Some ID",
+        "name": "some_id",
+        "in": "query",
+        "required": true
+    }
+]`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseParamCommentByBodyType(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param some_id body model.Order
