@@ -1337,4 +1337,29 @@ func TestParseParamCommentByQueryType(t *testing.T) {
 func TestParseParamCommentByBodyType(t *testing.T) {
 	t.Parallel()
 
-	comment := `@Param some_id body model.Order
+	comment := `@Param some_id body model.OrderRow true "Some ID"`
+	operation := NewOperation(nil)
+
+	operation.parser.addTestType("model.OrderRow")
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "description": "Some ID",
+        "name": "some_id",
+        "in": "body",
+        "required": true,
+        "schema": {
+            "$ref": "#/definitions/model.OrderRow"
+        }
+    }
+]`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseParamCommentByBodyTextPlain(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param tex
