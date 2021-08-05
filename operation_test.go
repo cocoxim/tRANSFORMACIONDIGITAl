@@ -1362,4 +1362,28 @@ func TestParseParamCommentByBodyType(t *testing.T) {
 func TestParseParamCommentByBodyTextPlain(t *testing.T) {
 	t.Parallel()
 
-	comment := `@Param tex
+	comment := `@Param text body string true "Text to process"`
+	operation := NewOperation(nil)
+
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "description": "Text to process",
+        "name": "text",
+        "in": "body",
+        "required": true,
+        "schema": {
+            "type": "string"
+        }
+    }
+]`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseParamCommentByBodyTypeWithDeepNestedFields(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param body body model.CommonHeader{data=string,data2=int} 
