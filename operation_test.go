@@ -1431,4 +1431,30 @@ func TestParseParamCommentByBodyTypeWithDeepNestedFields(t *testing.T) {
 func TestParseParamCommentByBodyTypeArrayOfPrimitiveGo(t *testing.T) {
 	t.Parallel()
 
-	comment := `@Param some_id body []int true "S
+	comment := `@Param some_id body []int true "Some ID"`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "description": "Some ID",
+        "name": "some_id",
+        "in": "body",
+        "required": true,
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "integer"
+            }
+        }
+    }
+]`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseParamCommentByBodyTypeArrayOfPrimitiveGoWithDeepNestedFields(t *testing.T) {
+	t.Parallel()
+
+	comm
