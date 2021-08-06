@@ -1408,4 +1408,27 @@ func TestParseParamCommentByBodyTypeWithDeepNestedFields(t *testing.T) {
         "schema": {
             "allOf": [
                 {
-                  
+                    "$ref": "#/definitions/model.CommonHeader"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "data": {
+                            "type": "string"
+                        },
+                        "data2": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+]`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseParamCommentByBodyTypeArrayOfPrimitiveGo(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param some_id body []int true "S
