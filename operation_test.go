@@ -1475,4 +1475,22 @@ func TestParseParamCommentByBodyTypeArrayOfPrimitiveGoWithDeepNestedFields(t *te
         "name": "body",
         "in": "body",
         "required": true,
-    
+        "schema": {
+            "type": "array",
+            "items": {
+                "allOf": [
+                    {
+                        "$ref": "#/definitions/model.CommonHeader"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "type": "string"
+                            },
+                            "data2": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+            
