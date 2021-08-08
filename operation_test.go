@@ -1493,4 +1493,30 @@ func TestParseParamCommentByBodyTypeArrayOfPrimitiveGoWithDeepNestedFields(t *te
                             }
                         }
                     }
-            
+                ]
+            }
+        }
+    }
+]`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseParamCommentByBodyTypeErr(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param some_id body model.OrderRow true "Some ID"`
+	operation := NewOperation(nil)
+	operation.parser.addTestType("model.notexist")
+	err := operation.ParseComment(comment, nil)
+
+	assert.Error(t, err)
+}
+
+func TestParseParamCommentByFormDataType(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param file formData file true "this is a test file"`
+	operation := NewOperation(nil)
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError
