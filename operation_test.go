@@ -1570,4 +1570,29 @@ func TestParseParamCommentNotMatch(t *testing.T) {
 	t.Parallel()
 
 	comment := `@Param some_id body mock true`
-	operation := NewOperatio
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+
+	assert.Error(t, err)
+}
+
+func TestParseParamCommentByEnums(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param some_id query string true "Some ID" Enums(A, B, C)`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "enum": [
+            "A",
+            "B",
+            "C"
+        ],
+        "type": "string",
+        "description": "Some ID",
+        "name": "some_id",
+        "in": "query"
