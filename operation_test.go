@@ -1621,4 +1621,30 @@ func TestParseParamCommentByEnums(t *testing.T) {
         "required": true
     }
 ]`
-	assert.Equal(
+	assert.Equal(t, expected, string(b))
+
+	comment = `@Param some_id query number true "Some ID" Enums(1.1, 2.2, 3.3)`
+	operation = NewOperation(nil)
+	err = operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ = json.MarshalIndent(operation.Parameters, "", "    ")
+	expected = `[
+    {
+        "enum": [
+            1.1,
+            2.2,
+            3.3
+        ],
+        "type": "number",
+        "description": "Some ID",
+        "name": "some_id",
+        "in": "query",
+        "required": true
+    }
+]`
+	assert.Equal(t, expected, string(b))
+
+	comment = `@Param some_id query bool true "Some ID" Enums(true, false)`
+	operation = NewOperation(nil)
+	err = o
