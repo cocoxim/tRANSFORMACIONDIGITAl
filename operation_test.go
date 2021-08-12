@@ -1672,4 +1672,24 @@ func TestParseParamCommentByEnums(t *testing.T) {
 	assert.Error(t, operation.ParseComment(comment, nil))
 
 	comment = `@Param some_id query number true "Some ID" Enums(A, B, C)`
-	ass
+	assert.Error(t, operation.ParseComment(comment, nil))
+
+	comment = `@Param some_id query boolean true "Some ID" Enums(A, B, C)`
+	assert.Error(t, operation.ParseComment(comment, nil))
+
+	comment = `@Param some_id query Document true "Some ID" Enums(A, B, C)`
+	assert.Error(t, operation.ParseComment(comment, nil))
+}
+
+func TestParseParamCommentByMaxLength(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param some_id query string true "Some ID" MaxLength(10)`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+    
