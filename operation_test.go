@@ -1692,4 +1692,26 @@ func TestParseParamCommentByMaxLength(t *testing.T) {
 	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
 	expected := `[
     {
-    
+        "maxLength": 10,
+        "type": "string",
+        "description": "Some ID",
+        "name": "some_id",
+        "in": "query",
+        "required": true
+    }
+]`
+	assert.Equal(t, expected, string(b))
+
+	comment = `@Param some_id query int true "Some ID" MaxLength(10)`
+	assert.Error(t, operation.ParseComment(comment, nil))
+
+	comment = `@Param some_id query string true "Some ID" MaxLength(Goopher)`
+	assert.Error(t, operation.ParseComment(comment, nil))
+}
+
+func TestParseParamCommentByMinLength(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param some_id query string true "Some ID" MinLength(10)`
+	operation := NewOperation(nil)
+	err := operation.Par
