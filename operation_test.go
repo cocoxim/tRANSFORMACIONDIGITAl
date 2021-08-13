@@ -1758,4 +1758,25 @@ func TestParseParamCommentByMinimum(t *testing.T) {
 ]`
 	assert.Equal(t, expected, string(b))
 
-	comment = `@Param some_id query int true "Some ID" Mininum(10
+	comment = `@Param some_id query int true "Some ID" Mininum(10)`
+	assert.NoError(t, operation.ParseComment(comment, nil))
+
+	comment = `@Param some_id query string true "Some ID" Minimum(10)`
+	assert.Error(t, operation.ParseComment(comment, nil))
+
+	comment = `@Param some_id query integer true "Some ID" Minimum(Goopher)`
+	assert.Error(t, operation.ParseComment(comment, nil))
+}
+
+func TestParseParamCommentByMaximum(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param some_id query int true "Some ID" Maximum(10)`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "maxi
