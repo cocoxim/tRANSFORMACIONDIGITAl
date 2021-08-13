@@ -1714,4 +1714,24 @@ func TestParseParamCommentByMinLength(t *testing.T) {
 
 	comment := `@Param some_id query string true "Some ID" MinLength(10)`
 	operation := NewOperation(nil)
-	err := operation.Par
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "minLength": 10,
+        "type": "string",
+        "description": "Some ID",
+        "name": "some_id",
+        "in": "query",
+        "required": true
+    }
+]`
+	assert.Equal(t, expected, string(b))
+
+	comment = `@Param some_id query int true "Some ID" MinLength(10)`
+	assert.Error(t, operation.ParseComment(comment, nil))
+
+	comment = `@Param some_id query string true "Some ID" MinLength(Goopher)`
+	assert.Error(t, operation.ParseComment(com
