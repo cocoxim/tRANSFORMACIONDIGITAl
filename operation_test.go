@@ -1779,4 +1779,24 @@ func TestParseParamCommentByMaximum(t *testing.T) {
 	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
 	expected := `[
     {
-        "maxi
+        "maximum": 10,
+        "type": "integer",
+        "description": "Some ID",
+        "name": "some_id",
+        "in": "query",
+        "required": true
+    }
+]`
+	assert.Equal(t, expected, string(b))
+
+	comment = `@Param some_id query int true "Some ID" Maxinum(10)`
+	assert.NoError(t, operation.ParseComment(comment, nil))
+
+	comment = `@Param some_id query string true "Some ID" Maximum(10)`
+	assert.Error(t, operation.ParseComment(comment, nil))
+
+	comment = `@Param some_id query integer true "Some ID" Maximum(Goopher)`
+	assert.Error(t, operation.ParseComment(comment, nil))
+}
+
+func TestParsePar
