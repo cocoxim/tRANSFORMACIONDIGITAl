@@ -1799,4 +1799,30 @@ func TestParseParamCommentByMaximum(t *testing.T) {
 	assert.Error(t, operation.ParseComment(comment, nil))
 }
 
-func TestParsePar
+func TestParseParamCommentByDefault(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param some_id query int true "Some ID" Default(10)`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "type": "integer",
+        "default": 10,
+        "description": "Some ID",
+        "name": "some_id",
+        "in": "query",
+        "required": true
+    }
+]`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseParamCommentByExampleInt(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param some_id query int true "Some ID" Example(10)`
+	op
