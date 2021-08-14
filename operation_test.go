@@ -1848,4 +1848,32 @@ func TestParseParamCommentByExampleString(t *testing.T) {
 
 	comment := `@Param some_id query string true "Some ID" Example(True feelings)`
 	operation := NewOperation(nil)
-	err := operation.ParseComm
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "type": "string",
+        "example": "True feelings",
+        "description": "Some ID",
+        "name": "some_id",
+        "in": "query",
+        "required": true
+    }
+]`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseParamCommentByExampleUnsupportedType(t *testing.T) {
+	t.Parallel()
+	var param spec.Parameter
+
+	setExample(&param, "something", "random value")
+	assert.Equal(t, param.Example, nil)
+
+	setExample(&param, STRING, "string value")
+	assert.Equal(t, param.Example, "string value")
+
+	setExample(&param, INTEGER, "10")
+	assert.E
