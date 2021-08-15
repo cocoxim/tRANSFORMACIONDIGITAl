@@ -1876,4 +1876,27 @@ func TestParseParamCommentByExampleUnsupportedType(t *testing.T) {
 	assert.Equal(t, param.Example, "string value")
 
 	setExample(&param, INTEGER, "10")
-	assert.E
+	assert.Equal(t, param.Example, 10)
+
+	setExample(&param, NUMBER, "10")
+	assert.Equal(t, param.Example, float64(10))
+}
+
+func TestParseParamCommentBySchemaExampleString(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param some_id body string true "Some ID" SchemaExample(True feelings)`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "description": "Some ID",
+        "name": "some_id",
+        "in": "body",
+        "required": true,
+        "schema": {
+            "type": "string",
+            "e
