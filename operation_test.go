@@ -1899,4 +1899,28 @@ func TestParseParamCommentBySchemaExampleString(t *testing.T) {
         "required": true,
         "schema": {
             "type": "string",
-            "e
+            "example": "True feelings"
+        }
+    }
+]`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseParamCommentBySchemaExampleUnsupportedType(t *testing.T) {
+	t.Parallel()
+	var param spec.Parameter
+
+	setSchemaExample(&param, "something", "random value")
+	assert.Nil(t, param.Schema)
+
+	setSchemaExample(&param, STRING, "string value")
+	assert.Nil(t, param.Schema)
+
+	param.Schema = &spec.Schema{}
+	setSchemaExample(&param, STRING, "string value")
+	assert.Equal(t, "string value", param.Schema.Example)
+
+	setSchemaExample(&param, INTEGER, "10")
+	assert.Equal(t, 10, param.Schema.Example)
+
+	setSchemaExample(&param, NUMBE
