@@ -1944,4 +1944,32 @@ func TestParseParamArrayWithEnums(t *testing.T) {
         "type": "array",
         "items": {
             "enum": [
-            
+                "also",
+                "valid"
+            ],
+            "type": "string"
+        },
+        "collectionFormat": "csv",
+        "description": "An enum collection",
+        "name": "field",
+        "in": "query",
+        "required": true
+    }
+]`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseAndExtractionParamAttribute(t *testing.T) {
+	t.Parallel()
+
+	op := NewOperation(nil)
+	numberParam := spec.Parameter{}
+	err := op.parseParamAttribute(
+		" default(1) maximum(100) minimum(0) format(csv)",
+		"",
+		NUMBER,
+		&numberParam,
+	)
+	assert.NoError(t, err)
+	assert.Equal(t, float64(0), *numberParam.Minimum)
+	assert.Equal(t, float64(100), *nu
