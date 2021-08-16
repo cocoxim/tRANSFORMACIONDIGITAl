@@ -1923,4 +1923,25 @@ func TestParseParamCommentBySchemaExampleUnsupportedType(t *testing.T) {
 	setSchemaExample(&param, INTEGER, "10")
 	assert.Equal(t, 10, param.Schema.Example)
 
-	setSchemaExample(&param, NUMBE
+	setSchemaExample(&param, NUMBER, "10")
+	assert.Equal(t, float64(10), param.Schema.Example)
+
+	setSchemaExample(&param, STRING, "string \\r\\nvalue")
+	assert.Equal(t, "string \r\nvalue", param.Schema.Example)
+}
+
+func TestParseParamArrayWithEnums(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Param field query []string true "An enum collection" collectionFormat(csv) enums(also,valid)`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(operation.Parameters, "", "    ")
+	expected := `[
+    {
+        "type": "array",
+        "items": {
+            "enum": [
+            
