@@ -1992,4 +1992,23 @@ func TestParseAndExtractionParamAttribute(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, int64(0), *stringParam.MinLength)
 	assert.Equal(t, int64(100), *stringParam.MaxLength)
-	assert.Equal(t, "csv", stringParam.SimpleSche
+	assert.Equal(t, "csv", stringParam.SimpleSchema.Format)
+	err = op.parseParamAttribute(" minimum(0)", "", STRING, nil)
+	assert.Error(t, err)
+
+	err = op.parseParamAttribute(" maximum(0)", "", STRING, nil)
+	assert.Error(t, err)
+
+	arrayParram := spec.Parameter{}
+	err = op.parseParamAttribute(" collectionFormat(tsv)", ARRAY, STRING, &arrayParram)
+	assert.Equal(t, "tsv", arrayParram.CollectionFormat)
+	assert.NoError(t, err)
+
+	err = op.parseParamAttribute(" collectionFormat(tsv)", STRING, STRING, nil)
+	assert.Error(t, err)
+
+	err = op.parseParamAttribute(" default(0)", "", ARRAY, nil)
+	assert.NoError(t, err)
+}
+
+func TestParsePara
