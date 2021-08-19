@@ -2063,4 +2063,34 @@ func TestFindTypeDefExternalPkg(t *testing.T) {
 func TestFindTypeDefInvalidPkg(t *testing.T) {
 	t.Parallel()
 
-	s
+	s, err := findTypeDef("does-not-exist", "foo")
+	assert.Error(t, err)
+	assert.Nil(t, s)
+}
+
+func TestParseSecurityComment(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Security OAuth2Implicit[read, write]`
+	operation := NewOperation(nil)
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	assert.Equal(t, operation.Security, []map[string][]string{
+		{
+			"OAuth2Implicit": {"read", "write"},
+		},
+	})
+}
+
+func TestParseSecurityCommentSimple(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Security ApiKeyAuth`
+	operation := NewOperation(nil)
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	assert.Equal(t, operation.Secur
