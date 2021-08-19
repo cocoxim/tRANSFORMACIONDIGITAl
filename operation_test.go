@@ -2033,4 +2033,34 @@ func TestParseParamCommentByExtensions(t *testing.T) {
 	assert.Equal(t, expected, string(b))
 }
 
-func TestParseIdComment(
+func TestParseIdComment(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Id myOperationId`
+	operation := NewOperation(nil)
+	err := operation.ParseComment(comment, nil)
+
+	assert.NoError(t, err)
+	assert.Equal(t, "myOperationId", operation.ID)
+}
+
+func TestFindTypeDefCoreLib(t *testing.T) {
+	t.Parallel()
+
+	s, err := findTypeDef("net/http", "Request")
+	assert.NoError(t, err)
+	assert.NotNil(t, s)
+}
+
+func TestFindTypeDefExternalPkg(t *testing.T) {
+	t.Parallel()
+
+	s, err := findTypeDef("github.com/KyleBanks/depth", "Tree")
+	assert.NoError(t, err)
+	assert.NotNil(t, s)
+}
+
+func TestFindTypeDefInvalidPkg(t *testing.T) {
+	t.Parallel()
+
+	s
