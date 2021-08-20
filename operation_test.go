@@ -2124,4 +2124,31 @@ func TestParseMultiDescription(t *testing.T) {
 	operation := NewOperation(nil)
 
 	err := operation.ParseComment(comment, nil)
-	assert.No
+	assert.NoError(t, err)
+
+	comment = `@Tags multi`
+	err = operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	comment = `@Description line two x`
+	err = operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(operation, "", "    ")
+
+	expected := `"description": "line one\nline two x"`
+	assert.Contains(t, string(b), expected)
+}
+
+func TestParseDescriptionMarkdown(t *testing.T) {
+	t.Parallel()
+
+	operation := NewOperation(nil)
+	operation.parser.markdownFileDir = "example/markdown"
+
+	comment := `@description.markdown admin.md`
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	comme
