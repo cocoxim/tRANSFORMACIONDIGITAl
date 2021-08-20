@@ -2093,4 +2093,35 @@ func TestParseSecurityCommentSimple(t *testing.T) {
 	err := operation.ParseComment(comment, nil)
 	assert.NoError(t, err)
 
-	assert.Equal(t, operation.Secur
+	assert.Equal(t, operation.Security, []map[string][]string{
+		{
+			"ApiKeyAuth": {},
+		},
+	})
+}
+
+func TestParseSecurityCommentOr(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Security OAuth2Implicit[read, write] || Firebase[]`
+	operation := NewOperation(nil)
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	assert.Equal(t, operation.Security, []map[string][]string{
+		{
+			"OAuth2Implicit": {"read", "write"},
+			"Firebase":       {""},
+		},
+	})
+}
+
+func TestParseMultiDescription(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Description line one`
+	operation := NewOperation(nil)
+
+	err := operation.ParseComment(comment, nil)
+	assert.No
