@@ -2151,4 +2151,34 @@ func TestParseDescriptionMarkdown(t *testing.T) {
 	err := operation.ParseComment(comment, nil)
 	assert.NoError(t, err)
 
-	comme
+	comment = `@description.markdown missing.md`
+
+	err = operation.ParseComment(comment, nil)
+	assert.Error(t, err)
+}
+
+func TestParseSummary(t *testing.T) {
+	t.Parallel()
+
+	comment := `@summary line one`
+	operation := NewOperation(nil)
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	comment = `@Summary line one`
+	err = operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+}
+
+func TestParseDeprecationDescription(t *testing.T) {
+	t.Parallel()
+
+	comment := `@Deprecated`
+	operation := NewOperation(nil)
+
+	err := operation.ParseComment(comment, nil)
+	assert.NoError(t, err)
+
+	if !operation.Deprecated {
+		t.
