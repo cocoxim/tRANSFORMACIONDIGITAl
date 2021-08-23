@@ -2202,4 +2202,25 @@ func TestParseExtentions(t *testing.T) {
 		operation := NewOperation(nil)
 
 		err := operation.ParseComment(comment, nil)
-		assert.EqualError(t, err, "annotation @x
+		assert.EqualError(t, err, "annotation @x-amazon-apigateway-integration need a valid json value")
+	}
+
+	// OK
+	{
+		comment := `@x-amazon-apigateway-integration {"uri": "${some_arn}", "passthroughBehavior": "when_no_match", "httpMethod": "POST", "type": "aws_proxy"}`
+		operation := NewOperation(nil)
+
+		err := operation.ParseComment(comment, nil)
+		assert.NoError(t, err)
+		assert.Equal(t, operation.Extensions["x-amazon-apigateway-integration"],
+			map[string]interface{}{
+				"httpMethod":          "POST",
+				"passthroughBehavior": "when_no_match",
+				"type":                "aws_proxy",
+				"uri":                 "${some_arn}",
+			})
+	}
+
+	// Test x-tagGroups
+	{
+		comment := `@x-tagGroups [{"name":"N
