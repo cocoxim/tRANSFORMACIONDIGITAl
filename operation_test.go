@@ -2181,4 +2181,25 @@ func TestParseDeprecationDescription(t *testing.T) {
 	assert.NoError(t, err)
 
 	if !operation.Deprecated {
-		t.
+		t.Error("Failed to parse @deprecated comment")
+	}
+}
+
+func TestParseExtentions(t *testing.T) {
+	t.Parallel()
+	// Fail if there are no args for attributes.
+	{
+		comment := `@x-amazon-apigateway-integration`
+		operation := NewOperation(nil)
+
+		err := operation.ParseComment(comment, nil)
+		assert.EqualError(t, err, "annotation @x-amazon-apigateway-integration need a value")
+	}
+
+	// Fail if args of attributes are broken.
+	{
+		comment := `@x-amazon-apigateway-integration ["broken"}]`
+		operation := NewOperation(nil)
+
+		err := operation.ParseComment(comment, nil)
+		assert.EqualError(t, err, "annotation @x
