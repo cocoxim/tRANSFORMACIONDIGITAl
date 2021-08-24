@@ -2223,4 +2223,26 @@ func TestParseExtentions(t *testing.T) {
 
 	// Test x-tagGroups
 	{
-		comment := `@x-tagGroups [{"name":"N
+		comment := `@x-tagGroups [{"name":"Natural Persons","tags":["Person","PersonRisk","PersonDocuments"]}]`
+		operation := NewOperation(nil)
+
+		err := operation.ParseComment(comment, nil)
+		assert.NoError(t, err)
+		assert.Equal(t, operation.Extensions["x-tagGroups"],
+			[]interface{}{map[string]interface{}{
+				"name": "Natural Persons",
+				"tags": []interface{}{
+					"Person",
+					"PersonRisk",
+					"PersonDocuments",
+				},
+			}})
+	}
+}
+
+func TestFindInSlice(t *testing.T) {
+	t.Parallel()
+
+	assert.True(t, findInSlice([]string{"one", "two", "tree"}, "one"))
+	assert.True(t, findInSlice([]string{"tree", "two", "one"}, "one"))
+	assert.True(t, findInSlice([]s
