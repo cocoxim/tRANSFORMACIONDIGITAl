@@ -2283,4 +2283,21 @@ func TestParseObjectSchema(t *testing.T) {
 
 	schema, err = operation.parseObjectSchema("[]string", nil)
 	assert.NoError(t, err)
-	assert.Equal(t, schema, spec.ArrayProperty(P
+	assert.Equal(t, schema, spec.ArrayProperty(PrimitiveSchema(STRING)))
+
+	schema, err = operation.parseObjectSchema("[]int", nil)
+	assert.NoError(t, err)
+	assert.Equal(t, schema, spec.ArrayProperty(PrimitiveSchema(INTEGER)))
+
+	_, err = operation.parseObjectSchema("[]bleah", nil)
+	assert.Error(t, err)
+
+	schema, err = operation.parseObjectSchema("map[]string", nil)
+	assert.NoError(t, err)
+	assert.Equal(t, schema, spec.MapProperty(PrimitiveSchema(STRING)))
+
+	schema, err = operation.parseObjectSchema("map[]int", nil)
+	assert.NoError(t, err)
+	assert.Equal(t, schema, spec.MapProperty(PrimitiveSchema(INTEGER)))
+
+	schema, err = operation.parseObjectSchema("map[]interface{}", ni
