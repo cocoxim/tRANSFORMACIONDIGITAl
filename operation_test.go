@@ -2245,4 +2245,26 @@ func TestFindInSlice(t *testing.T) {
 
 	assert.True(t, findInSlice([]string{"one", "two", "tree"}, "one"))
 	assert.True(t, findInSlice([]string{"tree", "two", "one"}, "one"))
-	assert.True(t, findInSlice([]s
+	assert.True(t, findInSlice([]string{"two", "one", "tree"}, "one"))
+	assert.False(t, findInSlice([]string{"one", "two", "tree"}, "four"))
+}
+
+func TestParseResponseHeaderComment(t *testing.T) {
+	t.Parallel()
+
+	operation := NewOperation(nil)
+	operation.Responses = &spec.Responses{}
+	err := operation.ParseResponseComment(`default {string} string "other error"`, nil)
+	assert.NoError(t, err)
+	err = operation.ParseResponseHeaderComment(`all {string} Token "qwerty"`, nil)
+	assert.NoError(t, err)
+}
+
+func TestParseObjectSchema(t *testing.T) {
+	t.Parallel()
+
+	operation := NewOperation(nil)
+
+	schema, err := operation.parseObjectSchema("interface{}", nil)
+	assert.NoError(t, err)
+	assert.Equal(t
