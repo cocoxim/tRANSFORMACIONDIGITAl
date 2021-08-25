@@ -2267,4 +2267,20 @@ func TestParseObjectSchema(t *testing.T) {
 
 	schema, err := operation.parseObjectSchema("interface{}", nil)
 	assert.NoError(t, err)
-	assert.Equal(t
+	assert.Equal(t, schema, PrimitiveSchema(OBJECT))
+
+	schema, err = operation.parseObjectSchema("any", nil)
+	assert.NoError(t, err)
+	assert.Equal(t, schema, PrimitiveSchema(OBJECT))
+
+	schema, err = operation.parseObjectSchema("any{data=string}", nil)
+	assert.NoError(t, err)
+	assert.Equal(t, schema, PrimitiveSchema(OBJECT).SetProperty("data", *PrimitiveSchema("string")))
+
+	schema, err = operation.parseObjectSchema("int", nil)
+	assert.NoError(t, err)
+	assert.Equal(t, schema, PrimitiveSchema(INTEGER))
+
+	schema, err = operation.parseObjectSchema("[]string", nil)
+	assert.NoError(t, err)
+	assert.Equal(t, schema, spec.ArrayProperty(P
