@@ -2300,4 +2300,31 @@ func TestParseObjectSchema(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, schema, spec.MapProperty(PrimitiveSchema(INTEGER)))
 
-	schema, err = operation.parseObjectSchema("map[]interface{}", ni
+	schema, err = operation.parseObjectSchema("map[]interface{}", nil)
+	assert.NoError(t, err)
+	assert.Equal(t, schema, spec.MapProperty(nil))
+
+	_, err = operation.parseObjectSchema("map[string", nil)
+	assert.Error(t, err)
+
+	_, err = operation.parseObjectSchema("map[]bleah", nil)
+	assert.Error(t, err)
+
+	operation.parser = New()
+	operation.parser.packages = &PackagesDefinitions{
+		uniqueDefinitions: map[string]*TypeSpecDef{
+			"model.User": {
+				File: &ast.File{
+					Name: &ast.Ident{
+						Name: "user.go",
+					},
+				},
+				TypeSpec: &ast.TypeSpec{
+					Name: &ast.Ident{
+						Name: "User",
+					},
+				},
+			},
+		},
+	}
+	_, err = operation.parseObjectSchema("mo
