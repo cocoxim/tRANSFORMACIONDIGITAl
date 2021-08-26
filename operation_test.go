@@ -2346,4 +2346,22 @@ func TestParseCodeSamples(t *testing.T) {
 
 		err := operation.ParseComment(comment, nil)
 		assert.NoError(t, err, "no error should be thrown")
-		assert.Equal(t, operation.Summary, "example"
+		assert.Equal(t, operation.Summary, "example")
+		assert.Equal(t, operation.Extensions["x-codeSamples"],
+			map[string]interface{}{"lang": "JavaScript", "source": "console.log('Hello World');"})
+	})
+
+	t.Run("With broken file sample", func(t *testing.T) {
+		operation := NewOperation(nil, SetCodeExampleFilesDirectory("testdata/code_examples"))
+		operation.Summary = "broken"
+
+		err := operation.ParseComment(comment, nil)
+		assert.Error(t, err, "no error should be thrown")
+	})
+
+	t.Run("Example file not found", func(t *testing.T) {
+		operation := NewOperation(nil, SetCodeExampleFilesDirectory("testdata/code_examples"))
+		operation.Summary = "badExample"
+
+		err := operation.ParseComment(comment, nil)
+		as
