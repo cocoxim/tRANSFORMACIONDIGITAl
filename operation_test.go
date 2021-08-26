@@ -2327,4 +2327,23 @@ func TestParseObjectSchema(t *testing.T) {
 			},
 		},
 	}
-	_, err = operation.parseObjectSchema("mo
+	_, err = operation.parseObjectSchema("model.User", nil)
+	assert.NoError(t, err)
+
+	operation.parser = nil
+	schema, err = operation.parseObjectSchema("user.Model", nil)
+	assert.NoError(t, err)
+	assert.Equal(t, schema, RefSchema("user.Model"))
+}
+
+func TestParseCodeSamples(t *testing.T) {
+	t.Parallel()
+	const comment = `@x-codeSamples file`
+	t.Run("Find sample by file", func(t *testing.T) {
+
+		operation := NewOperation(nil, SetCodeExampleFilesDirectory("testdata/code_examples"))
+		operation.Summary = "example"
+
+		err := operation.ParseComment(comment, nil)
+		assert.NoError(t, err, "no error should be thrown")
+		assert.Equal(t, operation.Summary, "example"
