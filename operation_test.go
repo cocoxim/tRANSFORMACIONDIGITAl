@@ -2381,4 +2381,6 @@ func TestParseCodeSamples(t *testing.T) {
 		operation.Summary = "code"
 
 		err := operation.ParseComment(comment, nil)
-		assert.Error(t, err, "no error should 
+		assert.Error(t, err, "no error should be thrown")
+	})
+}
