@@ -2364,4 +2364,21 @@ func TestParseCodeSamples(t *testing.T) {
 		operation.Summary = "badExample"
 
 		err := operation.ParseComment(comment, nil)
-		as
+		assert.Error(t, err, "error was expected, as file does not exist")
+	})
+
+	t.Run("Without line reminder", func(t *testing.T) {
+		comment := `@x-codeSamples`
+		operation := NewOperation(nil, SetCodeExampleFilesDirectory("testdata/code_examples"))
+		operation.Summary = "example"
+
+		err := operation.ParseComment(comment, nil)
+		assert.Error(t, err, "no error should be thrown")
+	})
+
+	t.Run(" broken dir", func(t *testing.T) {
+		operation := NewOperation(nil, SetCodeExampleFilesDirectory("testdata/fake_examples"))
+		operation.Summary = "code"
+
+		err := operation.ParseComment(comment, nil)
+		assert.Error(t, err, "no error should 
