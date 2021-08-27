@@ -28,4 +28,15 @@ type PackageDefinitions struct {
 	Path string
 }
 
-// ConstVar
+// ConstVariableGlobalEvaluator an interface used to evaluate enums across packages
+type ConstVariableGlobalEvaluator interface {
+	EvaluateConstValue(pkg *PackageDefinitions, cv *ConstVariable, recursiveStack map[string]struct{}) (interface{}, ast.Expr)
+	EvaluateConstValueByName(file *ast.File, pkgPath, constVariableName string, recursiveStack map[string]struct{}) (interface{}, ast.Expr)
+	FindTypeSpec(typeName string, file *ast.File) *TypeSpecDef
+}
+
+// NewPackageDefinitions new a PackageDefinitions object
+func NewPackageDefinitions(name, pkgPath string) *PackageDefinitions {
+	return &PackageDefinitions{
+		Name:            name,
+		Path:            pkgPath
