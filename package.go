@@ -39,4 +39,24 @@ type ConstVariableGlobalEvaluator interface {
 func NewPackageDefinitions(name, pkgPath string) *PackageDefinitions {
 	return &PackageDefinitions{
 		Name:            name,
-		Path:            pkgPath
+		Path:            pkgPath,
+		Files:           make(map[string]*ast.File),
+		TypeDefinitions: make(map[string]*TypeSpecDef),
+		ConstTable:      make(map[string]*ConstVariable),
+	}
+}
+
+// AddFile add a file
+func (pkg *PackageDefinitions) AddFile(pkgPath string, file *ast.File) *PackageDefinitions {
+	pkg.Files[pkgPath] = file
+	return pkg
+}
+
+// AddTypeSpec add a type spec.
+func (pkg *PackageDefinitions) AddTypeSpec(name string, typeSpec *TypeSpecDef) *PackageDefinitions {
+	pkg.TypeDefinitions[name] = typeSpec
+	return pkg
+}
+
+// AddConst add a const variable.
+func (pkg *PackageDefinitions) AddConst(astFile *ast.File, valueSpec *
