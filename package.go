@@ -76,4 +76,24 @@ func (pkg *PackageDefinitions) AddConst(astFile *ast.File, valueSpec *ast.ValueS
 
 func (pkg *PackageDefinitions) evaluateConstValue(file *ast.File, iota int, expr ast.Expr, globalEvaluator ConstVariableGlobalEvaluator, recursiveStack map[string]struct{}) (interface{}, ast.Expr) {
 	switch valueExpr := expr.(type) {
-	case *ast.Ident
+	case *ast.Ident:
+		if valueExpr.Name == "iota" {
+			return iota, nil
+		}
+		if pkg.ConstTable != nil {
+			if cv, ok := pkg.ConstTable[valueExpr.Name]; ok {
+				return globalEvaluator.EvaluateConstValue(pkg, cv, recursiveStack)
+			}
+		}
+	case *ast.SelectorExpr:
+		pkgIdent, ok := valueExpr.X.(*ast.Ident)
+		if !ok {
+			return nil, nil
+		}
+		return globalEvaluator.EvaluateConstValueByName(file, pkgIdent.Name, valueExpr.Sel.Name, recursiveStack)
+	case *ast.BasicLit:
+		switch valueExpr.Kind {
+		case token.INT:
+			// hexadecimal
+			if len(valueExpr.Value) > 2 && valueExpr.Value[0] == '0' && valueExpr.Value[1] == 'x' {
+				if x, err := strconv.ParseInt(valueExpr.Va
