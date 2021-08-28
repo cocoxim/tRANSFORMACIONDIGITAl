@@ -59,4 +59,21 @@ func (pkg *PackageDefinitions) AddTypeSpec(name string, typeSpec *TypeSpecDef) *
 }
 
 // AddConst add a const variable.
-func (pkg *PackageDefinitions) AddConst(astFile *ast.File, valueSpec *
+func (pkg *PackageDefinitions) AddConst(astFile *ast.File, valueSpec *ast.ValueSpec) *PackageDefinitions {
+	for i := 0; i < len(valueSpec.Names) && i < len(valueSpec.Values); i++ {
+		variable := &ConstVariable{
+			Name:    valueSpec.Names[i],
+			Type:    valueSpec.Type,
+			Value:   valueSpec.Values[i],
+			Comment: valueSpec.Comment,
+			File:    astFile,
+		}
+		pkg.ConstTable[valueSpec.Names[i].Name] = variable
+		pkg.OrderedConst = append(pkg.OrderedConst, variable)
+	}
+	return pkg
+}
+
+func (pkg *PackageDefinitions) evaluateConstValue(file *ast.File, iota int, expr ast.Expr, globalEvaluator ConstVariableGlobalEvaluator, recursiveStack map[string]struct{}) (interface{}, ast.Expr) {
+	switch valueExpr := expr.(type) {
+	case *ast.Ident
