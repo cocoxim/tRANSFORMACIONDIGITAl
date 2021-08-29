@@ -96,4 +96,25 @@ func (pkg *PackageDefinitions) evaluateConstValue(file *ast.File, iota int, expr
 		case token.INT:
 			// hexadecimal
 			if len(valueExpr.Value) > 2 && valueExpr.Value[0] == '0' && valueExpr.Value[1] == 'x' {
-				if x, err := strconv.ParseInt(valueExpr.Va
+				if x, err := strconv.ParseInt(valueExpr.Value[2:], 16, 64); err == nil {
+					return int(x), nil
+				} else if x, err := strconv.ParseUint(valueExpr.Value[2:], 16, 64); err == nil {
+					return x, nil
+				} else {
+					panic(err)
+				}
+			}
+
+			//octet
+			if len(valueExpr.Value) > 1 && valueExpr.Value[0] == '0' {
+				if x, err := strconv.ParseInt(valueExpr.Value[1:], 8, 64); err == nil {
+					return int(x), nil
+				} else if x, err := strconv.ParseUint(valueExpr.Value[1:], 8, 64); err == nil {
+					return x, nil
+				} else {
+					panic(err)
+				}
+			}
+
+			//a basic literal integer is int type in default, or must have an explicit converting type in front
+			if x, err := strconv.ParseIn
