@@ -153,4 +153,21 @@ func (pkg *PackageDefinitions) evaluateConstValue(file *ast.File, iota int, expr
 			return nil, nil
 		}
 		arg := valueExpr.Args[0]
-		if id
+		if ident, ok := valueExpr.Fun.(*ast.Ident); ok {
+			name := ident.Name
+			if name == "uintptr" {
+				name = "uint"
+			}
+			if IsGolangPrimitiveType(name) {
+				value, _ := pkg.evaluateConstValue(file, iota, arg, globalEvaluator, recursiveStack)
+				value = EvaluateDataConversion(value, name)
+				return value, nil
+			} else if name == "len" {
+				value, _ := pkg.evaluateConstValue(file, iota, arg, globalEvaluator, recursiveStack)
+				return reflect.ValueOf(value).Len(), nil
+			}
+			typeDef := globalEvaluator.FindTypeSpec(name, file)
+			if typeDef == nil {
+				return nil, nil
+			}
+			return arg, value
