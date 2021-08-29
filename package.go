@@ -117,4 +117,22 @@ func (pkg *PackageDefinitions) evaluateConstValue(file *ast.File, iota int, expr
 			}
 
 			//a basic literal integer is int type in default, or must have an explicit converting type in front
-			if x, err := strconv.ParseIn
+			if x, err := strconv.ParseInt(valueExpr.Value, 10, 64); err == nil {
+				return int(x), nil
+			} else if x, err := strconv.ParseUint(valueExpr.Value, 10, 64); err == nil {
+				return x, nil
+			} else {
+				panic(err)
+			}
+		case token.STRING:
+			if valueExpr.Value[0] == '`' {
+				return valueExpr.Value[1 : len(valueExpr.Value)-1], nil
+			}
+			return EvaluateEscapedString(valueExpr.Value[1 : len(valueExpr.Value)-1]), nil
+		case token.CHAR:
+			return EvaluateEscapedChar(valueExpr.Value[1 : len(valueExpr.Value)-1]), nil
+		}
+	case *ast.UnaryExpr:
+		x, evalType := pkg.evaluateConstValue(file, iota, valueExpr.X, globalEvaluator, recursiveStack)
+		if x == nil {
+			return x, evalT
