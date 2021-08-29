@@ -135,4 +135,22 @@ func (pkg *PackageDefinitions) evaluateConstValue(file *ast.File, iota int, expr
 	case *ast.UnaryExpr:
 		x, evalType := pkg.evaluateConstValue(file, iota, valueExpr.X, globalEvaluator, recursiveStack)
 		if x == nil {
-			return x, evalT
+			return x, evalType
+		}
+		return EvaluateUnary(x, valueExpr.Op, evalType)
+	case *ast.BinaryExpr:
+		x, evalTypex := pkg.evaluateConstValue(file, iota, valueExpr.X, globalEvaluator, recursiveStack)
+		y, evalTypey := pkg.evaluateConstValue(file, iota, valueExpr.Y, globalEvaluator, recursiveStack)
+		if x == nil || y == nil {
+			return nil, nil
+		}
+		return EvaluateBinary(x, y, valueExpr.Op, evalTypex, evalTypey)
+	case *ast.ParenExpr:
+		return pkg.evaluateConstValue(file, iota, valueExpr.X, globalEvaluator, recursiveStack)
+	case *ast.CallExpr:
+		//data conversion
+		if len(valueExpr.Args) != 1 {
+			return nil, nil
+		}
+		arg := valueExpr.Args[0]
+		if id
