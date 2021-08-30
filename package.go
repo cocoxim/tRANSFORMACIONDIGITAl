@@ -170,4 +170,14 @@ func (pkg *PackageDefinitions) evaluateConstValue(file *ast.File, iota int, expr
 			if typeDef == nil {
 				return nil, nil
 			}
-			return arg, value
+			return arg, valueExpr.Fun
+		} else if selector, ok := valueExpr.Fun.(*ast.SelectorExpr); ok {
+			typeDef := globalEvaluator.FindTypeSpec(fullTypeName(selector.X.(*ast.Ident).Name, selector.Sel.Name), file)
+			if typeDef == nil {
+				return nil, nil
+			}
+			return arg, typeDef.TypeSpec.Type
+		}
+	}
+	return nil, nil
+}
