@@ -31,4 +31,22 @@ func TestPackagesDefinitions_collectAstFile(t *testing.T) {
 	assert.NoError(t, pd.collectAstFile(fileSet, packageDir, "testdata/simple/"+firstFile.Name.String(), firstFile, ParseAll))
 	assert.NotEmpty(t, pd.packages[packageDir])
 
-	absPath, _ := filepath.Abs(
+	absPath, _ := filepath.Abs("testdata/simple/" + firstFile.Name.String())
+	astFileInfo := &AstFileInfo{
+		FileSet:     fileSet,
+		File:        firstFile,
+		Path:        absPath,
+		PackagePath: packageDir,
+		ParseFlag:   ParseAll,
+	}
+	assert.Equal(t, pd.files[firstFile], astFileInfo)
+
+	// Override
+	assert.NoError(t, pd.collectAstFile(fileSet, packageDir, "testdata/simple/"+firstFile.Name.String(), firstFile, ParseAll))
+	assert.Equal(t, pd.files[firstFile], astFileInfo)
+
+	// Another file
+	secondFile := &ast.File{
+		Name: &ast.Ident{Name: "api.go"},
+	}
+	assert.NoError(t, pd.collectAstFile(fileSet, packageDir, "testdata/simple/"+s
