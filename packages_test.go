@@ -49,4 +49,27 @@ func TestPackagesDefinitions_collectAstFile(t *testing.T) {
 	secondFile := &ast.File{
 		Name: &ast.Ident{Name: "api.go"},
 	}
-	assert.NoError(t, pd.collectAstFile(fileSet, packageDir, "testdata/simple/"+s
+	assert.NoError(t, pd.collectAstFile(fileSet, packageDir, "testdata/simple/"+secondFile.Name.String(), secondFile, ParseAll))
+}
+
+func TestPackagesDefinitions_rangeFiles(t *testing.T) {
+	pd := PackagesDefinitions{
+		files: map[*ast.File]*AstFileInfo{
+			{
+				Name: &ast.Ident{Name: "main.go"},
+			}: {
+				File:        &ast.File{Name: &ast.Ident{Name: "main.go"}},
+				Path:        "testdata/simple/main.go",
+				PackagePath: "main",
+			},
+			{
+				Name: &ast.Ident{Name: "api.go"},
+			}: {
+				File:        &ast.File{Name: &ast.Ident{Name: "api.go"}},
+				Path:        "testdata/simple/api/api.go",
+				PackagePath: "api",
+			},
+		},
+	}
+
+	i, expect := 0, []string{"testdata/simple/a
