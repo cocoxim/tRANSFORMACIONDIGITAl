@@ -72,4 +72,34 @@ func TestPackagesDefinitions_rangeFiles(t *testing.T) {
 		},
 	}
 
-	i, expect := 0, []string{"testdata/simple/a
+	i, expect := 0, []string{"testdata/simple/api/api.go", "testdata/simple/main.go"}
+	_ = pd.RangeFiles(func(fileInfo *AstFileInfo) error {
+		assert.Equal(t, expect[i], fileInfo.Path)
+		i++
+		return nil
+	})
+}
+
+func TestPackagesDefinitions_ParseTypes(t *testing.T) {
+	absPath, _ := filepath.Abs("")
+
+	mainAST := ast.File{
+		Name: &ast.Ident{Name: "main.go"},
+		Decls: []ast.Decl{
+			&ast.GenDecl{
+				Tok: token.TYPE,
+				Specs: []ast.Spec{
+					&ast.TypeSpec{
+						Name: &ast.Ident{Name: "Test"},
+						Type: &ast.Ident{
+							Name: "string",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	pd := PackagesDefinitions{
+		files: map[*ast.File]*AstFileInfo{
+			&m
