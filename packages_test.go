@@ -102,4 +102,27 @@ func TestPackagesDefinitions_ParseTypes(t *testing.T) {
 
 	pd := PackagesDefinitions{
 		files: map[*ast.File]*AstFileInfo{
-			&m
+			&mainAST: {
+				File:        &mainAST,
+				Path:        filepath.Join(absPath, "testdata/simple/main.go"),
+				PackagePath: "main",
+			},
+			{
+				Name: &ast.Ident{Name: "api.go"},
+			}: {
+				File:        &ast.File{Name: &ast.Ident{Name: "api.go"}},
+				Path:        filepath.Join(absPath, "testdata/simple/api/api.go"),
+				PackagePath: "api",
+			},
+		},
+		packages: make(map[string]*PackageDefinitions),
+	}
+
+	_, err := pd.ParseTypes()
+	assert.NoError(t, err)
+}
+
+func TestPackagesDefinitions_parseFunctionScopedTypesFromFile(t *testing.T) {
+	mainAST := &ast.File{
+		Name: &ast.Ident{Name: "main.go"},
+		Decls: []ast.Decl{
