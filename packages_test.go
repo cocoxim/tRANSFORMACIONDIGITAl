@@ -126,3 +126,33 @@ func TestPackagesDefinitions_parseFunctionScopedTypesFromFile(t *testing.T) {
 	mainAST := &ast.File{
 		Name: &ast.Ident{Name: "main.go"},
 		Decls: []ast.Decl{
+			&ast.FuncDecl{
+				Name: ast.NewIdent("TestFuncDecl"),
+				Body: &ast.BlockStmt{
+					List: []ast.Stmt{
+						&ast.DeclStmt{
+							Decl: &ast.GenDecl{
+								Tok: token.TYPE,
+								Specs: []ast.Spec{
+									&ast.TypeSpec{
+										Name: ast.NewIdent("response"),
+										Type: ast.NewIdent("struct"),
+									},
+									&ast.TypeSpec{
+										Name: ast.NewIdent("stringResponse"),
+										Type: ast.NewIdent("string"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	pd := PackagesDefinitions{
+		packages: make(map[string]*PackageDefinitions),
+	}
+
+	parsedSchema := 
