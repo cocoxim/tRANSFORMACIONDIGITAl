@@ -155,4 +155,28 @@ func TestPackagesDefinitions_parseFunctionScopedTypesFromFile(t *testing.T) {
 		packages: make(map[string]*PackageDefinitions),
 	}
 
-	parsedSchema := 
+	parsedSchema := make(map[*TypeSpecDef]*Schema)
+	pd.parseFunctionScopedTypesFromFile(mainAST, "main", parsedSchema)
+
+	assert.Len(t, parsedSchema, 1)
+
+	_, ok := pd.uniqueDefinitions["main.go.TestFuncDecl.response"]
+	assert.True(t, ok)
+
+	_, ok = pd.packages["main"].TypeDefinitions["main.go.TestFuncDecl.response"]
+	assert.True(t, ok)
+}
+
+func TestPackagesDefinitions_FindTypeSpec(t *testing.T) {
+	userDef := TypeSpecDef{
+		File: &ast.File{
+			Name: &ast.Ident{Name: "user.go"},
+		},
+		TypeSpec: &ast.TypeSpec{
+			Name: ast.NewIdent("User"),
+		},
+		PkgPath: "user",
+	}
+	var pkg = PackagesDefinitions{
+		uniqueDefinitions: map[string]*TypeSpecDef{
+			"user.Model": &userDef,
