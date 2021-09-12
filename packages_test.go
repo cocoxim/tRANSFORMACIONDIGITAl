@@ -180,3 +180,23 @@ func TestPackagesDefinitions_FindTypeSpec(t *testing.T) {
 	var pkg = PackagesDefinitions{
 		uniqueDefinitions: map[string]*TypeSpecDef{
 			"user.Model": &userDef,
+		},
+	}
+
+	var nilDef *TypeSpecDef
+	assert.Equal(t, nilDef, pkg.FindTypeSpec("int", nil))
+	assert.Equal(t, nilDef, pkg.FindTypeSpec("bool", nil))
+	assert.Equal(t, nilDef, pkg.FindTypeSpec("string", nil))
+
+	assert.Equal(t, &userDef, pkg.FindTypeSpec("user.Model", nil))
+	assert.Equal(t, nilDef, pkg.FindTypeSpec("Model", nil))
+}
+
+func TestPackage_rangeFiles(t *testing.T) {
+	pd := NewPackagesDefinitions()
+	pd.files = map[*ast.File]*AstFileInfo{
+		{
+			Name: &ast.Ident{Name: "main.go"},
+		}: {
+			File:        &ast.File{Name: &ast.Ident{Name: "main.go"}},
+			Path:        "tes
