@@ -199,4 +199,25 @@ func TestPackage_rangeFiles(t *testing.T) {
 			Name: &ast.Ident{Name: "main.go"},
 		}: {
 			File:        &ast.File{Name: &ast.Ident{Name: "main.go"}},
-			Path:        "tes
+			Path:        "testdata/simple/main.go",
+			PackagePath: "main",
+		},
+		{
+			Name: &ast.Ident{Name: "api.go"},
+		}: {
+			File:        &ast.File{Name: &ast.Ident{Name: "api.go"}},
+			Path:        "testdata/simple/api/api.go",
+			PackagePath: "api",
+		},
+		{
+			Name: &ast.Ident{Name: "foo.go"},
+		}: {
+			File:        &ast.File{Name: &ast.Ident{Name: "foo.go"}},
+			Path:        "vendor/foo/foo.go",
+			PackagePath: "vendor/foo",
+		},
+		{
+			Name: &ast.Ident{Name: "bar.go"},
+		}: {
+			File:        &ast.File{Name: &ast.Ident{Name: "bar.go"}},
+			Path:        filepath.Join(runtime.GOROOT(), "bar
