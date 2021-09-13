@@ -244,4 +244,21 @@ func TestPackagesDefinitions_findTypeSpec(t *testing.T) {
 	var nilTypeSpec *TypeSpecDef
 	assert.Equal(t, nilTypeSpec, pd.findTypeSpec("model", "User"))
 
-	userTypeSpec := TypeSpec
+	userTypeSpec := TypeSpecDef{
+		File:     &ast.File{},
+		TypeSpec: &ast.TypeSpec{},
+		PkgPath:  "model",
+	}
+	pd = PackagesDefinitions{
+		packages: map[string]*PackageDefinitions{
+			"model": {
+				TypeDefinitions: map[string]*TypeSpecDef{
+					"User": &userTypeSpec,
+				},
+			},
+		},
+	}
+	assert.Equal(t, &userTypeSpec, pd.findTypeSpec("model", "User"))
+	assert.Equal(t, nilTypeSpec, pd.findTypeSpec("others", "User"))
+
+}
