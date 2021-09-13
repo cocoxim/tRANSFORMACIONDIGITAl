@@ -220,4 +220,28 @@ func TestPackage_rangeFiles(t *testing.T) {
 			Name: &ast.Ident{Name: "bar.go"},
 		}: {
 			File:        &ast.File{Name: &ast.Ident{Name: "bar.go"}},
-			Path:        filepath.Join(runtime.GOROOT(), "bar
+			Path:        filepath.Join(runtime.GOROOT(), "bar.go"),
+			PackagePath: "bar",
+		},
+	}
+
+	var sorted []string
+	processor := func(fileInfo *AstFileInfo) error {
+		sorted = append(sorted, fileInfo.Path)
+		return nil
+	}
+	assert.NoError(t, pd.RangeFiles(processor))
+	assert.Equal(t, []string{"testdata/simple/api/api.go", "testdata/simple/main.go"}, sorted)
+
+	assert.Error(t, pd.RangeFiles(func(fileInfo *AstFileInfo) error {
+		return ErrFuncTypeField
+	}))
+
+}
+
+func TestPackagesDefinitions_findTypeSpec(t *testing.T) {
+	pd := PackagesDefinitions{}
+	var nilTypeSpec *TypeSpecDef
+	assert.Equal(t, nilTypeSpec, pd.findTypeSpec("model", "User"))
+
+	userTypeSpec := TypeSpec
