@@ -853,3 +853,615 @@ func getTagsFromComment(comment string) (tags []string) {
 	if lowerAttribute == tagsAttr {
 		for _, tag := range strings.Split(lineRemainder, ",") {
 			tags = append(tags, strings.TrimSpace(tag))
+		}
+	}
+	return
+
+}
+
+func (parser *Parser) matchTags(comments []*ast.Comment) (match bool) {
+	if len(parser.tags) != 0 {
+		for _, comment := range comments {
+			for _, tag := range getTagsFromComment(comment.Text) {
+				if _, has := parser.tags["!"+tag]; has {
+					return false
+				}
+				if _, has := parser.tags[tag]; has {
+					match = true // keep iterating as it may contain a tag that is excluded
+				}
+			}
+		}
+		return
+	}
+	return true
+}
+
+func matchExtension(extensionToMatch string, comments []*ast.Comment) (match bool) {
+	if len(extensionToMatch) != 0 {
+		for _, comment := range comments {
+			commentLine := strings.TrimSpace(strings.TrimLeft(comment.Text, "/"))
+			fields := FieldsByAnySpace(commentLine, 2)
+			if len(fields) > 0 {
+				lowerAttribute := strings.ToLower(fields[0])
+
+				if lowerAttribute == fmt.Sprintf("@x-%s", strings.ToLower(extensionToMatch)) {
+					return true
+				}
+			}
+		}
+		return false
+	}
+	return true
+}
+
+// ParseRouterAPIInfo parses router api info for given astFile.
+func (parser *Parser) ParseRouterAPIInfo(fileInfo *AstFileInfo) error {
+	for _, astDescription := range fileInfo.File.Decls {
+		if (fileInfo.ParseFlag & ParseOperations) == ParseNone {
+			continue
+		}
+		astDeclaration, ok := astDescription.(*ast.FuncDecl)
+		if ok && astDeclaration.Doc != nil && astDeclaration.Doc.List != nil {
+			if parser.matchTags(astDeclaration.Doc.List) &&
+				matchExtension(parser.parseExtension, astDeclaration.Doc.List) {
+				// for per 'function' comment, create a new 'Operation' object
+				operation := NewOperation(parser, SetCodeExampleFilesDirectory(parser.codeExampleFilesDir))
+				for _, comment := range astDeclaration.Doc.List {
+					err := operation.ParseComment(comment.Text, fileInfo.File)
+					if err != nil {
+						return fmt.Errorf("ParseComment error in file %s :%+v", fileInfo.Path, err)
+					}
+				}
+				err := processRouterOperation(parser, operation)
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
+func refRouteMethodOp(item *spec.PathItem, method string) (op **spec.Operation) {
+	switch method {
+	case http.MethodGet:
+		op = &item.Get
+	case http.MethodPost:
+		op = &item.Post
+	case http.MethodDelete:
+		op = &item.Delete
+	case http.MethodPut:
+		op = &item.Put
+	case http.MethodPatch:
+		op = &item.Patch
+	case http.MethodHead:
+		op = &item.Head
+	case http.MethodOptions:
+		op = &item.Options
+	}
+
+	return
+}
+
+func processRouterOperation(parser *Parser, operation *Operation) error {
+	for _, routeProperties := range operation.RouterProperties {
+		var (
+			pathItem spec.PathItem
+			ok       bool
+		)
+
+		pathItem, ok = parser.swagger.Paths.Paths[routeProperties.Path]
+		if !ok {
+			pathItem = spec.PathItem{}
+		}
+
+		op := refRouteMethodOp(&pathItem, routeProperties.HTTPMethod)
+
+		// check if we already have an operation for this path and method
+		if *op != nil {
+			err := fmt.Errorf("route %s %s is declared multiple times", routeProperties.HTTPMethod, routeProperties.Path)
+			if parser.Strict {
+				return err
+			}
+
+			parser.debug.Printf("warning: %s\n", err)
+		}
+
+		*op = &operation.Operation
+
+		parser.swagger.Paths.Paths[routeProperties.Path] = pathItem
+	}
+
+	return nil
+}
+
+func convertFromSpecificToPrimitive(typeName string) (string, error) {
+	name := typeName
+	if strings.ContainsRune(name, '.') {
+		name = strings.Split(name, ".")[1]
+	}
+
+	switch strings.ToUpper(name) {
+	case "TIME", "OBJECTID", "UUID":
+		return STRING, nil
+	case "DECIMAL":
+		return NUMBER, nil
+	}
+
+	return typeName, ErrFailedConvertPrimitiveType
+}
+
+func (parser *Parser) getTypeSchema(typeName string, file *ast.File, ref bool) (*spec.Schema, error) {
+	if override, ok := parser.Overrides[typeName]; ok {
+		parser.debug.Printf("Override detected for %s: using %s instead", typeName, override)
+		return parseObjectSchema(parser, override, file)
+	}
+
+	if IsInterfaceLike(typeName) {
+		return &spec.Schema{}, nil
+	}
+	if IsGolangPrimitiveType(typeName) {
+		return PrimitiveSchema(TransToValidSchemeType(typeName)), nil
+	}
+
+	schemaType, err := convertFromSpecificToPrimitive(typeName)
+	if err == nil {
+		return PrimitiveSchema(schemaType), nil
+	}
+
+	typeSpecDef := parser.packages.FindTypeSpec(typeName, file)
+	if typeSpecDef == nil {
+		return nil, fmt.Errorf("cannot find type definition: %s", typeName)
+	}
+
+	if override, ok := parser.Overrides[typeSpecDef.FullPath()]; ok {
+		if override == "" {
+			parser.debug.Printf("Override detected for %s: ignoring", typeSpecDef.FullPath())
+
+			return nil, ErrSkippedField
+		}
+
+		parser.debug.Printf("Override detected for %s: using %s instead", typeSpecDef.FullPath(), override)
+
+		separator := strings.LastIndex(override, ".")
+		if separator == -1 {
+			// treat as a swaggertype tag
+			parts := strings.Split(override, ",")
+
+			return BuildCustomSchema(parts)
+		}
+
+		typeSpecDef = parser.packages.findTypeSpec(override[0:separator], override[separator+1:])
+	}
+
+	schema, ok := parser.parsedSchemas[typeSpecDef]
+	if !ok {
+		var err error
+
+		schema, err = parser.ParseDefinition(typeSpecDef)
+		if err != nil {
+			if err == ErrRecursiveParseStruct && ref {
+				return parser.getRefTypeSchema(typeSpecDef, schema), nil
+			}
+			return nil, err
+		}
+	}
+
+	if ref {
+		if IsComplexSchema(schema.Schema) {
+			return parser.getRefTypeSchema(typeSpecDef, schema), nil
+		}
+		// if it is a simple schema, just return a copy
+		newSchema := *schema.Schema
+		return &newSchema, nil
+	}
+
+	return schema.Schema, nil
+}
+
+func (parser *Parser) getRefTypeSchema(typeSpecDef *TypeSpecDef, schema *Schema) *spec.Schema {
+	_, ok := parser.outputSchemas[typeSpecDef]
+	if !ok {
+		parser.swagger.Definitions[schema.Name] = spec.Schema{}
+
+		if schema.Schema != nil {
+			parser.swagger.Definitions[schema.Name] = *schema.Schema
+		}
+
+		parser.outputSchemas[typeSpecDef] = schema
+	}
+
+	refSchema := RefSchema(schema.Name)
+
+	return refSchema
+}
+
+func (parser *Parser) isInStructStack(typeSpecDef *TypeSpecDef) bool {
+	for _, specDef := range parser.structStack {
+		if typeSpecDef == specDef {
+			return true
+		}
+	}
+
+	return false
+}
+
+// ParseDefinition parses given type spec that corresponds to the type under
+// given name and package, and populates swagger schema definitions registry
+// with a schema for the given type
+func (parser *Parser) ParseDefinition(typeSpecDef *TypeSpecDef) (*Schema, error) {
+	typeName := typeSpecDef.TypeName()
+	schema, found := parser.parsedSchemas[typeSpecDef]
+	if found {
+		parser.debug.Printf("Skipping '%s', already parsed.", typeName)
+
+		return schema, nil
+	}
+
+	if parser.isInStructStack(typeSpecDef) {
+		parser.debug.Printf("Skipping '%s', recursion detected.", typeName)
+
+		return &Schema{
+				Name:    typeName,
+				PkgPath: typeSpecDef.PkgPath,
+				Schema:  PrimitiveSchema(OBJECT),
+			},
+			ErrRecursiveParseStruct
+	}
+
+	parser.structStack = append(parser.structStack, typeSpecDef)
+
+	parser.debug.Printf("Generating %s", typeName)
+
+	definition, err := parser.parseTypeExpr(typeSpecDef.File, typeSpecDef.TypeSpec.Type, false)
+	if err != nil {
+		return nil, err
+	}
+
+	if definition.Description == "" {
+		fillDefinitionDescription(definition, typeSpecDef.File, typeSpecDef)
+	}
+
+	if len(typeSpecDef.Enums) > 0 {
+		var varnames []string
+		var enumComments = make(map[string]string)
+		for _, value := range typeSpecDef.Enums {
+			definition.Enum = append(definition.Enum, value.Value)
+			varnames = append(varnames, value.key)
+			if len(value.Comment) > 0 {
+				enumComments[value.key] = value.Comment
+			}
+		}
+		if definition.Extensions == nil {
+			definition.Extensions = make(spec.Extensions)
+		}
+		definition.Extensions[enumVarNamesExtension] = varnames
+		if len(enumComments) > 0 {
+			definition.Extensions[enumCommentsExtension] = enumComments
+		}
+	}
+
+	sch := Schema{
+		Name:    typeName,
+		PkgPath: typeSpecDef.PkgPath,
+		Schema:  definition,
+	}
+	parser.parsedSchemas[typeSpecDef] = &sch
+
+	// update an empty schema as a result of recursion
+	s2, found := parser.outputSchemas[typeSpecDef]
+	if found {
+		parser.swagger.Definitions[s2.Name] = *definition
+	}
+
+	return &sch, nil
+}
+
+func fullTypeName(parts ...string) string {
+	return strings.Join(parts, ".")
+}
+
+// fillDefinitionDescription additionally fills fields in definition (spec.Schema)
+// TODO: If .go file contains many types, it may work for a long time
+func fillDefinitionDescription(definition *spec.Schema, file *ast.File, typeSpecDef *TypeSpecDef) {
+	for _, astDeclaration := range file.Decls {
+		generalDeclaration, ok := astDeclaration.(*ast.GenDecl)
+		if !ok || generalDeclaration.Tok != token.TYPE {
+			continue
+		}
+
+		for _, astSpec := range generalDeclaration.Specs {
+			typeSpec, ok := astSpec.(*ast.TypeSpec)
+			if !ok || typeSpec != typeSpecDef.TypeSpec {
+				continue
+			}
+
+			definition.Description =
+				extractDeclarationDescription(typeSpec.Doc, typeSpec.Comment, generalDeclaration.Doc)
+		}
+	}
+}
+
+// extractDeclarationDescription gets first description
+// from attribute descriptionAttr in commentGroups (ast.CommentGroup)
+func extractDeclarationDescription(commentGroups ...*ast.CommentGroup) string {
+	var description string
+
+	for _, commentGroup := range commentGroups {
+		if commentGroup == nil {
+			continue
+		}
+
+		isHandlingDescription := false
+
+		for _, comment := range commentGroup.List {
+			commentText := strings.TrimSpace(strings.TrimLeft(comment.Text, "/"))
+			if len(commentText) == 0 {
+				continue
+			}
+			attribute := FieldsByAnySpace(commentText, 2)[0]
+
+			if strings.ToLower(attribute) != descriptionAttr {
+				if !isHandlingDescription {
+					continue
+				}
+
+				break
+			}
+
+			isHandlingDescription = true
+			description += " " + strings.TrimSpace(commentText[len(attribute):])
+		}
+	}
+
+	return strings.TrimLeft(description, " ")
+}
+
+// parseTypeExpr parses given type expression that corresponds to the type under
+// given name and package, and returns swagger schema for it.
+func (parser *Parser) parseTypeExpr(file *ast.File, typeExpr ast.Expr, ref bool) (*spec.Schema, error) {
+	switch expr := typeExpr.(type) {
+	// type Foo interface{}
+	case *ast.InterfaceType:
+		return &spec.Schema{}, nil
+
+	// type Foo struct {...}
+	case *ast.StructType:
+		return parser.parseStruct(file, expr.Fields)
+
+	// type Foo Baz
+	case *ast.Ident:
+		return parser.getTypeSchema(expr.Name, file, ref)
+
+	// type Foo *Baz
+	case *ast.StarExpr:
+		return parser.parseTypeExpr(file, expr.X, ref)
+
+	// type Foo pkg.Bar
+	case *ast.SelectorExpr:
+		if xIdent, ok := expr.X.(*ast.Ident); ok {
+			return parser.getTypeSchema(fullTypeName(xIdent.Name, expr.Sel.Name), file, ref)
+		}
+	// type Foo []Baz
+	case *ast.ArrayType:
+		itemSchema, err := parser.parseTypeExpr(file, expr.Elt, true)
+		if err != nil {
+			return nil, err
+		}
+
+		return spec.ArrayProperty(itemSchema), nil
+	// type Foo map[string]Bar
+	case *ast.MapType:
+		if _, ok := expr.Value.(*ast.InterfaceType); ok {
+			return spec.MapProperty(nil), nil
+		}
+		schema, err := parser.parseTypeExpr(file, expr.Value, true)
+		if err != nil {
+			return nil, err
+		}
+
+		return spec.MapProperty(schema), nil
+
+	case *ast.FuncType:
+		return nil, ErrFuncTypeField
+		// ...
+	}
+
+	return parser.parseGenericTypeExpr(file, typeExpr)
+}
+
+func (parser *Parser) parseStruct(file *ast.File, fields *ast.FieldList) (*spec.Schema, error) {
+	required, properties := make([]string, 0), make(map[string]spec.Schema)
+
+	for _, field := range fields.List {
+		fieldProps, requiredFromAnon, err := parser.parseStructField(file, field)
+		if err != nil {
+			if err == ErrFuncTypeField || err == ErrSkippedField {
+				continue
+			}
+
+			return nil, err
+		}
+
+		if len(fieldProps) == 0 {
+			continue
+		}
+
+		required = append(required, requiredFromAnon...)
+
+		for k, v := range fieldProps {
+			properties[k] = v
+		}
+	}
+
+	sort.Strings(required)
+
+	return &spec.Schema{
+		SchemaProps: spec.SchemaProps{
+			Type:       []string{OBJECT},
+			Properties: properties,
+			Required:   required,
+		},
+	}, nil
+}
+
+func (parser *Parser) parseStructField(file *ast.File, field *ast.Field) (map[string]spec.Schema, []string, error) {
+	if field.Tag != nil {
+		skip, ok := reflect.StructTag(strings.ReplaceAll(field.Tag.Value, "`", "")).Lookup("swaggerignore")
+		if ok && strings.EqualFold(skip, "true") {
+			return nil, nil, nil
+		}
+	}
+
+	ps := parser.fieldParserFactory(parser, field)
+
+	if ps.ShouldSkip() {
+		return nil, nil, nil
+	}
+
+	fieldName, err := ps.FieldName()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if fieldName == "" {
+		typeName, err := getFieldType(file, field.Type, nil)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		schema, err := parser.getTypeSchema(typeName, file, false)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		if len(schema.Type) > 0 && schema.Type[0] == OBJECT {
+			if len(schema.Properties) == 0 {
+				return nil, nil, nil
+			}
+
+			properties := map[string]spec.Schema{}
+			for k, v := range schema.Properties {
+				properties[k] = v
+			}
+
+			return properties, schema.SchemaProps.Required, nil
+		}
+		// for alias type of non-struct types ,such as array,map, etc. ignore field tag.
+		return map[string]spec.Schema{typeName: *schema}, nil, nil
+
+	}
+
+	schema, err := ps.CustomSchema()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if schema == nil {
+		typeName, err := getFieldType(file, field.Type, nil)
+		if err == nil {
+			// named type
+			schema, err = parser.getTypeSchema(typeName, file, true)
+		} else {
+			// unnamed type
+			schema, err = parser.parseTypeExpr(file, field.Type, false)
+		}
+
+		if err != nil {
+			return nil, nil, err
+		}
+	}
+
+	err = ps.ComplementSchema(schema)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var tagRequired []string
+
+	required, err := ps.IsRequired()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if required {
+		tagRequired = append(tagRequired, fieldName)
+	}
+
+	return map[string]spec.Schema{fieldName: *schema}, tagRequired, nil
+}
+
+func getFieldType(file *ast.File, field ast.Expr, genericParamTypeDefs map[string]*genericTypeSpec) (string, error) {
+	switch fieldType := field.(type) {
+	case *ast.Ident:
+		return fieldType.Name, nil
+	case *ast.SelectorExpr:
+		packageName, err := getFieldType(file, fieldType.X, genericParamTypeDefs)
+		if err != nil {
+			return "", err
+		}
+
+		return fullTypeName(packageName, fieldType.Sel.Name), nil
+	case *ast.StarExpr:
+		fullName, err := getFieldType(file, fieldType.X, genericParamTypeDefs)
+		if err != nil {
+			return "", err
+		}
+
+		return fullName, nil
+	default:
+		return getGenericFieldType(file, field, genericParamTypeDefs)
+	}
+}
+
+// GetSchemaTypePath get path of schema type.
+func (parser *Parser) GetSchemaTypePath(schema *spec.Schema, depth int) []string {
+	if schema == nil || depth == 0 {
+		return nil
+	}
+
+	name := schema.Ref.String()
+	if name != "" {
+		if pos := strings.LastIndexByte(name, '/'); pos >= 0 {
+			name = name[pos+1:]
+			if schema, ok := parser.swagger.Definitions[name]; ok {
+				return parser.GetSchemaTypePath(&schema, depth)
+			}
+		}
+
+		return nil
+	}
+
+	if len(schema.Type) > 0 {
+		switch schema.Type[0] {
+		case ARRAY:
+			depth--
+
+			s := []string{schema.Type[0]}
+
+			return append(s, parser.GetSchemaTypePath(schema.Items.Schema, depth)...)
+		case OBJECT:
+			if schema.AdditionalProperties != nil && schema.AdditionalProperties.Schema != nil {
+				// for map
+				depth--
+
+				s := []string{schema.Type[0]}
+
+				return append(s, parser.GetSchemaTypePath(schema.AdditionalProperties.Schema, depth)...)
+			}
+		}
+
+		return []string{schema.Type[0]}
+	}
+
+	return []string{ANY}
+}
+
+func replaceLastTag(slice []spec.Tag, element spec.Tag) {
+	slice = append(slice[:len(slice)-1], element)
+}
+
+// defineTypeOfExample example value define the type (object and array unsupported).
+func defineTypeOfExample(schemaType, arrayType, exampleValue string) (interface{}, error) {
+	switch schemaType {
