@@ -1465,3 +1465,213 @@ func replaceLastTag(slice []spec.Tag, element spec.Tag) {
 // defineTypeOfExample example value define the type (object and array unsupported).
 func defineTypeOfExample(schemaType, arrayType, exampleValue string) (interface{}, error) {
 	switch schemaType {
+	case STRING:
+		return exampleValue, nil
+	case NUMBER:
+		v, err := strconv.ParseFloat(exampleValue, 64)
+		if err != nil {
+			return nil, fmt.Errorf("example value %s can't convert to %s err: %s", exampleValue, schemaType, err)
+		}
+
+		return v, nil
+	case INTEGER:
+		v, err := strconv.Atoi(exampleValue)
+		if err != nil {
+			return nil, fmt.Errorf("example value %s can't convert to %s err: %s", exampleValue, schemaType, err)
+		}
+
+		return v, nil
+	case BOOLEAN:
+		v, err := strconv.ParseBool(exampleValue)
+		if err != nil {
+			return nil, fmt.Errorf("example value %s can't convert to %s err: %s", exampleValue, schemaType, err)
+		}
+
+		return v, nil
+	case ARRAY:
+		values := strings.Split(exampleValue, ",")
+		result := make([]interface{}, 0)
+		for _, value := range values {
+			v, err := defineTypeOfExample(arrayType, "", value)
+			if err != nil {
+				return nil, err
+			}
+
+			result = append(result, v)
+		}
+
+		return result, nil
+	case OBJECT:
+		if arrayType == "" {
+			return nil, fmt.Errorf("%s is unsupported type in example value `%s`", schemaType, exampleValue)
+		}
+
+		values := strings.Split(exampleValue, ",")
+
+		result := map[string]interface{}{}
+
+		for _, value := range values {
+			mapData := strings.SplitN(value, ":", 2)
+
+			if len(mapData) == 2 {
+				v, err := defineTypeOfExample(arrayType, "", mapData[1])
+				if err != nil {
+					return nil, err
+				}
+
+				result[mapData[0]] = v
+
+				continue
+			}
+
+			return nil, fmt.Errorf("example value %s should format: key:value", exampleValue)
+		}
+
+		return result, nil
+	}
+
+	return nil, fmt.Errorf("%s is unsupported type in example value %s", schemaType, exampleValue)
+}
+
+// GetAllGoFileInfo gets all Go source files information for given searchDir.
+func (parser *Parser) getAllGoFileInfo(packageDir, searchDir string) error {
+	return filepath.Walk(searchDir, func(path string, f os.FileInfo, _ error) error {
+		err := parser.Skip(path, f)
+		if err != nil {
+			return err
+		}
+
+		if f.IsDir() {
+			return nil
+		}
+
+		relPath, err := filepath.Rel(searchDir, path)
+		if err != nil {
+			return err
+		}
+
+		return parser.parseFile(filepath.ToSlash(filepath.Dir(filepath.Clean(filepath.Join(packageDir, relPath)))), path, nil, ParseAll)
+	})
+}
+
+func (parser *Parser) getAllGoFileInfoFromDeps(pkg *depth.Pkg) error {
+	ignoreInternal := pkg.Internal && !parser.ParseInternal
+	if ignoreInternal || !pkg.Resolved { // ignored internal and not resolved dependencies
+		return nil
+	}
+
+	// Skip cgo
+	if pkg.Raw == nil && pkg.Name == "C" {
+		return nil
+	}
+
+	srcDir := pkg.Raw.Dir
+
+	files, err := os.ReadDir(srcDir) // only parsing files in the dir(don't contain sub dir files)
+	if err != nil {
+		return err
+	}
+
+	for _, f := range files {
+		if f.IsDir() {
+			continue
+		}
+
+		path := filepath.Join(srcDir, f.Name())
+		if err := parser.parseFile(pkg.Name, path, nil, ParseModels); err != nil {
+			return err
+		}
+	}
+
+	for i := 0; i < len(pkg.Deps); i++ {
+		if err := parser.getAllGoFileInfoFromDeps(&pkg.Deps[i]); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (parser *Parser) parseFile(packageDir, path string, src interface{}, flag ParseFlag) error {
+	if strings.HasSuffix(strings.ToLower(path), "_test.go") || filepath.Ext(path) != ".go" {
+		return nil
+	}
+
+	return parser.packages.ParseFile(packageDir, path, src, flag)
+}
+
+func (parser *Parser) checkOperationIDUniqueness() error {
+	// operationsIds contains all operationId annotations to check it's unique
+	operationsIds := make(map[string]string)
+
+	for path, item := range parser.swagger.Paths.Paths {
+		var method, id string
+
+		for method = range allMethod {
+			op := refRouteMethodOp(&item, method)
+			if *op != nil {
+				id = (**op).ID
+
+				break
+			}
+		}
+
+		if id == "" {
+			continue
+		}
+
+		current := fmt.Sprintf("%s %s", method, path)
+
+		previous, ok := operationsIds[id]
+		if ok {
+			return fmt.Errorf(
+				"duplicated @id annotation '%s' found in '%s', previously declared in: '%s'",
+				id, current, previous)
+		}
+
+		operationsIds[id] = current
+	}
+
+	return nil
+}
+
+// Skip returns filepath.SkipDir error if match vendor and hidden folder.
+func (parser *Parser) Skip(path string, f os.FileInfo) error {
+	return walkWith(parser.excludes, parser.ParseVendor)(path, f)
+}
+
+func walkWith(excludes map[string]struct{}, parseVendor bool) func(path string, fileInfo os.FileInfo) error {
+	return func(path string, f os.FileInfo) error {
+		if f.IsDir() {
+			if !parseVendor && f.Name() == "vendor" || // ignore "vendor"
+				f.Name() == "docs" || // exclude docs
+				len(f.Name()) > 1 && f.Name()[0] == '.' && f.Name() != ".." { // exclude all hidden folder
+				return filepath.SkipDir
+			}
+
+			if excludes != nil {
+				if _, ok := excludes[path]; ok {
+					return filepath.SkipDir
+				}
+			}
+		}
+
+		return nil
+	}
+}
+
+// GetSwagger returns *spec.Swagger which is the root document object for the API specification.
+func (parser *Parser) GetSwagger() *spec.Swagger {
+	return parser.swagger
+}
+
+// addTestType just for tests.
+func (parser *Parser) addTestType(typename string) {
+	typeDef := &TypeSpecDef{}
+	parser.packages.uniqueDefinitions[typename] = typeDef
+	parser.parsedSchemas[typeDef] = &Schema{
+		PkgPath: "",
+		Name:    typename,
+		Schema:  PrimitiveSchema(OBJECT),
+	}
+}
