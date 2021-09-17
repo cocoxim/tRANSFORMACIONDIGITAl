@@ -55,3 +55,38 @@ func TestNew(t *testing.T) {
 		logger := log.New(&bytes.Buffer{}, "", log.LstdFlags)
 
 		p := New(SetDebugger(logger))
+		assert.Equal(t, logger, p.debug)
+	})
+
+	t.Run("SetFieldParserFactory", func(t *testing.T) {
+		t.Parallel()
+
+		p := New(SetFieldParserFactory(nil))
+		assert.Nil(t, p.fieldParserFactory)
+	})
+}
+
+func TestSetOverrides(t *testing.T) {
+	t.Parallel()
+
+	overrides := map[string]string{
+		"foo": "bar",
+	}
+
+	p := New(SetOverrides(overrides))
+	assert.Equal(t, overrides, p.Overrides)
+}
+
+func TestOverrides_getTypeSchema(t *testing.T) {
+	t.Parallel()
+
+	overrides := map[string]string{
+		"sql.NullString": "string",
+	}
+
+	p := New(SetOverrides(overrides))
+
+	t.Run("Override sql.NullString by string", func(t *testing.T) {
+		t.Parallel()
+
+		s, err := p.getTypeSchema("sql
