@@ -26,4 +26,32 @@ func TestNew(t *testing.T) {
 	t.Run("SetMarkdownFileDirectory", func(t *testing.T) {
 		t.Parallel()
 
-		ex
+		expected := "docs/markdown"
+		p := New(SetMarkdownFileDirectory(expected))
+		assert.Equal(t, expected, p.markdownFileDir)
+	})
+
+	t.Run("SetCodeExamplesDirectory", func(t *testing.T) {
+		t.Parallel()
+
+		expected := "docs/examples"
+		p := New(SetCodeExamplesDirectory(expected))
+		assert.Equal(t, expected, p.codeExampleFilesDir)
+	})
+
+	t.Run("SetStrict", func(t *testing.T) {
+		t.Parallel()
+
+		p := New()
+		assert.Equal(t, false, p.Strict)
+
+		p = New(SetStrict(true))
+		assert.Equal(t, true, p.Strict)
+	})
+
+	t.Run("SetDebugger", func(t *testing.T) {
+		t.Parallel()
+
+		logger := log.New(&bytes.Buffer{}, "", log.LstdFlags)
+
+		p := New(SetDebugger(logger))
