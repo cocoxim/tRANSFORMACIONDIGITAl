@@ -89,4 +89,26 @@ func TestOverrides_getTypeSchema(t *testing.T) {
 	t.Run("Override sql.NullString by string", func(t *testing.T) {
 		t.Parallel()
 
-		s, err := p.getTypeSchema("sql
+		s, err := p.getTypeSchema("sql.NullString", nil, false)
+		if assert.NoError(t, err) {
+			assert.Truef(t, s.Type.Contains("string"), "type sql.NullString should be overridden by string")
+		}
+	})
+
+	t.Run("Missing Override for sql.NullInt64", func(t *testing.T) {
+		t.Parallel()
+
+		_, err := p.getTypeSchema("sql.NullInt64", nil, false)
+		if assert.Error(t, err) {
+			assert.Equal(t, "cannot find type definition: sql.NullInt64", err.Error())
+		}
+	})
+}
+
+func TestParser_ParseDefinition(t *testing.T) {
+	p := New()
+
+	// Parsing existing type
+	definition := &TypeSpecDef{
+		PkgPath: "github.com/swagger/swag",
+		File: &ast.Fil
