@@ -178,4 +178,22 @@ func TestParser_ParseGeneralApiInfo(t *testing.T) {
     "schemes": [
         "http",
         "https"
-    ]
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server Petstore server.\nIt has a lot of beautiful features.",
+        "title": "Swagger Example API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0",
+        "x-logo": {
+            "altText": "Petstore logo",
+            "backgrou
