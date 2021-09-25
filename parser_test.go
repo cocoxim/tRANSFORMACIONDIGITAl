@@ -196,4 +196,25 @@ func TestParser_ParseGeneralApiInfo(t *testing.T) {
         "version": "1.0",
         "x-logo": {
             "altText": "Petstore logo",
-            "backgrou
+            "backgroundColor": "#FFFFFF",
+            "url": "https://redocly.github.io/redoc/petstore-logo.png"
+        }
+    },
+    "host": "petstore.swagger.io",
+    "basePath": "/v2",
+    "paths": {},
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "description": "some description",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
+        "BasicAuth": {
+            "type": "basic"
+        },
+        "OAuth2AccessCode": {
+            "type": "oauth2",
+            "flow": "accessCode",
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            
