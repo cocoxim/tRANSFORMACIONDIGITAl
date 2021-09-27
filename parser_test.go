@@ -248,4 +248,30 @@ func TestParser_ParseGeneralApiInfo(t *testing.T) {
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
-                "read": " Grants read a
+                "read": " Grants read access",
+                "write": " Grants write access"
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api"
+    },
+    "x-google-endpoints": [
+        {
+            "allowCors": true,
+            "name": "name.endpoints.environment.cloud.goog"
+        }
+    ],
+    "x-google-marks": "marks values"
+}`
+	gopath := os.Getenv("GOPATH")
+	assert.NotNil(t, gopath)
+
+	p := New()
+
+	err := p.ParseGeneralAPIInfo("testdata/main.go")
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	assert.Equal(t, expected, strin
