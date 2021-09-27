@@ -234,4 +234,18 @@ func TestParser_ParseGeneralApiInfo(t *testing.T) {
         },
         "OAuth2Implicit": {
             "type": "oauth2",
-            "flow
+            "flow": "implicit",
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            "scopes": {
+                "admin": " Grants read and write access to administrative information",
+                "write": " Grants write access"
+            },
+            "x-google-audiences": "some_audience.google.com"
+        },
+        "OAuth2Password": {
+            "type": "oauth2",
+            "flow": "password",
+            "tokenUrl": "https://example.com/oauth/token",
+            "scopes": {
+                "admin": " Grants read and write access to administrative information",
+                "read": " Grants read a
