@@ -274,4 +274,28 @@ func TestParser_ParseGeneralApiInfo(t *testing.T) {
 	assert.NoError(t, err)
 
 	b, _ := json.MarshalIndent(p.swagger, "", "    ")
-	assert.Equal(t, expected, strin
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParser_ParseGeneralApiInfoTemplated(t *testing.T) {
+	t.Parallel()
+
+	expected := `{
+    "swagger": "2.0",
+    "info": {
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "paths": {},
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorizatio
