@@ -355,4 +355,26 @@ func TestParser_ParseGeneralApiInfoTemplated(t *testing.T) {
     "x-google-marks": "marks values"
 }`
 	gopath := os.Getenv("GOPATH")
-	assert.NotNil(t,
+	assert.NotNil(t, gopath)
+
+	p := New()
+
+	err := p.ParseGeneralAPIInfo("testdata/templated.go")
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParser_ParseGeneralApiInfoExtensions(t *testing.T) {
+	// should return an error because extension value is not a valid json
+	t.Run("Test invalid extension value", func(t *testing.T) {
+		t.Parallel()
+
+		expected := "annotation @x-google-endpoints need a valid json value"
+		gopath := os.Getenv("GOPATH")
+		assert.NotNil(t, gopath)
+
+		p := New()
+
+		err := p.ParseGeneralAPIInfo("t
