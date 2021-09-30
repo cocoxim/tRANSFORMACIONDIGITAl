@@ -334,4 +334,25 @@ func TestParser_ParseGeneralApiInfoTemplated(t *testing.T) {
         "OAuth2Password": {
             "type": "oauth2",
             "flow": "password",
- 
+            "tokenUrl": "https://example.com/oauth/token",
+            "scopes": {
+                "admin": " Grants read and write access to administrative information",
+                "read": " Grants read access",
+                "write": " Grants write access"
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api"
+    },
+    "x-google-endpoints": [
+        {
+            "allowCors": true,
+            "name": "name.endpoints.environment.cloud.goog"
+        }
+    ],
+    "x-google-marks": "marks values"
+}`
+	gopath := os.Getenv("GOPATH")
+	assert.NotNil(t,
