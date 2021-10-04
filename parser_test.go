@@ -377,4 +377,27 @@ func TestParser_ParseGeneralApiInfoExtensions(t *testing.T) {
 
 		p := New()
 
-		err := p.ParseGeneralAPIInfo("t
+		err := p.ParseGeneralAPIInfo("testdata/extensionsFail1.go")
+		if assert.Error(t, err) {
+			assert.Equal(t, expected, err.Error())
+		}
+	})
+
+	// should return an error because extension don't have a value
+	t.Run("Test missing extension value", func(t *testing.T) {
+		t.Parallel()
+
+		expected := "annotation @x-google-endpoints need a value"
+		gopath := os.Getenv("GOPATH")
+		assert.NotNil(t, gopath)
+
+		p := New()
+
+		err := p.ParseGeneralAPIInfo("testdata/extensionsFail2.go")
+		if assert.Error(t, err) {
+			assert.Equal(t, expected, err.Error())
+		}
+	})
+}
+
+func TestParser_ParseGeneralApiInfoWithOpsInSameFile(t *testing.
