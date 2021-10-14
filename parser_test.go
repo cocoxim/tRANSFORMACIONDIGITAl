@@ -400,4 +400,31 @@ func TestParser_ParseGeneralApiInfoExtensions(t *testing.T) {
 	})
 }
 
-func TestParser_ParseGeneralApiInfoWithOpsInSameFile(t *testing.
+func TestParser_ParseGeneralApiInfoWithOpsInSameFile(t *testing.T) {
+	t.Parallel()
+
+	expected := `{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server Petstore server.\nIt has a lot of beautiful features.",
+        "title": "Swagger Example API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {}
+}`
+
+	gopath := os.Getenv("GOPATH")
+	assert.NotNil(t, gopath)
+
+	p := New()
+
+	err := p.ParseGeneralAPIInfo("testdata/single_file_api/main.go")
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	assert.Equal(t, expected, string(b))
+}
+
+func
