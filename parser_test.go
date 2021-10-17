@@ -481,4 +481,22 @@ func TestParser_ParseAcceptComment(t *testing.T) {
 		"multipart/form-data",
 		"application/x-www-form-urlencoded",
 		"application/vnd.api+json",
-		
+		"application/x-json-stream",
+		"application/octet-stream",
+		"image/png",
+		"image/jpeg",
+		"image/gif",
+		"application/xhtml+xml",
+		"application/health+json",
+	}
+
+	comment := `@Accept json,xml,plain,html,mpfd,x-www-form-urlencoded,json-api,json-stream,octet-stream,png,jpeg,gif,application/xhtml+xml,application/health+json`
+
+	parser := New()
+	assert.NoError(t, parseGeneralAPIInfo(parser, []string{comment}))
+	assert.Equal(t, parser.swagger.Consumes, expected)
+
+	assert.Error(t, parseGeneralAPIInfo(parser, []string{`@Accept cookies,candies`}))
+
+	parser = New()
+	assert.NoError(t, parser.ParseAcceptComment(comment[len(acceptAttr)+1:
