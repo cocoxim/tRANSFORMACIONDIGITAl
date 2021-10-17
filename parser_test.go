@@ -499,4 +499,30 @@ func TestParser_ParseAcceptComment(t *testing.T) {
 	assert.Error(t, parseGeneralAPIInfo(parser, []string{`@Accept cookies,candies`}))
 
 	parser = New()
-	assert.NoError(t, parser.ParseAcceptComment(comment[len(acceptAttr)+1:
+	assert.NoError(t, parser.ParseAcceptComment(comment[len(acceptAttr)+1:]))
+	assert.Equal(t, parser.swagger.Consumes, expected)
+}
+
+func TestParser_ParseProduceComment(t *testing.T) {
+	t.Parallel()
+
+	expected := []string{
+		"application/json",
+		"text/xml",
+		"text/plain",
+		"text/html",
+		"multipart/form-data",
+		"application/x-www-form-urlencoded",
+		"application/vnd.api+json",
+		"application/x-json-stream",
+		"application/octet-stream",
+		"image/png",
+		"image/jpeg",
+		"image/gif",
+		"application/xhtml+xml",
+		"application/health+json",
+	}
+
+	comment := `@Produce json,xml,plain,html,mpfd,x-www-form-urlencoded,json-api,json-stream,octet-stream,png,jpeg,gif,application/xhtml+xml,application/health+json`
+
+	parser
