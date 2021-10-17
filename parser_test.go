@@ -452,4 +452,33 @@ func TestParser_ParseGeneralAPIInfoMarkdown(t *testing.T) {
         }
     ]
 }`
-	b, _ := json.
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	assert.Equal(t, expected, string(b))
+
+	p = New()
+
+	err = p.ParseGeneralAPIInfo(mainAPIFile)
+	assert.Error(t, err)
+}
+
+func TestParser_ParseGeneralApiInfoFailed(t *testing.T) {
+	t.Parallel()
+
+	gopath := os.Getenv("GOPATH")
+	assert.NotNil(t, gopath)
+	p := New()
+	assert.Error(t, p.ParseGeneralAPIInfo("testdata/noexist.go"))
+}
+
+func TestParser_ParseAcceptComment(t *testing.T) {
+	t.Parallel()
+
+	expected := []string{
+		"application/json",
+		"text/xml",
+		"text/plain",
+		"text/html",
+		"multipart/form-data",
+		"application/x-www-form-urlencoded",
+		"application/vnd.api+json",
+		
