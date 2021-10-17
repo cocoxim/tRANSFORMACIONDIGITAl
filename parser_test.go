@@ -427,4 +427,29 @@ func TestParser_ParseGeneralApiInfoWithOpsInSameFile(t *testing.T) {
 	assert.Equal(t, expected, string(b))
 }
 
-func
+func TestParser_ParseGeneralAPIInfoMarkdown(t *testing.T) {
+	t.Parallel()
+
+	p := New(SetMarkdownFileDirectory("testdata"))
+	mainAPIFile := "testdata/markdown.go"
+	err := p.ParseGeneralAPIInfo(mainAPIFile)
+	assert.NoError(t, err)
+
+	expected := `{
+    "swagger": "2.0",
+    "info": {
+        "description": "Swagger Example API Markdown Description",
+        "title": "Swagger Example API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {},
+    "tags": [
+        {
+            "description": "Users Tag Markdown Description",
+            "name": "users"
+        }
+    ]
+}`
+	b, _ := json.
