@@ -525,4 +525,24 @@ func TestParser_ParseProduceComment(t *testing.T) {
 
 	comment := `@Produce json,xml,plain,html,mpfd,x-www-form-urlencoded,json-api,json-stream,octet-stream,png,jpeg,gif,application/xhtml+xml,application/health+json`
 
-	parser
+	parser := New()
+	assert.NoError(t, parseGeneralAPIInfo(parser, []string{comment}))
+	assert.Equal(t, parser.swagger.Produces, expected)
+
+	assert.Error(t, parseGeneralAPIInfo(parser, []string{`@Produce cookies,candies`}))
+
+	parser = New()
+	assert.NoError(t, parser.ParseProduceComment(comment[len(produceAttr)+1:]))
+	assert.Equal(t, parser.swagger.Produces, expected)
+}
+
+func TestParser_ParseGeneralAPIInfoCollectionFormat(t *testing.T) {
+	t.Parallel()
+
+	parser := New()
+	assert.NoError(t, parseGeneralAPIInfo(parser, []string{
+		"@query.collection.format csv",
+	}))
+	assert.Equal(t, parser.collectionFormatInQuery, "csv")
+
+	assert.No
