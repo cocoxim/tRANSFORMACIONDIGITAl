@@ -585,4 +585,25 @@ func TestParser_ParseGeneralAPITagDocs(t *testing.T) {
         "description": "A test Tag",
         "name": "test",
         "externalDocs": {
-            "d
+            "description": "Best example documentation",
+            "url": "https://example.com"
+        }
+    }
+]`
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParser_ParseGeneralAPISecurity(t *testing.T) {
+	t.Run("ApiKey", func(t *testing.T) {
+		t.Parallel()
+
+		parser := New()
+		assert.Error(t, parseGeneralAPIInfo(parser, []string{
+			"@securitydefinitions.apikey ApiKey"}))
+
+		assert.Error(t, parseGeneralAPIInfo(parser, []string{
+			"@securitydefinitions.apikey ApiKey",
+			"@in header"}))
+		assert.Error(t, parseGeneralAPIInfo(parser, []string{
+			"@securitydefinitions.apikey ApiKey",
+			"@n
