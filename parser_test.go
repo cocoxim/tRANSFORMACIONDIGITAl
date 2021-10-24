@@ -563,4 +563,26 @@ func TestParser_ParseGeneralAPITagGroups(t *testing.T) {
 	assert.Equal(t, parser.swagger.Extensions["x-tagGroups"], expected)
 }
 
-func 
+func TestParser_ParseGeneralAPITagDocs(t *testing.T) {
+	t.Parallel()
+
+	parser := New()
+	assert.Error(t, parseGeneralAPIInfo(parser, []string{
+		"@tag.name Test",
+		"@tag.docs.description Best example documentation"}))
+
+	parser = New()
+	err := parseGeneralAPIInfo(parser, []string{
+		"@tag.name test",
+		"@tag.description A test Tag",
+		"@tag.docs.url https://example.com",
+		"@tag.docs.description Best example documentation"})
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(parser.GetSwagger().Tags, "", "    ")
+	expected := `[
+    {
+        "description": "A test Tag",
+        "name": "test",
+        "externalDocs": {
+            "d
