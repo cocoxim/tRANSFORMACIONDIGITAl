@@ -606,4 +606,27 @@ func TestParser_ParseGeneralAPISecurity(t *testing.T) {
 			"@in header"}))
 		assert.Error(t, parseGeneralAPIInfo(parser, []string{
 			"@securitydefinitions.apikey ApiKey",
-			"@n
+			"@name X-API-KEY"}))
+
+		err := parseGeneralAPIInfo(parser, []string{
+			"@securitydefinitions.apikey ApiKey",
+			"@in header",
+			"@name X-API-KEY",
+			"@description some",
+			"",
+			"@securitydefinitions.oauth2.accessCode OAuth2AccessCode",
+			"@tokenUrl https://example.com/oauth/token",
+			"@authorizationUrl https://example.com/oauth/authorize",
+			"@scope.admin foo",
+		})
+		assert.NoError(t, err)
+
+		b, _ := json.MarshalIndent(parser.GetSwagger().SecurityDefinitions, "", "    ")
+		expected := `{
+    "ApiKey": {
+        "description": "some",
+        "type": "apiKey",
+        "name": "X-API-KEY",
+        "in": "header"
+    },
+    "OAuth2Access
