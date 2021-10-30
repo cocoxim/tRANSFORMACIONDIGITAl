@@ -629,4 +629,26 @@ func TestParser_ParseGeneralAPISecurity(t *testing.T) {
         "name": "X-API-KEY",
         "in": "header"
     },
-    "OAuth2Access
+    "OAuth2AccessCode": {
+        "type": "oauth2",
+        "flow": "accessCode",
+        "authorizationUrl": "https://example.com/oauth/authorize",
+        "tokenUrl": "https://example.com/oauth/token",
+        "scopes": {
+            "admin": " foo"
+        }
+    }
+}`
+		assert.Equal(t, expected, string(b))
+	})
+
+	t.Run("OAuth2Application", func(t *testing.T) {
+		t.Parallel()
+
+		parser := New()
+		assert.Error(t, parseGeneralAPIInfo(parser, []string{
+			"@securitydefinitions.oauth2.application OAuth2Application"}))
+
+		err := parseGeneralAPIInfo(parser, []string{
+			"@securitydefinitions.oauth2.application OAuth2Application",
+			"@tokenUrl 
