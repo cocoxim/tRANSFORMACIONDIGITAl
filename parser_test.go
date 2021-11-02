@@ -728,4 +728,19 @@ func TestParser_ParseGeneralAPISecurity(t *testing.T) {
 			"@tokenUrl https://example.com/oauth/token",
 			"@authorizationurl https://example.com/oauth/authorize"})
 		assert.NoError(t, err)
-	
+		b, _ := json.MarshalIndent(parser.GetSwagger().SecurityDefinitions, "", "    ")
+		expected := `{
+    "OAuth2AccessCode": {
+        "type": "oauth2",
+        "flow": "accessCode",
+        "authorizationUrl": "https://example.com/oauth/authorize",
+        "tokenUrl": "https://example.com/oauth/token"
+    }
+}`
+		assert.Equal(t, expected, string(b))
+
+		assert.Error(t, parseGeneralAPIInfo(parser, []string{
+			"@securitydefinitions.oauth2.accessCode OAuth2AccessCode",
+			"@tokenUrl https://example.com/oauth/token",
+			"@authorizationurl https://example.com/oauth/authorize",
+			"@scope.read,write Multiple scope"
