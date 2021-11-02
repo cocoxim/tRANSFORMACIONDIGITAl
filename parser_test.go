@@ -713,4 +713,19 @@ func TestParser_ParseGeneralAPISecurity(t *testing.T) {
 
 		parser := New()
 		assert.Error(t, parseGeneralAPIInfo(parser, []string{
-			"@securitydefinitions.oauth2.accessCode 
+			"@securitydefinitions.oauth2.accessCode OAuth2AccessCode"}))
+
+		assert.Error(t, parseGeneralAPIInfo(parser, []string{
+			"@securitydefinitions.oauth2.accessCode OAuth2AccessCode",
+			"@tokenUrl https://example.com/oauth/token"}))
+
+		assert.Error(t, parseGeneralAPIInfo(parser, []string{
+			"@securitydefinitions.oauth2.accessCode OAuth2AccessCode",
+			"@authorizationurl https://example.com/oauth/authorize"}))
+
+		err := parseGeneralAPIInfo(parser, []string{
+			"@securitydefinitions.oauth2.accessCode OAuth2AccessCode",
+			"@tokenUrl https://example.com/oauth/token",
+			"@authorizationurl https://example.com/oauth/authorize"})
+		assert.NoError(t, err)
+	
