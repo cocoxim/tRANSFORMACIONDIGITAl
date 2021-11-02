@@ -743,4 +743,40 @@ func TestParser_ParseGeneralAPISecurity(t *testing.T) {
 			"@securitydefinitions.oauth2.accessCode OAuth2AccessCode",
 			"@tokenUrl https://example.com/oauth/token",
 			"@authorizationurl https://example.com/oauth/authorize",
-			"@scope.read,write Multiple scope"
+			"@scope.read,write Multiple scope"}))
+	})
+}
+
+func TestParser_RefWithOtherPropertiesIsWrappedInAllOf(t *testing.T) {
+	t.Run("Readonly", func(t *testing.T) {
+		src := `
+package main
+
+type Teacher struct {
+	Name string
+} //@name Teacher
+
+type Student struct {
+	Name string
+	Age int ` + "`readonly:\"true\"`" + `
+	Teacher Teacher ` + "`readonly:\"true\"`" + `
+	OtherTeacher Teacher
+} //@name Student
+
+// @Success 200 {object} Student
+// @Router /test [get]
+func Fun()  {
+
+}
+`
+		expected := `{
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/test": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+        
