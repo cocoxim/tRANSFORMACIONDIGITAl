@@ -779,4 +779,25 @@ func Fun()  {
                 "responses": {
                     "200": {
                         "description": "OK",
-        
+                        "schema": {
+                            "$ref": "#/definitions/Student"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Student": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer",
+                    "readOnly": true
+                },
+                "name": {
+                    "type": "string"
+                },
+                "otherTeacher": {
+                    "$ref": "#/definitions/Teacher"
+    
