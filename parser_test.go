@@ -800,4 +800,30 @@ func Fun()  {
                 },
                 "otherTeacher": {
                     "$ref": "#/definitions/Teacher"
-    
+                },
+                "teacher": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/Teacher"
+                        }
+                    ],
+                    "readOnly": true
+                }
+            }
+        },
+        "Teacher": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}`
+
+		p := New()
+		_ = p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+
+		_, err := p.packages.ParseTypes()
+		a
