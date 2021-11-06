@@ -855,4 +855,26 @@ func TestParser_ParseType(t *testing.T) {
 
 	p := New()
 	err := p.getAllGoFileInfo("testdata", searchDir)
-	assert.NoError(t, er
+	assert.NoError(t, err)
+
+	_, err = p.packages.ParseTypes()
+
+	assert.NoError(t, err)
+	assert.NotNil(t, p.packages.uniqueDefinitions["api.Pet3"])
+	assert.NotNil(t, p.packages.uniqueDefinitions["web.Pet"])
+	assert.NotNil(t, p.packages.uniqueDefinitions["web.Pet2"])
+}
+
+func TestParseSimpleApi1(t *testing.T) {
+	t.Parallel()
+
+	expected, err := os.ReadFile("testdata/simple/expected.json")
+	assert.NoError(t, err)
+	searchDir := "testdata/simple"
+	p := New()
+	p.PropNamingStrategy = PascalCase
+	err = p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(p.swagger, "", "  ")
+	assert.JSONEq(t, string(e
