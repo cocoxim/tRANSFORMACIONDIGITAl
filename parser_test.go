@@ -826,4 +826,33 @@ func Fun()  {
 		_ = p.packages.ParseFile("api", "api/api.go", src, ParseAll)
 
 		_, err := p.packages.ParseTypes()
-		a
+		assert.NoError(t, err)
+
+		err = p.packages.RangeFiles(p.ParseRouterAPIInfo)
+		assert.NoError(t, err)
+
+		b, _ := json.MarshalIndent(p.swagger, "", "    ")
+		assert.Equal(t, expected, string(b))
+	})
+}
+
+func TestGetAllGoFileInfo(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/pet"
+
+	p := New()
+	err := p.getAllGoFileInfo("testdata", searchDir)
+
+	assert.NoError(t, err)
+	assert.Equal(t, 2, len(p.packages.files))
+}
+
+func TestParser_ParseType(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/simple/"
+
+	p := New()
+	err := p.getAllGoFileInfo("testdata", searchDir)
+	assert.NoError(t, er
