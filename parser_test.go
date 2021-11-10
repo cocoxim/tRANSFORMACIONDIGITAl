@@ -923,4 +923,20 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                 "consumes": [
                     "multipart/form-data"
                 ],
- 
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Upload file",
+                "operationId": "file.upload",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "this is a test file",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "desc
