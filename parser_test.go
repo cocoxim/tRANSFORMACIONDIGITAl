@@ -955,4 +955,22 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                         "schema": {
                             "$ref": "#/definitions/web.APIError"
                         }
-                  
+                    }
+                }
+            }
+        },
+        "/testapi/get-string-by-int/{some_id}": {
+            "get": {
+                "description": "get string by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Add a new pet to the store",
+                "operationId": "get-string-by-int",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "format": "int64"
