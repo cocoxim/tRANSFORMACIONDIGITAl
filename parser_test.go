@@ -939,4 +939,20 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                 ],
                 "responses": {
                     "200": {
-                        "desc
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "We need ID!!",
+                        "schema": {
+                            "$ref": "#/definitions/web.APIError"
+                        }
+                    },
+                    "404": {
+                        "description": "Can not find ID",
+                        "schema": {
+                            "$ref": "#/definitions/web.APIError"
+                        }
+                  
