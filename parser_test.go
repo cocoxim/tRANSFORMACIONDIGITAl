@@ -973,4 +973,22 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                 "parameters": [
                     {
                         "type": "integer",
-                        "format": "int64"
+                        "format": "int64",
+                        "description": "Some ID",
+                        "name": "some_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Some ID",
+                        "name": "some_id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/web.Pet"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+    
