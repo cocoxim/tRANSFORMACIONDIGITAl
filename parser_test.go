@@ -1008,4 +1008,26 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                             "$ref": "#/definitions/web.APIError"
                         }
                     }
-             
+                }
+            }
+        },
+        "/testapi/get-struct-array-by-string/{some_id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    },
+                    {
+                        "BasicAuth": []
+                    },
+                    {
+                        "OAuth2Application": [
+                            "write"
+                        ]
+                    },
+                    {
+                        "OAuth2Implicit": [
+                            "read",
+                            "admin"
+                        ]
+      
