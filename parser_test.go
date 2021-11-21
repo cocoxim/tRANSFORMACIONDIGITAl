@@ -1030,4 +1030,23 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                             "read",
                             "admin"
                         ]
-      
+                    },
+                    {
+                        "OAuth2AccessCode": [
+                            "read"
+                        ]
+                    },
+                    {
+                        "OAuth2Password": [
+                            "admin"
+                        ]
+                    }
+                ],
+                "description": "get struct array by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "operationId": "get-st
