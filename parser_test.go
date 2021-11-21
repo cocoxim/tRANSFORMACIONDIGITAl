@@ -1049,4 +1049,22 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                 "produces": [
                     "application/json"
                 ],
-                "operationId": "get-st
+                "operationId": "get-struct-array-by-string",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Some ID",
+                        "name": "some_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ],
+                        "type": "integer",
+                        "description": "Category",
+                        "name": "category",
+                  
