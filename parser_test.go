@@ -1067,4 +1067,20 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                         "type": "integer",
                         "description": "Category",
                         "name": "category",
-                  
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "maximum": 50,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "
