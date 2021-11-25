@@ -1083,4 +1083,22 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                         "maximum": 50,
                         "type": "integer",
                         "default": 10,
-                        "description": "
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 50,
+                        "minLength": 1,
+                        "type": "string",
+                        "default": "\"\"",
+                        "description": "q",
+                        "name": "q",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    
