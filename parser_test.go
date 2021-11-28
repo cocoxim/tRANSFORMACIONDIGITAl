@@ -1161,4 +1161,19 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                             "type": "array",
                             "items": {
                                 "type": "string",
-                                "format": "ur
+                                "format": "url"
+                            },
+                            "example": [
+                                "http://test/image/1.jpg",
+                                "http://test/image/2.jpg"
+                            ]
+                        },
+                        "small_category": {
+                            "type": "object",
+                            "required": [
+                                "name"
+                            ],
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+              
