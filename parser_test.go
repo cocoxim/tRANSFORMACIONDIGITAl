@@ -1145,4 +1145,20 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
             "properties": {
                 "birthday": {
                     "type": "integer"
-              
+                },
+                "category": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "name": {
+                            "type": "string",
+                            "example": "category_name"
+                        },
+                        "photo_urls": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "ur
