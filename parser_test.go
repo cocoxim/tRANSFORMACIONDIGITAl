@@ -1120,3 +1120,29 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                     }
                 }
             }
+        }
+    },
+    "definitions": {
+        "web.APIError": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "error_code": {
+                    "type": "integer"
+                },
+                "error_message": {
+                    "type": "string"
+                }
+            }
+        },
+        "web.Pet": {
+            "type": "object",
+            "required": [
+                "price"
+            ],
+            "properties": {
+                "birthday": {
+                    "type": "integer"
+              
