@@ -1188,4 +1188,22 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                                         "type": "string"
                                     },
                                     "example": [
-                                        "http://test
+                                        "http://test/image/1.jpg",
+                                        "http://test/image/2.jpg"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "coeffs": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "custom_string": {
+                    "type": "string"
+                },
+                "custom_string_arr": {
+                    "type": "array",
