@@ -1207,3 +1207,23 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                 },
                 "custom_string_arr": {
                     "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "data": {},
+                "decimal": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1
+                },
+                "is_alive": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "name": {
+                    "type": "string",
+                    "examp
