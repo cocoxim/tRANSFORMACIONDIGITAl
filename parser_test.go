@@ -1226,4 +1226,24 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                 },
                 "name": {
                     "type": "string",
-                    "examp
+                    "example": "poti"
+                },
+                "null_int": {
+                    "type": "integer"
+                },
+                "pets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.Pet2"
+                    }
+                },
+                "pets2": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.Pet2"
+                    }
+                },
+                "photo_urls": {
+                    "type": "array",
+                    "items": {
+                        "type": "st
