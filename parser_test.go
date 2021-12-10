@@ -1291,4 +1291,26 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
         "web.RevValue": {
             "type": "object",
             "properties": {
-                "d
+                "data": {
+                    "type": "integer"
+                },
+                "err": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "web.Tag": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pets": {
+                    "type
