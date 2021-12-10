@@ -1246,4 +1246,24 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                 "photo_urls": {
                     "type": "array",
                     "items": {
-                        "type": "st
+                        "type": "string"
+                    },
+                    "example": [
+                        "http://test/image/1.jpg",
+                        "http://test/image/2.jpg"
+                    ]
+                },
+                "price": {
+                    "type": "number",
+                    "maximum": 130,
+                    "minimum": 0,
+                    "multipleOf": 0.01,
+                    "example": 3.25
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$
