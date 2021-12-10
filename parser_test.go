@@ -1266,4 +1266,29 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
                 "tags": {
                     "type": "array",
                     "items": {
-                        "$
+                        "$ref": "#/definitions/web.Tag"
+                    }
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "web.Pet2": {
+            "type": "object",
+            "properties": {
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "middle_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "web.RevValue": {
+            "type": "object",
+            "properties": {
+                "d
