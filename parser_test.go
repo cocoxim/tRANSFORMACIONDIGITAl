@@ -1351,4 +1351,23 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
         "OAuth2Implicit": {
             "type": "oauth2",
             "flow": "implicit",
-            "authorizationUrl": "https://example.com/oauth/authori
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            "scopes": {
+                "admin": " Grants read and write access to administrative information",
+                "write": " Grants write access"
+            }
+        },
+        "OAuth2Password": {
+            "type": "oauth2",
+            "flow": "password",
+            "tokenUrl": "https://example.com/oauth/token",
+            "scopes": {
+                "admin": " Grants read and write access to administrative information",
+                "read": " Grants read access",
+                "write": " Grants write access"
+            }
+        }
+    }
+}`
+	searchDir := "testdata/simple2"
+	p := New()
