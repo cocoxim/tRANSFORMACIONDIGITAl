@@ -1371,3 +1371,24 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
 }`
 	searchDir := "testdata/simple2"
 	p := New()
+	p.PropNamingStrategy = SnakeCase
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
+	t.Parallel()
+
+	expected := `{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server Petstore server.",
+        "title": "Swagger Example API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "sup
