@@ -1336,3 +1336,19 @@ func TestParseSimpleApi_ForSnakecase(t *testing.T) {
             "authorizationUrl": "https://example.com/oauth/authorize",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
+                "admin": " Grants read and write access to administrative information"
+            }
+        },
+        "OAuth2Application": {
+            "type": "oauth2",
+            "flow": "application",
+            "tokenUrl": "https://example.com/oauth/token",
+            "scopes": {
+                "admin": " Grants read and write access to administrative information",
+                "write": " Grants write access"
+            }
+        },
+        "OAuth2Implicit": {
+            "type": "oauth2",
+            "flow": "implicit",
+            "authorizationUrl": "https://example.com/oauth/authori
