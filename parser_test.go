@@ -1413,4 +1413,20 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                 ],
                 "summary": "Upload file",
                 "operationId": "file.upload",
-    
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "this is a test file",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": 
