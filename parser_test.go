@@ -1391,4 +1391,26 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
         "contact": {
             "name": "API Support",
             "url": "http://www.swagger.io/support",
-            "email": "sup
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "petstore.swagger.io",
+    "basePath": "/v2",
+    "paths": {
+        "/file/upload": {
+            "post": {
+                "description": "Upload file",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Upload file",
+                "operationId": "file.upload",
+    
