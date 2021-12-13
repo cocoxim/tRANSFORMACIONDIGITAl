@@ -1429,4 +1429,22 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                             "type": "string"
                         }
                     },
-                    "400": 
+                    "400": {
+                        "description": "We need ID!!",
+                        "schema": {
+                            "$ref": "#/definitions/web.APIError"
+                        }
+                    },
+                    "404": {
+                        "description": "Can not find ID",
+                        "schema": {
+                            "$ref": "#/definitions/web.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/testapi/get-string-by-int/{some_id}": {
+            "get": {
+                "description": "get string by ID",
+                "consume
