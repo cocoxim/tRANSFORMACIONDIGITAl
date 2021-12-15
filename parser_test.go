@@ -1447,4 +1447,22 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
         "/testapi/get-string-by-int/{some_id}": {
             "get": {
                 "description": "get string by ID",
-                "consume
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Add a new pet to the store",
+                "operationId": "get-string-by-int",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Some ID",
+                        "name": "some_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                      
