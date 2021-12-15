@@ -1465,4 +1465,22 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                         "required": true
                     },
                     {
-                      
+                        "description": "Some ID",
+                        "name": "some_id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/web.Pet"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "We need ID!!",
+            
