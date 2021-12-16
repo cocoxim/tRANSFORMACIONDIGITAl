@@ -1522,4 +1522,22 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                         ]
                     },
                     {
-                        "OAuth2Pass
+                        "OAuth2Password": [
+                            "admin"
+                        ]
+                    }
+                ],
+                "description": "get struct array by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "operationId": "get-struct-array-by-string",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Some ID",
+                        "name": "some_id",
+                        "in
