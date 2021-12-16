@@ -1483,4 +1483,23 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                     },
                     "400": {
                         "description": "We need ID!!",
-            
+                        "schema": {
+                            "$ref": "#/definitions/web.APIError"
+                        }
+                    },
+                    "404": {
+                        "description": "Can not find ID",
+                        "schema": {
+                            "$ref": "#/definitions/web.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/testapi/get-struct-array-by-string/{some_id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    },
+     
