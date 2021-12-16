@@ -1502,4 +1502,24 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                     {
                         "ApiKeyAuth": []
                     },
-     
+                    {
+                        "BasicAuth": []
+                    },
+                    {
+                        "OAuth2Application": [
+                            "write"
+                        ]
+                    },
+                    {
+                        "OAuth2Implicit": [
+                            "read",
+                            "admin"
+                        ]
+                    },
+                    {
+                        "OAuth2AccessCode": [
+                            "read"
+                        ]
+                    },
+                    {
+                        "OAuth2Pass
