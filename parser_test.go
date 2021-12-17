@@ -1540,4 +1540,22 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                         "type": "string",
                         "description": "Some ID",
                         "name": "some_id",
-                        "in
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ],
+                        "type": "integer",
+                        "description": "Category",
+                        "name": "category",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                    
