@@ -1558,4 +1558,21 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                     {
                         "minimum": 0,
                         "type": "integer",
-                    
+                        "default": 0,
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "maximum": 50,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 50,
+                        "minLeng
