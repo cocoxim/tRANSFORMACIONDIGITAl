@@ -1575,4 +1575,21 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                     },
                     {
                         "maxLength": 50,
-                        "minLeng
+                        "minLength": 1,
+                        "type": "string",
+                        "default": "\"\"",
+                        "description": "q",
+                        "name": "q",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "We need 
