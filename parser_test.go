@@ -1613,4 +1613,24 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
             "properties": {
                 "createdAt": {
                     "type": "string"
-               
+                },
+                "errorCode": {
+                    "type": "integer"
+                },
+                "errorMessage": {
+                    "type": "string"
+                }
+            }
+        },
+        "web.Pet": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "name": {
+                            "
