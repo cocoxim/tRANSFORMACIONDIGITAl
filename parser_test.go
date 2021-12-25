@@ -1647,4 +1647,18 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                                 "http://test/image/2.jpg"
                             ]
                         },
-                        "smallCate
+                        "smallCategory": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "example": "detail_category_name"
+                                },
+                                "photoURLs": {
+                                    "type": "array",
+                                    "items": {
+     
