@@ -1698,4 +1698,22 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                 "pets2": {
                     "type": "array",
                     "items": {
-         
+                        "$ref": "#/definitions/web.Pet2"
+                    }
+                },
+                "photoURLs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "http://test/image/1.jpg",
+                        "http://test/image/2.jpg"
+                    ]
+                },
+                "price": {
+                    "type": "number",
+                    "multipleOf": 0.01,
+                    "example": 3.25
+                },
+       
