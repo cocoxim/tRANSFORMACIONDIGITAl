@@ -1679,4 +1679,23 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                 "id": {
                     "type": "integer",
                     "format": "int64",
+                    "example": 1
+                },
+                "isAlive": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "name": {
+                    "type": "string",
+                    "example": "poti"
+                },
+                "pets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.Pet2"
+                    }
+                },
+                "pets2": {
+                    "type": "array",
+                    "items": {
          
