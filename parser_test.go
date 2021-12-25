@@ -1661,4 +1661,22 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                                 "photoURLs": {
                                     "type": "array",
                                     "items": {
-     
+                                        "type": "string"
+                                    },
+                                    "example": [
+                                        "http://test/image/1.jpg",
+                                        "http://test/image/2.jpg"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "data": {},
+                "decimal": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+         
