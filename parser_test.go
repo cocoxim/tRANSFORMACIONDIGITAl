@@ -1716,4 +1716,27 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                     "multipleOf": 0.01,
                     "example": 3.25
                 },
-       
+                "status": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.Tag"
+                    }
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "web.Pet2": {
+            "type": "object",
+            "properties": {
+                "deletedAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "mid
