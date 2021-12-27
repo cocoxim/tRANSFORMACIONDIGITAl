@@ -1763,4 +1763,27 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
             "properties": {
                 "id": {
                     "type": "integer",
-                 
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.Pet"
+                    }
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
+        "BasicAuth": {
+            "type": "basic"
+        },
+        "OAuth2AccessCode": {
