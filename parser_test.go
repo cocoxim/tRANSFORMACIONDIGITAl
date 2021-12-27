@@ -1802,4 +1802,20 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
                 "write": " Grants write access"
-            
+            }
+        },
+        "OAuth2Implicit": {
+            "type": "oauth2",
+            "flow": "implicit",
+            "authorizationUrl": "https://example.com/oauth/authorize",
+            "scopes": {
+                "admin": " Grants read and write access to administrative information",
+                "write": " Grants write access"
+            }
+        },
+        "OAuth2Password": {
+            "type": "oauth2",
+            "flow": "password",
+            "tokenUrl": "https://example.com/oauth/token",
+            "scopes": {
+                "admin": " Grants read and write access to administ
