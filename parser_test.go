@@ -1739,4 +1739,28 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
                 "id": {
                     "type": "integer"
                 },
-                "mid
+                "middleName": {
+                    "type": "string"
+                }
+            }
+        },
+        "web.RevValue": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "integer"
+                },
+                "err": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "web.Tag": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                 
