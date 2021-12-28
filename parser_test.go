@@ -1818,4 +1818,28 @@ func TestParseSimpleApi_ForLowerCamelcase(t *testing.T) {
             "flow": "password",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
-                "admin": " Grants read and write access to administ
+                "admin": " Grants read and write access to administrative information",
+                "read": " Grants read access",
+                "write": " Grants write access"
+            }
+        }
+    }
+}`
+	searchDir := "testdata/simple3"
+	p := New()
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseStructComment(t *testing.T) {
+	t.Parallel()
+
+	expected := `{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server Petstore server.",
+        "title": "Swagger Example API",
+  
