@@ -1842,4 +1842,24 @@ func TestParseStructComment(t *testing.T) {
     "info": {
         "description": "This is a sample server Petstore server.",
         "title": "Swagger Example API",
-  
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:4000",
+    "basePath": "/api",
+    "paths": {
+        "/posts/{post_id}": {
+            "get": {
+                "description": "get string by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Add a new pet to the store",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "format": "int64",
+                        "descriptio
