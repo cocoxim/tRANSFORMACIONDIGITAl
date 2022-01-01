@@ -1862,4 +1862,21 @@ func TestParseStructComment(t *testing.T) {
                     {
                         "type": "integer",
                         "format": "int64",
-                        "descriptio
+                        "description": "Some ID",
+                        "name": "post_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "We need ID!!",
+                        "schema": {
+                            "$ref": "#/definitions/web.APIError"
+                        
