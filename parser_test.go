@@ -1879,4 +1879,25 @@ func TestParseStructComment(t *testing.T) {
                         "description": "We need ID!!",
                         "schema": {
                             "$ref": "#/definitions/web.APIError"
-                        
+                        }
+                    },
+                    "404": {
+                        "description": "Can not find ID",
+                        "schema": {
+                            "$ref": "#/definitions/web.APIError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "web.APIError": {
+            "description": "API error with information about it",
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "description": "Error time",
+                    "type": "string"
+                },
+                "e
