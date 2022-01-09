@@ -1900,4 +1900,23 @@ func TestParseStructComment(t *testing.T) {
                     "description": "Error time",
                     "type": "string"
                 },
-                "e
+                "error": {
+                    "description": "Error an Api error",
+                    "type": "string"
+                },
+                "errorCtx": {
+                    "description": "Error ` + "`" + `context` + "`" + ` tick comment",
+                    "type": "string"
+                },
+                "errorNo": {
+                    "description": "Error ` + "`" + `number` + "`" + ` tick comment",
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}`
+	searchDir := "testdata/struct_comment"
+	p := New()
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.
