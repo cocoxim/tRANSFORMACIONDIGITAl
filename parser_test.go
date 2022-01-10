@@ -1919,4 +1919,27 @@ func TestParseStructComment(t *testing.T) {
 	searchDir := "testdata/struct_comment"
 	p := New()
 	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
-	assert.
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseNonExportedJSONFields(t *testing.T) {
+	t.Parallel()
+
+	expected := `{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server.",
+        "title": "Swagger Example API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:4000",
+    "basePath": "/api",
+    "paths": {
+        "/so-something": {
+            "get": {
+                "description": "Does something, but internal (non-exported) fields inside a struct won't be marshaled into JSON",
+                "consumes": [
+       
