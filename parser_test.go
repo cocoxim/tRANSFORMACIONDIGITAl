@@ -1942,4 +1942,24 @@ func TestParseNonExportedJSONFields(t *testing.T) {
             "get": {
                 "description": "Does something, but internal (non-exported) fields inside a struct won't be marshaled into JSON",
                 "consumes": [
-       
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Call DoSomething",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.MyStruct"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.MyStruct": {
+            "type": "object",
+          
