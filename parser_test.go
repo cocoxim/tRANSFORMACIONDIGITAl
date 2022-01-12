@@ -1962,4 +1962,22 @@ func TestParseNonExportedJSONFields(t *testing.T) {
     "definitions": {
         "main.MyStruct": {
             "type": "object",
-          
+            "properties": {
+                "data": {
+                    "description": "Post data",
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "description": "Post tag",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1
+ 
