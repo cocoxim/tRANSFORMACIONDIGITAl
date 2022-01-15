@@ -2043,4 +2043,24 @@ func TestParseModelAsTypeAlias(t *testing.T) {
         "title": "Swagger Example API",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
-            "name"
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "petstore.swagger.io",
+    "basePath": "/v2",
+    "paths": {
+        "/testapi/time-as-time-container": {
+            "get": {
+                "description": "test container with time and time alias",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "applicatio
