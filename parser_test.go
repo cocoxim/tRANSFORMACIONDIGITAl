@@ -1980,4 +1980,30 @@ func TestParseNonExportedJSONFields(t *testing.T) {
                     "type": "integer",
                     "format": "int64",
                     "example": 1
- 
+                },
+                "name": {
+                    "description": "Post name",
+                    "type": "string",
+                    "example": "poti"
+                }
+            }
+        }
+    }
+}`
+
+	searchDir := "testdata/non_exported_json_fields"
+	p := New()
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParsePetApi(t *testing.T) {
+	t.Parallel()
+
+	expected := `{
+    "schemes": [
+        "http",
+        "https"
+    ],
