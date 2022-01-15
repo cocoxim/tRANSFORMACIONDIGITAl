@@ -2017,4 +2017,30 @@ func TestParsePetApi(t *testing.T) {
         },
         "license": {
             "name": "Apache 2.0",
-            "url": "http://www.apache.org/
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "petstore.swagger.io",
+    "basePath": "/v2",
+    "paths": {}
+}`
+	searchDir := "testdata/pet"
+	p := New()
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseModelAsTypeAlias(t *testing.T) {
+	t.Parallel()
+
+	expected := `{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server Petstore server.",
+        "title": "Swagger Example API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name"
