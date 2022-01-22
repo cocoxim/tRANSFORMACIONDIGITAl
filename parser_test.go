@@ -2109,4 +2109,28 @@ func TestParseComposition(t *testing.T) {
 
 	searchDir := "testdata/composition"
 	p := New()
-	err := p.ParseAPI(searchDir, mainAPIFile, default
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+
+	expected, err := os.ReadFile(filepath.Join(searchDir, "expected.json"))
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+
+	// windows will fail: \r\n \n
+	assert.Equal(t, string(expected), string(b))
+}
+
+func TestParseImportAliases(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/alias_import"
+	p := New()
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+
+	expected, err := os.ReadFile(filepath.Join(searchDir, "expected.json"))
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	// windows will fail: \r\n 
