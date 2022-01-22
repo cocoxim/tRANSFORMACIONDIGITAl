@@ -2084,4 +2084,29 @@ func TestParseModelAsTypeAlias(t *testing.T) {
             "properties": {
                 "created_at": {
                     "type": "string"
- 
+                },
+                "name": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}`
+	searchDir := "testdata/alias_type"
+	p := New()
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseComposition(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/composition"
+	p := New()
+	err := p.ParseAPI(searchDir, mainAPIFile, default
