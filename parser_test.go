@@ -2063,4 +2063,25 @@ func TestParseModelAsTypeAlias(t *testing.T) {
                     "application/json"
                 ],
                 "produces": [
-                    "applicatio
+                    "application/json"
+                ],
+                "summary": "Get container with time and time alias",
+                "operationId": "time-as-time-container",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/data.TimeContainer"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "data.TimeContainer": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+ 
