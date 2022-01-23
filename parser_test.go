@@ -2149,4 +2149,25 @@ func TestParseTypeOverrides(t *testing.T) {
 	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
 	assert.NoError(t, err)
 
-	expected, err := os.ReadFile(filepath
+	expected, err := os.ReadFile(filepath.Join(searchDir, "expected.json"))
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	//windows will fail: \r\n \n
+	assert.Equal(t, string(expected), string(b))
+}
+
+func TestParseNested(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/nested"
+	p := New(SetParseDependency(true))
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+
+	expected, err := os.ReadFile(filepath.Join(searchDir, "expected.json"))
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	assert.Equal(t, string(expected), string(b))
+}
