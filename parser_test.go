@@ -2193,4 +2193,23 @@ func TestParseDuplicatedOtherMethods(t *testing.T) {
 func TestParseDuplicatedFunctionScoped(t *testing.T) {
 	t.Parallel()
 
-	searchDir
+	searchDir := "testdata/duplicated_function_scoped"
+	p := New(SetParseDependency(true))
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.Errorf(t, err, "duplicated @id declarations successfully found")
+}
+
+func TestParseConflictSchemaName(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/conflict_name"
+	p := New(SetParseDependency(true))
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	expected, err := os.ReadFile(filepath.Join(searchDir, "expected.json"))
+	assert.NoError(t, err)
+	assert.Equal(t, string(expected), string(b))
+}
+
+func
