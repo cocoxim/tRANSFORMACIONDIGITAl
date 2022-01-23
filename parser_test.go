@@ -2133,4 +2133,20 @@ func TestParseImportAliases(t *testing.T) {
 	assert.NoError(t, err)
 
 	b, _ := json.MarshalIndent(p.swagger, "", "    ")
-	// windows will fail: \r\n 
+	// windows will fail: \r\n \n
+	assert.Equal(t, string(expected), string(b))
+}
+
+func TestParseTypeOverrides(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/global_override"
+	p := New(SetOverrides(map[string]string{
+		"github.com/swaggo/swag/testdata/global_override/types.Application":  "string",
+		"github.com/swaggo/swag/testdata/global_override/types.Application2": "github.com/swaggo/swag/testdata/global_override/othertypes.Application",
+		"github.com/swaggo/swag/testdata/global_override/types.ShouldSkip":   "",
+	}))
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+
+	expected, err := os.ReadFile(filepath
