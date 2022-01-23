@@ -2171,3 +2171,26 @@ func TestParseNested(t *testing.T) {
 	b, _ := json.MarshalIndent(p.swagger, "", "    ")
 	assert.Equal(t, string(expected), string(b))
 }
+
+func TestParseDuplicated(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/duplicated"
+	p := New(SetParseDependency(true))
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.Errorf(t, err, "duplicated @id declarations successfully found")
+}
+
+func TestParseDuplicatedOtherMethods(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/duplicated2"
+	p := New(SetParseDependency(true))
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.Errorf(t, err, "duplicated @id declarations successfully found")
+}
+
+func TestParseDuplicatedFunctionScoped(t *testing.T) {
+	t.Parallel()
+
+	searchDir
