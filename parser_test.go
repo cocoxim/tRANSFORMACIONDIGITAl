@@ -2212,4 +2212,23 @@ func TestParseConflictSchemaName(t *testing.T) {
 	assert.Equal(t, string(expected), string(b))
 }
 
-func
+func TestParseExternalModels(t *testing.T) {
+	searchDir := "testdata/external_models/main"
+	mainAPIFile := "main.go"
+	p := New(SetParseDependency(true))
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	//ioutil.WriteFile("./testdata/external_models/main/expected.json",b,0777)
+	expected, err := os.ReadFile(filepath.Join(searchDir, "expected.json"))
+	assert.NoError(t, err)
+	assert.Equal(t, string(expected), string(b))
+}
+
+func TestParseGoList(t *testing.T) {
+	mainAPIFile := "main.go"
+	p := New(ParseUsingGoList(true), SetParseDependency(true))
+	go111moduleEnv := os.Getenv("GO111MODULE")
+
+	cases := []struct {
+		
