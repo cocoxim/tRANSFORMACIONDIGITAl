@@ -2231,4 +2231,30 @@ func TestParseGoList(t *testing.T) {
 	go111moduleEnv := os.Getenv("GO111MODULE")
 
 	cases := []struct {
-		
+		name      string
+		gomodule  bool
+		searchDir string
+		err       error
+		run       func(searchDir string) error
+	}{
+		{
+			name:      "disableGOMODULE",
+			gomodule:  false,
+			searchDir: "testdata/golist_disablemodule",
+			run: func(searchDir string) error {
+				return p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+			},
+		},
+		{
+			name:      "enableGOMODULE",
+			gomodule:  true,
+			searchDir: "testdata/golist",
+			run: func(searchDir string) error {
+				return p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+			},
+		},
+		{
+			name:      "invalid_main",
+			gomodule:  true,
+			searchDir: "testdata/golist_invalid",
+			err:   
