@@ -2257,4 +2257,23 @@ func TestParseGoList(t *testing.T) {
 			name:      "invalid_main",
 			gomodule:  true,
 			searchDir: "testdata/golist_invalid",
-			err:   
+			err:       errors.New("no such file or directory"),
+			run: func(searchDir string) error {
+				return p.ParseAPI(searchDir, "invalid/main.go", defaultParseDepth)
+			},
+		},
+		{
+			name:      "internal_invalid_pkg",
+			gomodule:  true,
+			searchDir: "testdata/golist_invalid",
+			err:       errors.New("expected 'package', found This"),
+			run: func(searchDir string) error {
+				mockErrGoFile := "testdata/golist_invalid/err.go"
+				f, err := os.OpenFile(mockErrGoFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+				if err != nil {
+					return err
+				}
+				defer f.Close()
+				_, err = f.Write([]byte(`package invalid
+
+function a() {}
