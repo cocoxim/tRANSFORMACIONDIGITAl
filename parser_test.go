@@ -2276,4 +2276,24 @@ func TestParseGoList(t *testing.T) {
 				defer f.Close()
 				_, err = f.Write([]byte(`package invalid
 
-function a() {}
+function a() {}`))
+				if err != nil {
+					return err
+				}
+				defer os.Remove(mockErrGoFile)
+				return p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+			},
+		},
+		{
+			name:      "invalid_pkg",
+			gomodule:  true,
+			searchDir: "testdata/golist_invalid",
+			err:       errors.New("expected 'package', found This"),
+			run: func(searchDir string) error {
+				mockErrGoFile := "testdata/invalid_external_pkg/invalid/err.go"
+				f, err := os.OpenFile(mockErrGoFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+				if err != nil {
+					return err
+				}
+				defer f.Close()
+				_, err = f.Write([]b
