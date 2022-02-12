@@ -2326,4 +2326,40 @@ function a() {}`))
 	}
 }
 
-func TestParser_ParseStructArrayObjec
+func TestParser_ParseStructArrayObject(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package api
+
+type Response struct {
+	Code int
+	Table [][]string
+	Data []struct{
+		Field1 uint
+		Field2 string
+	}
+}
+
+// @Success 200 {object} Response
+// @Router /api/{id} [get]
+func Test(){
+}
+`
+	expected := `{
+   "api.Response": {
+      "type": "object",
+      "properties": {
+         "code": {
+            "type": "integer"
+         },
+         "data": {
+            "type": "array",
+            "items": {
+               "type": "object",
+               "properties": {
+                  "field1": {
+                     "type": "integer"
+                  },
+                  "field2": {
+      
