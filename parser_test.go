@@ -2362,4 +2362,31 @@ func Test(){
                      "type": "integer"
                   },
                   "field2": {
-      
+                     "type": "string"
+                  }
+               }
+            }
+         },
+         "table": {
+            "type": "array",
+            "items": {
+               "type": "array",
+               "items": {
+                  "type": "string"
+               }
+            }
+         }
+      }
+   }
+}`
+
+	p := New()
+	_ = p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+	_, err := p.packages.ParseTypes()
+	assert.NoError(t, err)
+
+	err = p.packages.RangeFiles(p.ParseRouterAPIInfo)
+	assert.NoError(t, err)
+
+	out, err := json.MarshalIndent(p.swagger.Definitions, "", "   ")
+	assert
