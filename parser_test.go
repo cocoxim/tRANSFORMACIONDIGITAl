@@ -2389,4 +2389,43 @@ func Test(){
 	assert.NoError(t, err)
 
 	out, err := json.MarshalIndent(p.swagger.Definitions, "", "   ")
-	assert
+	assert.NoError(t, err)
+	assert.Equal(t, expected, string(out))
+
+}
+
+func TestParser_ParseEmbededStruct(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package api
+
+type Response struct {
+	rest.ResponseWrapper
+}
+
+// @Success 200 {object} Response
+// @Router /api/{id} [get]
+func Test(){
+}
+`
+	restsrc := `
+package rest
+
+type ResponseWrapper struct {
+	Status   string
+	Code     int
+	Messages []string
+	Result   interface{}
+}
+`
+	expected := `{
+   "api.Response": {
+      "type": "object",
+      "properties": {
+         "code": {
+            "type": "integer"
+         },
+         "messages": {
+            "type": "array",
+            "items"
