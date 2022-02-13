@@ -2428,4 +2428,29 @@ type ResponseWrapper struct {
          },
          "messages": {
             "type": "array",
-            "items"
+            "items": {
+               "type": "string"
+            }
+         },
+         "result": {},
+         "status": {
+            "type": "string"
+         }
+      }
+   }
+}`
+	parser := New(SetParseDependency(true))
+
+	_ = parser.packages.ParseFile("api", "api/api.go", src, ParseAll)
+
+	_ = parser.packages.ParseFile("rest", "rest/rest.go", restsrc, ParseAll)
+
+	_, err := parser.packages.ParseTypes()
+	assert.NoError(t, err)
+
+	err = parser.packages.RangeFiles(parser.ParseRouterAPIInfo)
+	assert.NoError(t, err)
+
+	out, err := json.MarshalIndent(parser.swagger.Definitions, "", "   ")
+	assert.NoError(t, err)
+	assert.Equa
