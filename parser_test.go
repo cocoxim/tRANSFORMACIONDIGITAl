@@ -2495,4 +2495,35 @@ func Test(){
             "type": "string"
          },
          "test2": {
-   
+            "description": "test2",
+            "allOf": [
+               {
+                  "$ref": "#/definitions/api.Child"
+               }
+            ]
+         }
+      }
+   }
+}`
+	p := New()
+	_ = p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+	_, err := p.packages.ParseTypes()
+	assert.NoError(t, err)
+
+	err = p.packages.RangeFiles(p.ParseRouterAPIInfo)
+	assert.NoError(t, err)
+
+	out, err := json.MarshalIndent(p.swagger.Definitions, "", "   ")
+	assert.NoError(t, err)
+	assert.Equal(t, expected, string(out))
+}
+
+func TestParser_ParseStructMapMember(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package api
+
+type MyMapType map[string]string
+
+ty
