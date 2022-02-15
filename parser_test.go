@@ -2453,4 +2453,46 @@ type ResponseWrapper struct {
 
 	out, err := json.MarshalIndent(parser.swagger.Definitions, "", "   ")
 	assert.NoError(t, err)
-	assert.Equa
+	assert.Equal(t, expected, string(out))
+
+}
+
+func TestParser_ParseStructPointerMembers(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package api
+
+type Child struct {
+	Name string
+}
+
+type Parent struct {
+	Test1 *string  //test1
+	Test2 *Child   //test2
+}
+
+// @Success 200 {object} Parent
+// @Router /api/{id} [get]
+func Test(){
+}
+`
+
+	expected := `{
+   "api.Child": {
+      "type": "object",
+      "properties": {
+         "name": {
+            "type": "string"
+         }
+      }
+   },
+   "api.Parent": {
+      "type": "object",
+      "properties": {
+         "test1": {
+            "description": "test1",
+            "type": "string"
+         },
+         "test2": {
+   
