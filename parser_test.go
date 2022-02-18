@@ -2579,4 +2579,27 @@ func Test(){
          },
          "test3": {
             "description": "test3",
-            "type": "obje
+            "type": "object",
+            "additionalProperties": {
+               "type": "string"
+            }
+         },
+         "test4": {
+            "description": "test4",
+            "type": "object",
+            "additionalProperties": {
+               "$ref": "#/definitions/api.Child"
+            }
+         },
+         "test5": {
+            "description": "test5",
+            "type": "object",
+            "additionalProperties": {
+               "$ref": "#/definitions/api.Child"
+            }
+         },
+         "test6": {
+            "description": "test6",
+            "allOf": [
+               {
+                  "$ref": "#/definitions/api.MyM
