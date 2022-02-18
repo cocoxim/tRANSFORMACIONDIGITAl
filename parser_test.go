@@ -2602,4 +2602,29 @@ func Test(){
             "description": "test6",
             "allOf": [
                {
-                  "$ref": "#/definitions/api.MyM
+                  "$ref": "#/definitions/api.MyMapType"
+               }
+            ]
+         },
+         "test7": {
+            "description": "test7",
+            "type": "array",
+            "items": {
+               "$ref": "#/definitions/api.Child"
+            }
+         },
+         "test8": {
+            "description": "test8",
+            "type": "array",
+            "items": {
+               "$ref": "#/definitions/api.Child"
+            }
+         },
+         "test9": {
+            "description": "test9",
+            "type": "array",
+            "items": {
+               "type": "object",
+               "additionalProperties": {
+                  "type": "string"
+    
