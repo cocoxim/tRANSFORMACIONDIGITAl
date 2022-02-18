@@ -2526,4 +2526,31 @@ package api
 
 type MyMapType map[string]string
 
-ty
+type Child struct {
+	Name string
+}
+
+type Parent struct {
+	Test1 map[string]interface{}  //test1
+	Test2 map[string]string		  //test2
+	Test3 map[string]*string	  //test3
+	Test4 map[string]Child		  //test4
+	Test5 map[string]*Child		  //test5
+	Test6 MyMapType				  //test6
+	Test7 []Child				  //test7
+	Test8 []*Child				  //test8
+	Test9 []map[string]string	  //test9
+}
+
+// @Success 200 {object} Parent
+// @Router /api/{id} [get]
+func Test(){
+}
+`
+	expected := `{
+   "api.Child": {
+      "type": "object",
+      "properties": {
+         "name": {
+            "type": "string"
+         }
