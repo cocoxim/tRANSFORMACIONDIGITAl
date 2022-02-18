@@ -2554,3 +2554,29 @@ func Test(){
          "name": {
             "type": "string"
          }
+      }
+   },
+   "api.MyMapType": {
+      "type": "object",
+      "additionalProperties": {
+         "type": "string"
+      }
+   },
+   "api.Parent": {
+      "type": "object",
+      "properties": {
+         "test1": {
+            "description": "test1",
+            "type": "object",
+            "additionalProperties": true
+         },
+         "test2": {
+            "description": "test2",
+            "type": "object",
+            "additionalProperties": {
+               "type": "string"
+            }
+         },
+         "test3": {
+            "description": "test3",
+            "type": "obje
