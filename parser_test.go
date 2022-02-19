@@ -2658,4 +2658,42 @@ func Test(){
 }
 `
 	p := New()
-	err := p.packages.ParseFile("api", "api/api.go", src, P
+	err := p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+	assert.NoError(t, err)
+
+	err = p.packages.RangeFiles(p.ParseRouterAPIInfo)
+	assert.Error(t, err)
+}
+
+func TestParser_ParseRouterApiGet(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package test
+
+// @Router /api/{id} [get]
+func Test(){
+}
+`
+	p := New()
+	err := p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+	assert.NoError(t, err)
+
+	err = p.packages.RangeFiles(p.ParseRouterAPIInfo)
+	assert.NoError(t, err)
+
+	ps := p.swagger.Paths.Paths
+
+	val, ok := ps["/api/{id}"]
+
+	assert.True(t, ok)
+	assert.NotNil(t, val.Get)
+}
+
+func TestParser_ParseRouterApiPOST(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package test
+
+// @Rou
