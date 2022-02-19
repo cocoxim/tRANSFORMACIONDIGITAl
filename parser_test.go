@@ -2627,4 +2627,35 @@ func Test(){
                "type": "object",
                "additionalProperties": {
                   "type": "string"
-    
+               }
+            }
+         }
+      }
+   }
+}`
+	p := New()
+	_ = p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+
+	_, err := p.packages.ParseTypes()
+	assert.NoError(t, err)
+
+	err = p.packages.RangeFiles(p.ParseRouterAPIInfo)
+	assert.NoError(t, err)
+
+	out, err := json.MarshalIndent(p.swagger.Definitions, "", "   ")
+	assert.NoError(t, err)
+	assert.Equal(t, expected, string(out))
+}
+
+func TestParser_ParseRouterApiInfoErr(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package test
+
+// @Accept unknown
+func Test(){
+}
+`
+	p := New()
+	err := p.packages.ParseFile("api", "api/api.go", src, P
