@@ -2839,4 +2839,41 @@ func Test(){
 	assert.NotNil(t, val.Options)
 }
 
-f
+func TestParser_ParseRouterApiMultipleRoutesForSameFunction(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package test
+
+// @Router /api/v1/{id} [get]
+// @Router /api/v2/{id} [post]
+func Test(){
+}
+`
+	p := New()
+	err := p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+	assert.NoError(t, err)
+
+	err = p.packages.RangeFiles(p.ParseRouterAPIInfo)
+	assert.NoError(t, err)
+
+	ps := p.swagger.Paths.Paths
+
+	val, ok := ps["/api/v1/{id}"]
+
+	assert.True(t, ok)
+	assert.NotNil(t, val.Get)
+
+	val, ok = ps["/api/v2/{id}"]
+
+	assert.True(t, ok)
+	assert.NotNil(t, val.Post)
+}
+
+func TestParser_ParseRouterApiMultiple(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package test
+
+// @Router /api/{id} [get]
