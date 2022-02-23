@@ -2877,3 +2877,36 @@ func TestParser_ParseRouterApiMultiple(t *testing.T) {
 package test
 
 // @Router /api/{id} [get]
+func Test1(){
+}
+
+// @Router /api/{id} [patch]
+func Test2(){
+}
+
+// @Router /api/{id} [delete]
+func Test3(){
+}
+`
+	p := New()
+	err := p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+	assert.NoError(t, err)
+
+	err = p.packages.RangeFiles(p.ParseRouterAPIInfo)
+	assert.NoError(t, err)
+
+	ps := p.swagger.Paths.Paths
+
+	val, ok := ps["/api/{id}"]
+
+	assert.True(t, ok)
+	assert.NotNil(t, val.Get)
+	assert.NotNil(t, val.Patch)
+	assert.NotNil(t, val.Delete)
+}
+
+// func TestParseDeterministic(t *testing.T) {
+// 	mainAPIFile := "main.go"
+// 	for _, searchDir := range []string{
+// 		"testdata/simple",
+// 		"testdata/model_not_under_root/cmd"
