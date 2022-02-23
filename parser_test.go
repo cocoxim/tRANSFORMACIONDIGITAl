@@ -2909,4 +2909,27 @@ func Test3(){
 // 	mainAPIFile := "main.go"
 // 	for _, searchDir := range []string{
 // 		"testdata/simple",
-// 		"testdata/model_not_under_root/cmd"
+// 		"testdata/model_not_under_root/cmd",
+// 	} {
+// 		t.Run(searchDir, func(t *testing.T) {
+// 			var expected string
+
+// 			// run the same code 100 times and check that the output is the same every time
+// 			for i := 0; i < 100; i++ {
+// 				p := New()
+// 				p.PropNamingStrategy = PascalCase
+// 				err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+// 				b, _ := json.MarshalIndent(p.swagger, "", "    ")
+// 				assert.NotEqual(t, "", string(b))
+
+// 				if expected == "" {
+// 					expected = string(b)
+// 				}
+
+// 				assert.Equal(t, expected, string(b))
+// 			}
+// 		})
+// 	}
+// }
+
+func TestParser_ParseRouterApiDuplicateRoute(t *testing.T) {
