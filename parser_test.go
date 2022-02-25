@@ -2987,4 +2987,18 @@ func TestApiParseTag(t *testing.T) {
 	}
 
 	cats := p.swagger.Tags[1]
-	if cats.TagProps.N
+	if cats.TagProps.Name != "cats" || cats.TagProps.Description != "Cats are the devil" {
+		t.Error("Failed to parse cats name or description")
+	}
+
+	if cats.TagProps.ExternalDocs.URL != "https://google.de" || cats.TagProps.ExternalDocs.Description != "google is super useful to find out that cats are evil!" {
+		t.Error("URL: ", cats.TagProps.ExternalDocs.URL)
+		t.Error("Description: ", cats.TagProps.ExternalDocs.Description)
+		t.Error("Failed to parse cats external documentation")
+	}
+}
+
+func TestApiParseTag_NonExistendTag(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/tags_nonexis
