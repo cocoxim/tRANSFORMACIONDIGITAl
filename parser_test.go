@@ -2933,3 +2933,35 @@ func Test3(){
 // }
 
 func TestParser_ParseRouterApiDuplicateRoute(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package api
+
+import (
+	"net/http"
+)
+
+// @Router /api/endpoint [get]
+func FunctionOne(w http.ResponseWriter, r *http.Request) {
+	//write your code
+}
+
+// @Router /api/endpoint [get]
+func FunctionTwo(w http.ResponseWriter, r *http.Request) {
+	//write your code
+}
+
+`
+	p := New(SetStrict(true))
+	err := p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+	assert.NoError(t, err)
+
+	err = p.packages.RangeFiles(p.ParseRouterAPIInfo)
+	assert.EqualError(t, err, "route GET /api/endpoint is declared multiple times")
+
+	p = New()
+	err = p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+	assert.NoError(t, err)
+
+	err = p.packag
