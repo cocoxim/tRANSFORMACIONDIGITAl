@@ -2964,4 +2964,27 @@ func FunctionTwo(w http.ResponseWriter, r *http.Request) {
 	err = p.packages.ParseFile("api", "api/api.go", src, ParseAll)
 	assert.NoError(t, err)
 
-	err = p.packag
+	err = p.packages.RangeFiles(p.ParseRouterAPIInfo)
+	assert.NoError(t, err)
+}
+
+func TestApiParseTag(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/tags"
+	p := New(SetMarkdownFileDirectory(searchDir))
+	p.PropNamingStrategy = PascalCase
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+
+	if len(p.swagger.Tags) != 3 {
+		t.Error("Number of tags did not match")
+	}
+
+	dogs := p.swagger.Tags[0]
+	if dogs.TagProps.Name != "dogs" || dogs.TagProps.Description != "Dogs are cool" {
+		t.Error("Failed to parse dogs name or description")
+	}
+
+	cats := p.swagger.Tags[1]
+	if cats.TagProps.N
