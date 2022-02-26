@@ -3023,4 +3023,27 @@ func TestParseTagMarkdownDescription(t *testing.T) {
 		t.Error("Number of tags did not match")
 	}
 
-	apes := 
+	apes := p.swagger.Tags[2]
+	if apes.TagProps.Description == "" {
+		t.Error("Failed to parse tag description markdown file")
+	}
+}
+
+func TestParseApiMarkdownDescription(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/tags"
+	p := New(SetMarkdownFileDirectory(searchDir))
+	p.PropNamingStrategy = PascalCase
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	if err != nil {
+		t.Error("Failed to parse api description: " + err.Error())
+	}
+
+	if p.swagger.Info.Description == "" {
+		t.Error("Failed to parse api description: " + err.Error())
+	}
+}
+
+func TestIgnoreInvalidPkg(t *testing.T) {
+	t.Parallel
