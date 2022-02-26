@@ -3001,4 +3001,26 @@ func TestApiParseTag(t *testing.T) {
 func TestApiParseTag_NonExistendTag(t *testing.T) {
 	t.Parallel()
 
-	searchDir := "testdata/tags_nonexis
+	searchDir := "testdata/tags_nonexistend_tag"
+	p := New(SetMarkdownFileDirectory(searchDir))
+	p.PropNamingStrategy = PascalCase
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.Error(t, err)
+}
+
+func TestParseTagMarkdownDescription(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/tags"
+	p := New(SetMarkdownFileDirectory(searchDir))
+	p.PropNamingStrategy = PascalCase
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	if err != nil {
+		t.Error("Failed to parse api description: " + err.Error())
+	}
+
+	if len(p.swagger.Tags) != 3 {
+		t.Error("Number of tags did not match")
+	}
+
+	apes := 
