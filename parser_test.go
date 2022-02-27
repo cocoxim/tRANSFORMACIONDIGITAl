@@ -3046,4 +3046,29 @@ func TestParseApiMarkdownDescription(t *testing.T) {
 }
 
 func TestIgnoreInvalidPkg(t *testing.T) {
-	t.Parallel
+	t.Parallel()
+
+	searchDir := "testdata/deps_having_invalid_pkg"
+	p := New()
+	if err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth); err != nil {
+		t.Error("Failed to ignore valid pkg: " + err.Error())
+	}
+}
+
+func TestFixes432(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/fixes-432"
+	mainAPIFile := "cmd/main.go"
+
+	p := New()
+	if err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth); err != nil {
+		t.Error("Failed to ignore valid pkg: " + err.Error())
+	}
+}
+
+func TestParseOutsideDependencies(t *testing.T) {
+	t.Parallel()
+
+	searchDir := "testdata/pare_outside_dependencies"
+	mainAPIFile := "cmd/main.go"
