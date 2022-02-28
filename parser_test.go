@@ -3072,3 +3072,37 @@ func TestParseOutsideDependencies(t *testing.T) {
 
 	searchDir := "testdata/pare_outside_dependencies"
 	mainAPIFile := "cmd/main.go"
+
+	p := New(SetParseDependency(true))
+	if err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth); err != nil {
+		t.Error("Failed to parse api: " + err.Error())
+	}
+}
+
+func TestParseStructParamCommentByQueryType(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package main
+
+type Student struct {
+	Name string
+	Age int
+	Teachers []string
+	SkipField map[string]string
+}
+
+// @Param request query Student true "query params"
+// @Success 200
+// @Router /test [get]
+func Fun()  {
+
+}
+`
+	expected := `{
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/test": {
+            "get"
