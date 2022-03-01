@@ -3156,4 +3156,27 @@ func TestParseParamCommentExtension(t *testing.T) {
 	src := `
 package main
 
-// @Param request query string true
+// @Param request query string true "query params" extensions(x-example=[0, 9],x-foo=bar)
+// @Success 200
+// @Router /test [get]
+func Fun()  {
+
+}
+`
+	expected := `{
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/test": {
+            "get": {
+                "parameters": [
+                    {
+                       "type": "string",
+                       "x-example": "[0, 9]",
+                       "x-foo": "bar",
+                       "description": "query params",
+                       "name": "request",
+                       "in": "query",
+                       "required": true
+              
