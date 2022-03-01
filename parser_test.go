@@ -3105,4 +3105,24 @@ func Fun()  {
     },
     "paths": {
         "/test": {
-            "get"
+            "get": {
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "name": "age",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "name": "teachers",
+                        "in": "query"
+                    }
+                
