@@ -3240,4 +3240,23 @@ func Fun()  {
 	assert.True(t, ok)
 	ref := teacher.Properties["child"].SchemaProps.Ref
 	assert.Equal(t, "#/definitions/Student", ref.String())
-	_, ok = p.sw
+	_, ok = p.swagger.Definitions["Student"]
+	assert.True(t, ok)
+	path, ok := p.swagger.Paths.Paths["/test"]
+	assert.True(t, ok)
+	assert.Equal(t, "#/definitions/Teacher", path.Get.Parameters[0].Schema.Ref.String())
+	ref = path.Get.Responses.ResponsesProps.StatusCodeResponses[200].ResponseProps.Schema.Ref
+	assert.Equal(t, "#/definitions/Teacher", ref.String())
+}
+
+func TestParseFunctionScopedStructDefinition(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package main
+
+// @Param request body main.Fun.request true "query params" 
+// @Success 200 {object} main.Fun.response
+// @Router /test [post]
+func Fun()  {
+	type request str
