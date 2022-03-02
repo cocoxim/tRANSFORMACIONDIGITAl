@@ -3213,3 +3213,31 @@ package main
 type Child struct {
 	Name string
 }//@name Student
+
+type Parent struct {
+	Name string
+	Child Child
+}//@name Teacher
+
+// @Param request body Parent true "query params"
+// @Success 200 {object} Parent
+// @Router /test [get]
+func Fun()  {
+
+}
+`
+
+	p := New()
+	_ = p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+	_, err := p.packages.ParseTypes()
+	assert.NoError(t, err)
+
+	err = p.packages.RangeFiles(p.ParseRouterAPIInfo)
+	assert.NoError(t, err)
+
+	assert.NoError(t, err)
+	teacher, ok := p.swagger.Definitions["Teacher"]
+	assert.True(t, ok)
+	ref := teacher.Properties["child"].SchemaProps.Ref
+	assert.Equal(t, "#/definitions/Student", ref.String())
+	_, ok = p.sw
