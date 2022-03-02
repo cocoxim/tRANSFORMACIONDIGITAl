@@ -3179,4 +3179,37 @@ func Fun()  {
                        "name": "request",
                        "in": "query",
                        "required": true
-              
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    }
+}`
+
+	p := New()
+	_ = p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+
+	_, err := p.packages.ParseTypes()
+	assert.NoError(t, err)
+
+	err = p.packages.RangeFiles(p.ParseRouterAPIInfo)
+	assert.NoError(t, err)
+
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	assert.JSONEq(t, expected, string(b))
+}
+
+func TestParseRenamedStructDefinition(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package main
+
+type Child struct {
+	Name string
+}//@name Student
