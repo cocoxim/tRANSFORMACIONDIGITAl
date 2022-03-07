@@ -3291,4 +3291,32 @@ package main
 // @Success 200 {object} main.Fun.response
 // @Router /test [post]
 func Fun()  {
-	type 
+	type request struct {
+		Name string
+	}
+	
+	type response struct {
+		Name string
+		Child string
+	}
+}
+`
+	expected := `{
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/test": {
+            "post": {
+                "parameters": [
+                    {
+                        "description": "query params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.Fun.request"
+                        }
+                    }
+                ],
+               
