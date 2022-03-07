@@ -3319,4 +3319,27 @@ func Fun()  {
                         }
                     }
                 ],
-               
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.Fun.response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.Fun.request": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.Fun.response": {
+            "type": "object",
+            "properties": {
+                "c
