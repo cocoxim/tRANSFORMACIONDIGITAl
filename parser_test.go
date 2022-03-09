@@ -3377,4 +3377,33 @@ func Fun()  {
 
 }
 `
-	pkgs := NewPack
+	pkgs := NewPackagesDefinitions()
+
+	// unset the .files and .packages and check that they're re-initialized by collectAstFile
+	pkgs.packages = nil
+	pkgs.files = nil
+
+	_ = pkgs.ParseFile("api", "api/api.go", src, ParseAll)
+	assert.NotNil(t, pkgs.packages)
+	assert.NotNil(t, pkgs.files)
+}
+
+func TestCollectAstFileMultipleTimes(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package main
+
+// @Router /test [get]
+func Fun()  {
+
+}
+`
+
+	p := New()
+	_ = p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+	assert.Equal(t, 1, len(p.packages.files))
+	var path string
+	var file *ast.File
+	for path, file = range p.packages.packages["api"].Files {
+		bre
