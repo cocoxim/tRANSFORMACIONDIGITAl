@@ -3430,4 +3430,23 @@ func TestParseJSONFieldString(t *testing.T) {
         "version": "1.0"
     },
     "host": "localhost:4000",
-   
+    "basePath": "/",
+    "paths": {
+        "/do-something": {
+            "post": {
+                "description": "Does something",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Call DoSomething",
+                "parameters": [
+                    {
+                        "description": "My Struct",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+ 
