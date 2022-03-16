@@ -3406,4 +3406,28 @@ func Fun()  {
 	var path string
 	var file *ast.File
 	for path, file = range p.packages.packages["api"].Files {
-		bre
+		break
+	}
+	assert.NotNil(t, file)
+	assert.NotNil(t, p.packages.files[file])
+
+	// if we collect the same again nothing should happen
+	_ = p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+	assert.Equal(t, 1, len(p.packages.files))
+	assert.Equal(t, file, p.packages.packages["api"].Files[path])
+	assert.NotNil(t, p.packages.files[file])
+}
+
+func TestParseJSONFieldString(t *testing.T) {
+	t.Parallel()
+
+	expected := `{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server.",
+        "title": "Swagger Example API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:4000",
+   
