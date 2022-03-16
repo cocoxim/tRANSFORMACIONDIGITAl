@@ -3449,4 +3449,24 @@ func TestParseJSONFieldString(t *testing.T) {
                         "in": "body",
                         "required": true,
                         "schema": {
- 
+                            "$ref": "#/definitions/main.MyStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.MyStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.MyStruct": {
+     
