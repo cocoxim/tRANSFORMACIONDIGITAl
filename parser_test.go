@@ -3469,4 +3469,22 @@ func TestParseJSONFieldString(t *testing.T) {
     },
     "definitions": {
         "main.MyStruct": {
-     
+            "type": "object",
+            "properties": {
+                "boolvar": {
+                    "description": "boolean as a string",
+                    "type": "string",
+                    "example": "false"
+                },
+                "floatvar": {
+                    "description": "float as a string",
+                    "type": "string",
+                    "example": "0"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1
+                },
+                "myint": {
+                    "des
