@@ -3487,4 +3487,23 @@ func TestParseJSONFieldString(t *testing.T) {
                     "example": 1
                 },
                 "myint": {
-                    "des
+                    "description": "integer as string",
+                    "type": "string",
+                    "example": "0"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "poti"
+                },
+                "truebool": {
+                    "description": "boolean as a string",
+                    "type": "string",
+                    "example": "true"
+                },
+                "uuids": {
+                    "description": "string array with format",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+ 
