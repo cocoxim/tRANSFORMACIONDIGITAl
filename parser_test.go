@@ -3537,4 +3537,32 @@ type Parent struct {
 }//@name Teacher
 
 // @Param request body Parent true "query params"
-// @Success 
+// @Success 200 {object} Parent
+// @Router /test [get]
+func Fun()  {
+
+}
+`
+	p := New()
+	err := p.packages.ParseFile("api", "api/api.go", src, ParseAll)
+	assert.NoError(t, err)
+	_, _ = p.packages.ParseTypes()
+	err = p.packages.RangeFiles(p.ParseRouterAPIInfo)
+	assert.NoError(t, err)
+
+	teacher, ok := p.swagger.Definitions["Teacher"]
+	assert.True(t, ok)
+
+	name, ok := teacher.Properties["name"]
+	assert.True(t, ok)
+	assert.Len(t, name.Type, 1)
+	assert.Equal(t, "string", name.Type[0])
+
+	childName, ok := teacher.Properties["childName"]
+	assert.False(t, ok)
+	assert.Empty(t, childName)
+}
+
+func TestDefineTypeOfExample(t *testing.T) {
+
+	t.Run("String 
