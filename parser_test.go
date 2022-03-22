@@ -3506,4 +3506,35 @@ func TestParseJSONFieldString(t *testing.T) {
                     "items": {
                         "type": "string",
                         "format": "uuid"
- 
+                    }
+                }
+            }
+        }
+    }
+}`
+
+	searchDir := "testdata/json_field_string"
+	p := New()
+	err := p.ParseAPI(searchDir, mainAPIFile, defaultParseDepth)
+	assert.NoError(t, err)
+	b, _ := json.MarshalIndent(p.swagger, "", "    ")
+	assert.Equal(t, expected, string(b))
+}
+
+func TestParseSwaggerignoreForEmbedded(t *testing.T) {
+	t.Parallel()
+
+	src := `
+package main
+
+type Child struct {
+	ChildName string
+}//@name Student
+
+type Parent struct {
+	Name string
+	Child ` + "`swaggerignore:\"true\"`" + `
+}//@name Teacher
+
+// @Param request body Parent true "query params"
+// @Success 
