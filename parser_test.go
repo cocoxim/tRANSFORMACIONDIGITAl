@@ -3565,4 +3565,28 @@ func Fun()  {
 
 func TestDefineTypeOfExample(t *testing.T) {
 
-	t.Run("String 
+	t.Run("String type", func(t *testing.T) {
+		t.Parallel()
+
+		example, err := defineTypeOfExample("string", "", "example")
+		assert.NoError(t, err)
+		assert.Equal(t, example.(string), "example")
+	})
+
+	t.Run("Number type", func(t *testing.T) {
+		t.Parallel()
+
+		example, err := defineTypeOfExample("number", "", "12.34")
+		assert.NoError(t, err)
+		assert.Equal(t, example.(float64), 12.34)
+
+		_, err = defineTypeOfExample("number", "", "two")
+		assert.Error(t, err)
+	})
+
+	t.Run("Integer type", func(t *testing.T) {
+		t.Parallel()
+
+		example, err := defineTypeOfExample("integer", "", "12")
+		assert.NoError(t, err)
+		asser
