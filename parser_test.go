@@ -3614,4 +3614,28 @@ func TestDefineTypeOfExample(t *testing.T) {
 		assert.Nil(t, example)
 
 		example, err = defineTypeOfExample("array", "string", "one,two,three")
-		asse
+		assert.NoError(t, err)
+
+		var arr []string
+
+		for _, v := range example.([]interface{}) {
+			arr = append(arr, v.(string))
+		}
+
+		assert.Equal(t, arr, []string{"one", "two", "three"})
+	})
+
+	t.Run("Object type", func(t *testing.T) {
+		t.Parallel()
+
+		example, err := defineTypeOfExample("object", "", "key_one:one,key_two:two,key_three:three")
+		assert.Error(t, err)
+		assert.Nil(t, example)
+
+		example, err = defineTypeOfExample("object", "string", "key_one,key_two,key_three")
+		assert.Error(t, err)
+		assert.Nil(t, example)
+
+		example, err = defineTypeOfExample("object", "oops", "key_one:one,key_two:two,key_three:three")
+		assert.Error(t, err)
+		assert.Nil(t, 
