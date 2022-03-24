@@ -3666,4 +3666,26 @@ type mockFS struct {
 	IsDirectory bool
 }
 
-func (fs *
+func (fs *mockFS) Name() string {
+	return fs.FileName
+}
+
+func (fs *mockFS) IsDir() bool {
+	return fs.IsDirectory
+}
+
+func TestParser_Skip(t *testing.T) {
+	t.Parallel()
+
+	parser := New()
+	parser.ParseVendor = true
+
+	assert.NoError(t, parser.Skip("", &mockFS{FileName: "vendor"}))
+	assert.NoError(t, parser.Skip("", &mockFS{FileName: "vendor", IsDirectory: true}))
+
+	parser.ParseVendor = false
+	assert.NoError(t, parser.Skip("", &mockFS{FileName: "vendor"}))
+	assert.Error(t, parser.Skip("", &mockFS{FileName: "vendor", IsDirectory: true}))
+
+	assert.NoError(t, parser.Skip("", &mockFS{FileName: "models", IsDirectory: true}))
+	assert.NoError(t
