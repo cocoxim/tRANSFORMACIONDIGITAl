@@ -3589,4 +3589,29 @@ func TestDefineTypeOfExample(t *testing.T) {
 
 		example, err := defineTypeOfExample("integer", "", "12")
 		assert.NoError(t, err)
-		asser
+		assert.Equal(t, example.(int), 12)
+
+		_, err = defineTypeOfExample("integer", "", "two")
+		assert.Error(t, err)
+	})
+
+	t.Run("Boolean type", func(t *testing.T) {
+		t.Parallel()
+
+		example, err := defineTypeOfExample("boolean", "", "true")
+		assert.NoError(t, err)
+		assert.Equal(t, example.(bool), true)
+
+		_, err = defineTypeOfExample("boolean", "", "!true")
+		assert.Error(t, err)
+	})
+
+	t.Run("Array type", func(t *testing.T) {
+		t.Parallel()
+
+		example, err := defineTypeOfExample("array", "", "one,two,three")
+		assert.Error(t, err)
+		assert.Nil(t, example)
+
+		example, err = defineTypeOfExample("array", "string", "one,two,three")
+		asse
