@@ -3638,4 +3638,32 @@ func TestDefineTypeOfExample(t *testing.T) {
 
 		example, err = defineTypeOfExample("object", "oops", "key_one:one,key_two:two,key_three:three")
 		assert.Error(t, err)
-		assert.Nil(t, 
+		assert.Nil(t, example)
+
+		example, err = defineTypeOfExample("object", "string", "key_one:one,key_two:two,key_three:three")
+		assert.NoError(t, err)
+		obj := map[string]string{}
+
+		for k, v := range example.(map[string]interface{}) {
+			obj[k] = v.(string)
+		}
+
+		assert.Equal(t, obj, map[string]string{"key_one": "one", "key_two": "two", "key_three": "three"})
+	})
+
+	t.Run("Invalid type", func(t *testing.T) {
+		t.Parallel()
+
+		example, err := defineTypeOfExample("oops", "", "")
+		assert.Error(t, err)
+		assert.Nil(t, example)
+	})
+}
+
+type mockFS struct {
+	os.FileInfo
+	FileName    string
+	IsDirectory bool
+}
+
+func (fs *
