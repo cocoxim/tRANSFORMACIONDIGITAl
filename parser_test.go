@@ -3688,4 +3688,12 @@ func TestParser_Skip(t *testing.T) {
 	assert.Error(t, parser.Skip("", &mockFS{FileName: "vendor", IsDirectory: true}))
 
 	assert.NoError(t, parser.Skip("", &mockFS{FileName: "models", IsDirectory: true}))
-	assert.NoError(t
+	assert.NoError(t, parser.Skip("", &mockFS{FileName: "admin", IsDirectory: true}))
+	assert.NoError(t, parser.Skip("", &mockFS{FileName: "release", IsDirectory: true}))
+	assert.NoError(t, parser.Skip("", &mockFS{FileName: "..", IsDirectory: true}))
+
+	parser = New(SetExcludedDirsAndFiles("admin/release,admin/models"))
+	assert.NoError(t, parser.Skip("admin", &mockFS{IsDirectory: true}))
+	assert.NoError(t, parser.Skip(filepath.Clean("admin/service"), &mockFS{IsDirectory: true}))
+	assert.Error(t, parser.Skip(filepath.Clean("admin/models"), &mockFS{IsDirectory: true}))
+	assert.Error(t, parser.Skip(filepath.Clean("admin/release"
