@@ -3696,4 +3696,22 @@ func TestParser_Skip(t *testing.T) {
 	assert.NoError(t, parser.Skip("admin", &mockFS{IsDirectory: true}))
 	assert.NoError(t, parser.Skip(filepath.Clean("admin/service"), &mockFS{IsDirectory: true}))
 	assert.Error(t, parser.Skip(filepath.Clean("admin/models"), &mockFS{IsDirectory: true}))
-	assert.Error(t, parser.Skip(filepath.Clean("admin/release"
+	assert.Error(t, parser.Skip(filepath.Clean("admin/release"), &mockFS{IsDirectory: true}))
+}
+
+func TestGetFieldType(t *testing.T) {
+	t.Parallel()
+
+	field, err := getFieldType(&ast.File{}, &ast.Ident{Name: "User"}, nil)
+	assert.NoError(t, err)
+	assert.Equal(t, "User", field)
+
+	_, err = getFieldType(&ast.File{}, &ast.FuncType{}, nil)
+	assert.Error(t, err)
+
+	field, err = getFieldType(&ast.File{}, &ast.SelectorExpr{X: &ast.Ident{Name: "models"}, Sel: &ast.Ident{Name: "User"}}, nil)
+	assert.NoError(t, err)
+	assert.Equal(t, "models.User", field)
+
+	_, err = getFieldType(&ast.File{}, &ast.SelectorExpr{X: &ast.FuncType{}, Sel: &ast.Ident{Name: "User"}}, nil)
+	assert.Error(t
