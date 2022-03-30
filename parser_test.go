@@ -3734,4 +3734,31 @@ func TestTryAddDescription(t *testing.T) {
 		extensions map[string]interface{}
 	}
 	tests := []struct {
-		name  s
+		name  string
+		lines []string
+		args  args
+		want  *spec.SecurityScheme
+	}{
+		{
+			name: "added description",
+			lines: []string{
+				"\t@securitydefinitions.apikey test",
+				"\t@in header",
+				"\t@name x-api-key",
+				"\t@description some description",
+			},
+			want: &spec.SecurityScheme{
+				SecuritySchemeProps: spec.SecuritySchemeProps{
+					Name:        "x-api-key",
+					Type:        "apiKey",
+					In:          "header",
+					Description: "some description",
+				},
+			},
+		},
+		{
+			name: "no description",
+			lines: []string{
+				" @securitydefinitions.oauth2.application swagger",
+				" @tokenurl https://example.com/oauth/token",
+				
