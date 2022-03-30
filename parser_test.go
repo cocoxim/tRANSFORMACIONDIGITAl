@@ -3761,4 +3761,28 @@ func TestTryAddDescription(t *testing.T) {
 			lines: []string{
 				" @securitydefinitions.oauth2.application swagger",
 				" @tokenurl https://example.com/oauth/token",
-				
+				" @not-description some description",
+			},
+			want: &spec.SecurityScheme{
+				SecuritySchemeProps: spec.SecuritySchemeProps{
+					Type:        "oauth2",
+					Flow:        "application",
+					TokenURL:    "https://example.com/oauth/token",
+					Description: "",
+				},
+			},
+		},
+
+		{
+			name: "description has invalid format",
+			lines: []string{
+				"@securitydefinitions.oauth2.implicit swagger",
+				"@authorizationurl https://example.com/oauth/token",
+				"@description 12345",
+			},
+
+			want: &spec.SecurityScheme{
+				SecuritySchemeProps: spec.SecuritySchemeProps{
+					Type:             "oauth2",
+					Flow:             "implicit",
+					Authoriza
