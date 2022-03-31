@@ -3785,4 +3785,24 @@ func TestTryAddDescription(t *testing.T) {
 				SecuritySchemeProps: spec.SecuritySchemeProps{
 					Type:             "oauth2",
 					Flow:             "implicit",
-					Authoriza
+					AuthorizationURL: "https://example.com/oauth/token",
+					Description:      "12345",
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			swag := spec.Swagger{
+				SwaggerProps: spec.SwaggerProps{
+					SecurityDefinitions: make(map[string]*spec.SecurityScheme),
+				},
+			}
+			line := 0
+			commentLine := tt.lines[line]
+			attribute := strings.Split(commentLine, " ")[0]
+			value := strings.TrimSpace(commentLine[len(attribute):])
+			secAttr, _ := parseSecAttributes(attribute, tt.lines, &line)
+			if !reflect.DeepEqual(secAttr, tt.want) {
+				t.Errorf("setSwaggerSecurity() = %#v, want %#v", swag.SecurityDefinitions[value], tt.want)
+		
