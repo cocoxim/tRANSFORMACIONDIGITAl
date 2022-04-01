@@ -3843,4 +3843,31 @@ func Test_getTagsFromComment(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotTags := 
+			if gotTags := getTagsFromComment(tt.args.comment); !reflect.DeepEqual(gotTags, tt.wantTags) {
+				t.Errorf("getTagsFromComment() = %v, want %v", gotTags, tt.wantTags)
+			}
+		})
+	}
+}
+
+func TestParser_matchTags(t *testing.T) {
+
+	type args struct {
+		comments []*ast.Comment
+	}
+	tests := []struct {
+		name      string
+		parser    *Parser
+		args      args
+		wantMatch bool
+	}{
+		{
+			name:      "no tags filter",
+			parser:    New(),
+			args:      args{comments: []*ast.Comment{{Text: "//@Tags tag1,tag2,tag3"}}},
+			wantMatch: true,
+		},
+		{
+			name:      "with tags filter but no match",
+			parser:    New(SetTags("tag4,tag5,!tag1")),
+			args:  
