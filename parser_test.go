@@ -3805,4 +3805,42 @@ func TestTryAddDescription(t *testing.T) {
 			secAttr, _ := parseSecAttributes(attribute, tt.lines, &line)
 			if !reflect.DeepEqual(secAttr, tt.want) {
 				t.Errorf("setSwaggerSecurity() = %#v, want %#v", swag.SecurityDefinitions[value], tt.want)
-		
+			}
+		})
+	}
+}
+
+func Test_getTagsFromComment(t *testing.T) {
+	type args struct {
+		comment string
+	}
+	tests := []struct {
+		name     string
+		args     args
+		wantTags []string
+	}{
+		{
+			name: "no tags comment",
+			args: args{
+				comment: "//@name Student",
+			},
+			wantTags: nil,
+		},
+		{
+			name: "empty comment",
+			args: args{
+				comment: "//",
+			},
+			wantTags: nil,
+		},
+		{
+			name: "tags comment",
+			args: args{
+				comment: "//@Tags tag1,tag2,tag3",
+			},
+			wantTags: []string{"tag1", "tag2", "tag3"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotTags := 
