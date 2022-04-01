@@ -3890,4 +3890,21 @@ func TestParser_matchTags(t *testing.T) {
 }
 
 func TestParser_parseExtension(t *testing.T) {
-	packagePath := "t
+	packagePath := "testdata/parseExtension"
+	filePath := packagePath + "/parseExtension.go"
+	src, err := os.ReadFile(filePath)
+	assert.NoError(t, err)
+
+	fileSet := token.NewFileSet()
+	f, err := goparser.ParseFile(fileSet, "", src, goparser.ParseComments)
+	assert.NoError(t, err)
+
+	tests := []struct {
+		name          string
+		parser        *Parser
+		expectedPaths map[string]bool
+	}{
+		{
+			name:          "when no flag is set, everything is exported",
+			parser:        New(),
+			expectedPaths: map[string]bool{"/without-extension": true, "/with-another-extension": true, "/with-correct-extension": true, "/with-empty-comment-line": true},
