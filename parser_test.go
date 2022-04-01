@@ -3870,4 +3870,24 @@ func TestParser_matchTags(t *testing.T) {
 		{
 			name:      "with tags filter but no match",
 			parser:    New(SetTags("tag4,tag5,!tag1")),
-			args:  
+			args:      args{comments: []*ast.Comment{{Text: "//@Tags tag1,tag2,tag3"}}},
+			wantMatch: false,
+		},
+		{
+			name:      "with tags filter but match",
+			parser:    New(SetTags("tag4,tag5,tag1")),
+			args:      args{comments: []*ast.Comment{{Text: "//@Tags tag1,tag2,tag3"}}},
+			wantMatch: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotMatch := tt.parser.matchTags(tt.args.comments); gotMatch != tt.wantMatch {
+				t.Errorf("Parser.matchTags() = %v, want %v", gotMatch, tt.wantMatch)
+			}
+		})
+	}
+}
+
+func TestParser_parseExtension(t *testing.T) {
+	packagePath := "t
