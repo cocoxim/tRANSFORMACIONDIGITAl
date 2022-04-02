@@ -3917,4 +3917,29 @@ func TestParser_parseExtension(t *testing.T) {
 		{
 			name:          "when correct flag is set, only that Path is exported",
 			parser:        New(SetParseExtension("google-backend")),
-			expectedPaths: map[string]bool{"/without-extension": false, "/with-another-extension": false, "/with-correct-extension": true, "/with-empty-comment-
+			expectedPaths: map[string]bool{"/without-extension": false, "/with-another-extension": false, "/with-correct-extension": true, "/with-empty-comment-line": false},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err = tt.parser.ParseRouterAPIInfo(&AstFileInfo{
+				FileSet:     fileSet,
+				File:        f,
+				Path:        filePath,
+				PackagePath: packagePath,
+				ParseFlag:   ParseAll,
+			})
+			assert.NoError(t, err)
+			for p, isExpected := range tt.expectedPaths {
+				_, ok := tt.parser.swagger.Paths.Paths[p]
+				assert.Equal(t, isExpected, ok)
+			}
+
+			for p := range tt.parser.swagger.Paths.Paths {
+				_, isExpected := tt.expectedPaths[p]
+				assert.Equal(t, isExpected, true)
+			}
+		})
+
+	}
