@@ -3943,3 +3943,4 @@ func TestParser_parseExtension(t *testing.T) {
 		})
 
 	}
+}
