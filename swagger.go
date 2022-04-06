@@ -50,3 +50,24 @@ func GetSwagger(name string) Swagger {
 }
 
 // ReadDoc reads swagger document. An optional name parameter can be passed to read a specific document.
+// The default name is "swagger".
+func ReadDoc(optionalName ...string) (string, error) {
+	swaggerMu.RLock()
+	defer swaggerMu.RUnlock()
+
+	if swags == nil {
+		return "", errors.New("no swag has yet been registered")
+	}
+
+	name := Name
+	if len(optionalName) != 0 && optionalName[0] != "" {
+		name = optionalName[0]
+	}
+
+	swag, ok := swags[name]
+	if !ok {
+		return "", fmt.Errorf("no swag named \"%s\" was registered", name)
+	}
+
+	return swag.ReadDoc(), nil
+}
