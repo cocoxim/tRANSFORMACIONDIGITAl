@@ -14,4 +14,16 @@ import (
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} data.ApplicationResponse	"ok"
-// @Router /testa
+// @Router /testapi/application [get]
+func GetApplication(w http.ResponseWriter, r *http.Request) {
+	var foo = data.ApplicationResponse{
+		Application: types.Application{
+			Name: "name",
+		},
+		ApplicationArray: []types.Application{
+			{Name: "name"},
+		},
+	}
+	log.Println(foo)
+	//write your code
+}
