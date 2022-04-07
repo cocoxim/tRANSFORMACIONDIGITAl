@@ -9,4 +9,5 @@ type ApplicationResponse struct {
 
 	Application      typesapplication.Application   `json:"application"`
 	ApplicationArray []typesapplication.Application `json:"application_array"`
-	ApplicationTime  typesapplication.D
+	ApplicationTime  typesapplication.DateOnly      `json:"application_time"`
+}
