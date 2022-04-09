@@ -34,4 +34,24 @@
                         "description": "ok",
                         "schema": {
                             "$ref": "#/definitions/data.ApplicationResponse"
-   
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "data.ApplicationResponse": {
+            "type": "object",
+            "properties": {
+                "application": {
+                    "$ref": "#/definitions/types.Application"
+                },
+                "application_array": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.Application"
+                    }
+                },
+                "application_time": {
+                    "type": "strin
