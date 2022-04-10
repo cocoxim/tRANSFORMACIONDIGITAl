@@ -54,4 +54,20 @@
                     }
                 },
                 "application_time": {
-                    "type": "strin
+                    "type": "string"
+                },
+                "embedded": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.Application": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
