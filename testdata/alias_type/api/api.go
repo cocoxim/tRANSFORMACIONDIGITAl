@@ -34,4 +34,20 @@ func GetTimeAsTimeAlias(w http.ResponseWriter, r *http.Request) {
 	//write your code
 }*/
 
-// @
+// @Summary Get container with time and time alias
+// @Description test container with time and time alias
+// @ID time-as-time-container
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} data.TimeContainer	"ok"
+// @Router /testapi/time-as-time-container [get]
+func GetTimeAsTimeContainer(w http.ResponseWriter, r *http.Request) {
+	now := time.Now()
+	var foo = data.TimeContainer{
+		Name:      "test",
+		Timestamp: now,
+		//CreatedAt: &now,
+	}
+	log.Println(foo)
+	//write your code
+}
