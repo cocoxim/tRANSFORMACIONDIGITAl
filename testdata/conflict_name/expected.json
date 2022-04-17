@@ -1,0 +1,23 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "test for conflict name",
+        "title": "Swag test",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/health": {
+            "get": {
+                "description": "Check if Health  of service it's OK!",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Health"
+                ],
+                "operationId": "health",
+                "responses"

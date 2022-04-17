@@ -12,4 +12,6 @@ import (
 // @Produce  json
 // @Success 200 {object} model.ErrorsResponse
 // @Router /health2 [get]
-func Get2(w http.Resp
+func Get2(w http.ResponseWriter, r *http.Request) {
+
+}
