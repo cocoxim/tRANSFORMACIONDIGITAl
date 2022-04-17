@@ -175,3 +175,29 @@
                         "$ref": "#/definitions/api.MapValue"
                     }
                 }
+            }
+        },
+        "api.FooBarPointer": {
+            "type": "object",
+            "properties": {
+                "field1": {
+                    "type": "string"
+                },
+                "field2": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.MapValue": {
+            "type": "object",
+            "properties": {
+                "field4": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
