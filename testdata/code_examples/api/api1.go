@@ -5,4 +5,9 @@ import (
 	"net/http"
 )
 
-// @D
+// @Description  Check if Health  of service it's OK!
+// @Router /health [get]
+// @x-codeSamples file
+func Get1(w http.ResponseWriter, r *http.Request) {
+
+}
