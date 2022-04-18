@@ -20,4 +20,22 @@
                     "Health"
                 ],
                 "operationId": "health",
-                "responses"
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_swaggo_swag_testdata_conflict_name_model.ErrorsResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/health2": {
+            "get": {
+                "description": "Check if Health  of service it's OK!",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
