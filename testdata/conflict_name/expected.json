@@ -39,3 +39,22 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Health"
+                ],
+                "operationId": "health2",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_swaggo_swag_testdata_conflict_name_model2.ErrorsResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "github_com_swaggo_swag_testdata_conflict_name_model.ErrorsResponse": {
+            "type": "object",
+            "properties": {
