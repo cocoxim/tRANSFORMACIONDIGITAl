@@ -58,3 +58,23 @@
         "github_com_swaggo_swag_testdata_conflict_name_model.ErrorsResponse": {
             "type": "object",
             "properties": {
+                "newTime": {
+                    "$ref": "#/definitions/model.MyPayload"
+                }
+            }
+        },
+        "github_com_swaggo_swag_testdata_conflict_name_model.MyStruct": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_swaggo_swag_testdata_conflict_name_model2.ErrorsResponse": {
+            "type": "object",
+            "properties": {
+                "newTime": {
+                    "$ref": "#/definitions/model.MyPayload2"
+                }
+            
