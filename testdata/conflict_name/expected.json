@@ -77,4 +77,25 @@
                 "newTime": {
                     "$ref": "#/definitions/model.MyPayload2"
                 }
-            
+            }
+        },
+        "github_com_swaggo_swag_testdata_conflict_name_model2.MyStruct": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.MyPayload": {
+            "type": "object",
+            "properties": {
+                "my": {
+                    "$ref": "#/definitions/github_com_swaggo_swag_testdata_conflict_name_model.MyStruct"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.MyPaylo
