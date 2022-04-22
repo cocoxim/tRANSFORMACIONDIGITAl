@@ -1,3 +1,4 @@
+
 package api
 
 import "net/http"
@@ -9,4 +10,3 @@ import "net/http"
 func GetFoo(w http.ResponseWriter, r *http.Request) {
 	type response struct {
 	}
-}
