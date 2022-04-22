@@ -98,4 +98,16 @@
                 }
             }
         },
-        "model.MyPaylo
+        "model.MyPayload2": {
+            "type": "object",
+            "properties": {
+                "my": {
+                    "$ref": "#/definitions/github_com_swaggo_swag_testdata_conflict_name_model2.MyStruct"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
