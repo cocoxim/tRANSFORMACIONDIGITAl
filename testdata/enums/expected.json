@@ -27,4 +27,22 @@
                         "schema": {
                             "$ref": "#/definitions/types.Person"
                         }
+                    }
+                }
+            }
+        },
+        "/students/{typeinpath}/": {
+            "get": {
+                "description": "test enums in response request",
+                "summary": "test enums in response request",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "enum": [
+                                "teacher",
+                                "student",
+                                "Other"
+                            ],
+                            "type": "string"
              
