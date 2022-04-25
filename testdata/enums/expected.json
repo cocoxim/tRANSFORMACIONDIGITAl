@@ -8,3 +8,23 @@
             "name": "API Support",
             "url": "http://www.swagger.io/support",
             "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/v2",
+    "paths": {
+        "/students": {
+            "post": {
+                "description": "test enums in response models",
+                "summary": "test enums in response models",
+                "responses": {
+                    "400": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/types.Person"
+                        }
+             
