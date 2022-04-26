@@ -45,4 +45,20 @@
                                 "Other"
                             ],
                             "type": "string"
-             
+                        },
+                        "description": "type",
+                        "name": "typeinquery",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "teacher",
+                            "student",
+                            "Other"
+                        ],
+                        "type": "string",
+                        "description": "type",
+                        "name": "typeinheader",
+                        "in": "header",
+                     
