@@ -108,4 +108,28 @@
                 "F"
             ]
         },
-       
+        "types.Mask": {
+            "type": "integer",
+            "enum": [
+                1,
+                2,
+                4,
+                8
+            ],
+            "x-enum-comments": {
+                "Mask1": "Mask1",
+                "Mask2": "Mask2",
+                "Mask3": "Mask3",
+                "Mask4": "Mask4"
+            },
+            "x-enum-varnames": [
+                "Mask1",
+                "Mask2",
+                "Mask3",
+                "Mask4"
+            ]
+        },
+        "types.Person": {
+            "type": "object",
+            "properties": {
+                "class":
