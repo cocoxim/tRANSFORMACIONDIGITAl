@@ -61,4 +61,21 @@
                         "description": "type",
                         "name": "typeinheader",
                         "in": "header",
-                     
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "teacher",
+                            "student",
+                            "Other"
+                        ],
+                        "type": "string",
+                        "description": "type",
+                        "name": "typeinpath",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "descript
