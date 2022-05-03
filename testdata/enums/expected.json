@@ -132,4 +132,26 @@
         "types.Person": {
             "type": "object",
             "properties": {
-                "class":
+                "class": {
+                    "$ref": "#/definitions/types.Class"
+                },
+                "mask": {
+                    "$ref": "#/definitions/types.Mask"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/types.Type"
+                }
+            }
+        },
+        "types.Type": {
+            "type": "string",
+            "enum": [
+                "teacher",
+                "student",
+                "Other"
+            ],
+            "x-enum-comments": {
+        
