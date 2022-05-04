@@ -154,4 +154,15 @@
                 "Other"
             ],
             "x-enum-comments": {
-        
+                "Other": "Other",
+                "Student": "student",
+                "Teacher": "teacher"
+            },
+            "x-enum-varnames": [
+                "Teacher",
+                "Student",
+                "Other"
+            ]
+        }
+    }
+}
