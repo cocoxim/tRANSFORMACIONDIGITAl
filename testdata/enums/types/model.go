@@ -29,4 +29,29 @@ const (
 	Mask1 Mask = 0x02 << iota >> 1 // Mask1
 	Mask2                          /* Mask2 */
 	Mask3                          // Mask3
-	Mask4           
+	Mask4                          // Mask4
+)
+
+type Type string
+
+const (
+	Teacher      Type = "teacher" // teacher
+	Student      Type = "student" /* student */
+	Other        Type = "Other"   // Other
+	Unknown           = "Unknown"
+	OtherUnknown      = string(Other + Unknown)
+)
+
+type Sex rune
+
+const (
+	Male   Sex = 'M'
+	Female     = 'F'
+)
+
+type Person struct {
+	Name  string
+	Class Class
+	Mask  Mask
+	Type  Type
+}
