@@ -46,3 +46,25 @@
                           "type": "string"
                       }
                   },
+                  "400": {
+                      "description": "Abort !!",
+                      "schema": {
+                          "$ref": "#/definitions/web.CrossErrors"
+                      }
+                  }
+              }
+          }
+      }
+  },
+  "definitions": {
+      "web.CrossErrors": {
+          "type": "object",
+          "properties": {
+              "any": {},
+              "error": {},
+              "errorInterface": {},
+              "interface": {}
+          }
+      }
+  }
+}
