@@ -55,4 +55,35 @@ func GetStructArrayByString(w http.ResponseWriter, r *http.Request) {
 // @Failure 401 {array} string
 // @Failure 404 {object} web.APIError "Can not find ID"
 // @Router /file/upload [post]
-func Upload(w http.Respon
+func Upload(w http.ResponseWriter, r *http.Request) {
+	//write your code
+}
+
+// @Summary use Anonymous field
+// @Success 200 {object} web.RevValue "ok"
+// @Router /AnonymousField [get]
+func AnonymousField() {
+
+}
+
+// @Summary use pet2
+// @Success 200 {object} web.Pet2 "ok"
+// @Router /Pet2 [get]
+func Pet2() {
+
+}
+
+// @Summary Use IndirectRecursiveTest
+// @Success 200 {object} web.IndirectRecursiveTest
+// @Router /IndirectRecursiveTest [get]
+func IndirectRecursiveTest() {
+}
+
+// @Summary Use Tags
+// @Success 200 {object} web.Tags
+// @Router /Tags [get]
+func Tags() {
+}
+
+// @Summary Use CrossAlias
+// @Succe
