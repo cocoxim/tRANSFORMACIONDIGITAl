@@ -37,4 +37,22 @@ func GetStringByInt(w http.ResponseWriter, r *http.Request) {
 // @Security BasicAuth
 // @Security OAuth2Application[write]
 // @Security OAuth2Implicit[read, admin]
-// @Security OAuth2Acces
+// @Security OAuth2AccessCode[read]
+// @Security OAuth2Password[admin]
+// @Router /testapi/get-struct-array-by-string/{some_id} [get]
+func GetStructArrayByString(w http.ResponseWriter, r *http.Request) {
+	//write your code
+}
+
+// @Summary Upload file
+// @Description Upload file
+// @ID file.upload
+// @Accept  multipart/form-data
+// @Produce  json
+// @Param   file formData file true  "this is a test file"
+// @Success 200 {string} string "ok"
+// @Failure 400 {object} web.APIError "We need ID!!"
+// @Failure 401 {array} string
+// @Failure 404 {object} web.APIError "Can not find ID"
+// @Router /file/upload [post]
+func Upload(w http.Respon
