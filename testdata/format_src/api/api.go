@@ -121,4 +121,8 @@ func GetPet5c() {
 
 type SwagReturn []map[string]string
 
-// @Success 200 {object}  api.SwagRe
+// @Success 200 {object}  api.SwagReturn	"ok"
+// @Router /GetPet6MapString [get]
+func GetPet6MapString() {
+
+}
