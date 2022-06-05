@@ -31,4 +31,23 @@ func GetStringByInt(w http.ResponseWriter, r *http.Request) {
 // @Param limit query int true "Limit" Maximum(50) default(10)
 // @Param q query string true "q" Minlength(1) Maxlength(50) default("")
 // @Success 200 {string} string	"ok"
-// @Failure 400 {object} web.APIE
+// @Failure 400 {object} web.APIError "We need ID!!"
+// @Failure 404 {object} web.APIError "Can not find ID"
+// @Security ApiKeyAuth
+// @Security BasicAuth
+// @Security OAuth2Application[write]
+// @Security OAuth2Implicit[read, admin]
+// @Security OAuth2AccessCode[read]
+// @Security OAuth2Password[admin]
+// @Router /testapi/get-struct-array-by-string/{some_id} [get]
+func GetStructArrayByString(w http.ResponseWriter, r *http.Request) {
+	//write your code
+}
+
+// @Summary Upload file
+// @Description Upload file
+// @ID file.upload
+// @Accept  multipart/form-data
+// @Produce  json
+// @Param   file formData file true  "this is a test file"
+// @Success 200 {st
