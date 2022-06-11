@@ -76,4 +76,41 @@ func Pet2() {
 // @Summary Use IndirectRecursiveTest
 // @Success 200 {object} web.IndirectRecursiveTest
 // @Router /IndirectRecursiveTest [get]
-func IndirectRecursiveTest(
+func IndirectRecursiveTest() {
+}
+
+// @Summary Use Tags
+// @Success 200 {object} web.Tags
+// @Router /Tags [get]
+func Tags() {
+}
+
+// @Summary Use CrossAlias
+// @Success 200 {object} web.CrossAlias
+// @Router /CrossAlias [get]
+func CrossAlias() {
+}
+
+// @Summary Use AnonymousStructArray
+// @Success 200 {object} web.AnonymousStructArray
+// @Router /AnonymousStructArray [get]
+func AnonymousStructArray() {
+}
+
+type Pet3 struct {
+	ID int `json:"id"`
+}
+
+// @Success 200 {object} web.Pet5a "ok"
+// @Router /GetPet5a [options]
+func GetPet5a() {
+
+}
+
+// @Success 200 {object} web.Pet5b "ok"
+// @Router /GetPet5b [head]
+func GetPet5b() {
+
+}
+
+// @Succes
