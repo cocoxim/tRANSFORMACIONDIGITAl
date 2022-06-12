@@ -113,4 +113,16 @@ func GetPet5b() {
 
 }
 
-// @Succes
+// @Success 200 {object} web.Pet5c "ok"
+// @Router /GetPet5c [patch]
+func GetPet5c() {
+
+}
+
+type SwagReturn []map[string]string
+
+// @Success 200 {object}  api.SwagReturn	"ok"
+// @Router /GetPet6MapString [get]
+func GetPet6MapString() {
+
+}
