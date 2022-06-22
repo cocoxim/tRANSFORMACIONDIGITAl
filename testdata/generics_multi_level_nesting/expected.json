@@ -10,4 +10,21 @@
     "basePath": "/api",
     "paths": {
         "/use-struct-and-generics-with-multi-level-nesting": {
-            "
+            "get": {
+                "description": "Test one of the edge cases found in generics",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Test Generics with multi level nesting",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.TestResponse"
+                        }
+                    }
+                }
+  
