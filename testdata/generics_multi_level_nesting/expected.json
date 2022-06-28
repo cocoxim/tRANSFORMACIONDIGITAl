@@ -27,4 +27,30 @@
                         }
                     }
                 }
-  
+            }
+        }
+    },
+    "definitions": {
+        "web.DataPoint-float64": {
+            "type": "object",
+            "properties": {
+                "timestamp": {
+                    "type": "integer"
+                },
+                "value": {
+                    "type": "number"
+                }
+            }
+        },
+        "web.DataPoint-int64": {
+            "type": "object",
+            "properties": {
+                "timestamp": {
+                    "type": "integer"
+                },
+                "value": {
+                    "type": "integer"
+                }
+            }
+        },
+        
