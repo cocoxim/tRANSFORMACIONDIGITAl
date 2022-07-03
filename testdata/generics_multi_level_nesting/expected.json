@@ -53,4 +53,21 @@
                 }
             }
         },
-        
+        "web.Entity-float64": {
+            "type": "object",
+            "properties": {
+                "line_with_fix_type": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.DataPoint-float64"
+                    }
+                },
+                "line_with_generic_type": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.DataPoint-float64"
+                    }
+                },
+                "multiple_lines": {
+                    "type": "array",
+                    "items":
