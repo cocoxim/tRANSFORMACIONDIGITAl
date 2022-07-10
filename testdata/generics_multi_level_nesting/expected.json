@@ -89,4 +89,24 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/web.DataPoint-int64"
-                   
+                    }
+                },
+                "multiple_lines": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.NamedLineData-int64"
+                    }
+                }
+            }
+        },
+        "web.NamedLineData-float64": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.DataPoint-float64"
+                    }
+                },
+                "name": {
+                    "type": 
