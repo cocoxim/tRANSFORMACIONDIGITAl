@@ -109,4 +109,26 @@
                     }
                 },
                 "name": {
-                    "type": 
+                    "type": "string"
+                }
+            }
+        },
+        "web.NamedLineData-int64": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.DataPoint-int64"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "web.TestResponse": {
+            "type": "object",
+            "properties": {
+                "field_1": {
+                    "$ref": "#/definitions/web.Entity-int6
