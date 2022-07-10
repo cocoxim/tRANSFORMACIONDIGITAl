@@ -70,4 +70,23 @@
                 },
                 "multiple_lines": {
                     "type": "array",
-                    "items":
+                    "items": {
+                        "$ref": "#/definitions/web.NamedLineData-float64"
+                    }
+                }
+            }
+        },
+        "web.Entity-int64": {
+            "type": "object",
+            "properties": {
+                "line_with_fix_type": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.DataPoint-float64"
+                    }
+                },
+                "line_with_generic_type": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.DataPoint-int64"
+                   
