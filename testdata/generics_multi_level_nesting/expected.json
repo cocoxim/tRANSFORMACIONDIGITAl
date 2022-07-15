@@ -131,4 +131,12 @@
             "type": "object",
             "properties": {
                 "field_1": {
-                    "$ref": "#/definitions/web.Entity-int6
+                    "$ref": "#/definitions/web.Entity-int64"
+                },
+                "field_2": {
+                    "$ref": "#/definitions/web.Entity-float64"
+                }
+            }
+        }
+    }
+}
