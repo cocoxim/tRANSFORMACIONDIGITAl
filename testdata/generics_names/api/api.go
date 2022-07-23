@@ -28,4 +28,19 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 // @Produce  json
 // @Param   data	body	web.GenericBodyMulti[types.Post, types.Post]	true	"Some ID"
 // @Success 200 {object} web.GenericResponse[types.Post]
-// @Success 222 {object} web.Gene
+// @Success 222 {object} web.GenericResponseMulti[types.Post, types.Post]
+// @Router /posts-multi/ [post]
+func GetPostMulti(w http.ResponseWriter, r *http.Request) {
+	//write your code
+	_ = web.GenericResponse[types.Post]{}
+}
+
+// @Summary Add new pets to the store
+// @Description get string by ID
+// @Accept  json
+// @Produce  json
+// @Param   data	body	web.GenericBodyMulti[[]types.Post, [][]types.Post]	true	"Some ID"
+// @Success 200 {object} web.GenericResponse[[]types.Post]
+// @Success 222 {object} web.GenericResponseMulti[[]types.Post, [][]types.Post]
+// @Router /posts-multis/ [post]
+func GetPostArray(w 
