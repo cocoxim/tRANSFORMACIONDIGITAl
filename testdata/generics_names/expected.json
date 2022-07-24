@@ -19,4 +19,20 @@
                     "application/json"
                 ],
                 "summary": "Add new pets to the store",
-         
+                "parameters": [
+                    {
+                        "description": "Some ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/MultiBody-Post-Post"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Response-Post"
+                    
