@@ -43,4 +43,7 @@ func GetPostMulti(w http.ResponseWriter, r *http.Request) {
 // @Success 200 {object} web.GenericResponse[[]types.Post]
 // @Success 222 {object} web.GenericResponseMulti[[]types.Post, [][]types.Post]
 // @Router /posts-multis/ [post]
-func GetPostArray(w 
+func GetPostArray(w http.ResponseWriter, r *http.Request) {
+	//write your code
+	_ = web.GenericResponse[types.Post]{}
+}
