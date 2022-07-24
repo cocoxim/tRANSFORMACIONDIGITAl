@@ -15,4 +15,5 @@ import (
 // @Router /posts/aliaspkg [post]
 func GetPostFromAliasPkg(w http.ResponseWriter, r *http.Request) {
 	//write your code
-	_ = myweb.AliasPkgGenericResponse[mytyp
+	_ = myweb.AliasPkgGenericResponse[mytypes.Post]{}
+}
