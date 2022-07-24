@@ -35,4 +35,23 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/Response-Post"
-                    
+                        }
+                    },
+                    "222": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/MultiResponse-Post-Post"
+                        }
+                    }
+                }
+            }
+        },
+        "/posts-multis/": {
+            "post": {
+                "description": "get string by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+      
