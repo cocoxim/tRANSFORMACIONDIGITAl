@@ -54,4 +54,21 @@
                 ],
                 "produces": [
                     "application/json"
-      
+                ],
+                "summary": "Add new pets to the store",
+                "parameters": [
+                    {
+                        "description": "Some ID",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/MultiBody-array_Post-array2_Post"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+          
