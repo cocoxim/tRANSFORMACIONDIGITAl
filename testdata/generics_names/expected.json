@@ -71,4 +71,22 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-          
+                            "$ref": "#/definitions/Response-array_Post"
+                        }
+                    },
+                    "222": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/MultiResponse-array_Post-array2_Post"
+                        }
+                    }
+                }
+            }
+        },
+        "/posts/": {
+            "post": {
+                "description": "get string by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produ
