@@ -107,4 +107,20 @@
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "schema
+                        "schema": {
+                            "$ref": "#/definitions/Response-Post"
+                        }
+                    },
+                    "222": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/MultiResponse-Post-Post"
+                        }
+                    },
+                    "400": {
+                        "description": "We need ID!!",
+                        "schema": {
+                            "$ref": "#/definitions/web.APIError"
+                        }
+                    },
+                    "40
