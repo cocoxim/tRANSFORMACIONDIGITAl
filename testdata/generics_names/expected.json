@@ -123,4 +123,24 @@
                             "$ref": "#/definitions/web.APIError"
                         }
                     },
-                    "40
+                    "404": {
+                        "description": "Can not find ID",
+                        "schema": {
+                            "$ref": "#/definitions/web.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/posts/aliaspkg": {
+            "post": {
+                "description": "get string by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Add a new pet to the store",
+                "responses": {
+                    "200": {
