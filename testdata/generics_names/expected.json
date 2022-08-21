@@ -144,3 +144,26 @@
                 "summary": "Add a new pet to the store",
                 "responses": {
                     "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.AliasPkgGenericResponse-Post"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Body-Post": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/Post"
+                }
+            }
+        },
+        "MultiBody-Post-Post": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref":
