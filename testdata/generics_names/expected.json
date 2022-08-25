@@ -186,4 +186,27 @@
                     "type": "array",
                     "items": {
                         "type": "array",
-          
+                        "items": {
+                            "$ref": "#/definitions/Post"
+                        }
+                    }
+                }
+            }
+        },
+        "MultiResponse-Post-Post": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/Post"
+                },
+                "meta": {
+                    "$ref": "#/definitions/Post"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "MultiResponse-array_Post-array2_Post": {
+            "type": "object",
+ 
