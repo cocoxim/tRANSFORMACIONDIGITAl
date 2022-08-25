@@ -166,4 +166,24 @@
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref":
+                    "$ref": "#/definitions/Post"
+                },
+                "meta": {
+                    "$ref": "#/definitions/Post"
+                }
+            }
+        },
+        "MultiBody-array_Post-array2_Post": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Post"
+                    }
+                },
+                "meta": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+          
