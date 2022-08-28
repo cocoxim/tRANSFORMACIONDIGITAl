@@ -209,4 +209,24 @@
         },
         "MultiResponse-array_Post-array2_Post": {
             "type": "object",
- 
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Post"
+                    }
+                },
+                "meta": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Post"
+                        }
+                    }
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+     
