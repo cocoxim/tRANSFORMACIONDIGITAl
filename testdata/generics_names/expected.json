@@ -268,4 +268,27 @@
                     "$ref": "#/definitions/Post"
                 },
                 "status": {
-                    "type": "st
+                    "type": "string"
+                }
+            }
+        },
+        "Response-array_Post": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Post"
+                    }
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "web.APIError": {
+            "description": "API error with information about it",
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "descri
