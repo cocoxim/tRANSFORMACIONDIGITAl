@@ -248,3 +248,24 @@
                             }
                         }
                     }
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1
+                },
+                "name": {
+                    "description": "Post name",
+                    "type": "string",
+                    "example": "poti"
+                }
+            }
+        },
+        "Response-Post": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/Post"
+                },
+                "status": {
+                    "type": "st
