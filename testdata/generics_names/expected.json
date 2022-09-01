@@ -291,4 +291,24 @@
             "type": "object",
             "properties": {
                 "createdAt": {
-                    "descri
+                    "description": "Error time",
+                    "type": "string"
+                },
+                "error": {
+                    "description": "Error an Api error",
+                    "type": "string"
+                },
+                "errorCtx": {
+                    "description": "Error `context` tick comment",
+                    "type": "string"
+                },
+                "errorNo": {
+                    "description": "Error `number` tick comment",
+                    "type": "integer"
+                }
+            }
+        },
+        "web.AliasPkgGenericResponse-Post": {
+            "type": "object",
+            "properties": {
+    
