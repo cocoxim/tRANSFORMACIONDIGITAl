@@ -311,4 +311,13 @@
         "web.AliasPkgGenericResponse-Post": {
             "type": "object",
             "properties": {
-    
+                "data": {
+                    "$ref": "#/definitions/Post"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
