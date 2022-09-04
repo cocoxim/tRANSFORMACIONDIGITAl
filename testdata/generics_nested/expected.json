@@ -310,3 +310,314 @@
         "web.GenericNestedBody-web_GenericInnerType-array_types_Post": {
             "type": "object",
             "properties": {
+                "items": {
+                    "description": "Items from the list response",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/web.GenericInnerType-array_types_Post"
+                        }
+                    ]
+                },
+                "status": {
+                    "description": "Status of some other stuff",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNestedBody-web_GenericInnerType-types_Post": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "description": "Items from the list response",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/web.GenericInnerType-types_Post"
+                        }
+                    ]
+                },
+                "status": {
+                    "description": "Status of some other stuff",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNestedResponse-array_types_Post": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "description": "Items from the list response",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/types.Post"
+                        }
+                    }
+                },
+                "status": {
+                    "description": "Status of some other stuff",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNestedResponse-array_web_GenericInnerType-array_types_Post": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "description": "Items from the list response",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/web.GenericInnerType-array_types_Post"
+                        }
+                    }
+                },
+                "status": {
+                    "description": "Status of some other stuff",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNestedResponse-array_web_GenericInnerType-types_Post": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "description": "Items from the list response",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/web.GenericInnerType-types_Post"
+                        }
+                    }
+                },
+                "status": {
+                    "description": "Status of some other stuff",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNestedResponse-types_Post": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "description": "Items from the list response",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.Post"
+                    }
+                },
+                "status": {
+                    "description": "Status of some other stuff",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNestedResponse-web_GenericInnerType-types_Post": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "description": "Items from the list response",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.GenericInnerType-types_Post"
+                    }
+                },
+                "status": {
+                    "description": "Status of some other stuff",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNestedResponseMulti-array_types_Post-array_web_GenericInnerMultiType-array_types_Post-types_Post": {
+            "type": "object",
+            "properties": {
+                "itemOne": {
+                    "description": "ItemsOne is the first thing",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.Post"
+                    }
+                },
+                "itemsTwo": {
+                    "description": "ItemsTwo is the second thing",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/web.GenericInnerMultiType-array_types_Post-types_Post"
+                        }
+                    }
+                },
+                "status": {
+                    "description": "Status of the things",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNestedResponseMulti-array_types_Post-web_GenericInnerMultiType-array_types_Post-types_Post": {
+            "type": "object",
+            "properties": {
+                "itemOne": {
+                    "description": "ItemsOne is the first thing",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.Post"
+                    }
+                },
+                "itemsTwo": {
+                    "description": "ItemsTwo is the second thing",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.GenericInnerMultiType-array_types_Post-types_Post"
+                    }
+                },
+                "status": {
+                    "description": "Status of the things",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNestedResponseMulti-types_Post-web_GenericInnerMultiType-types_Post-array_web_GenericInnerType-array2_types_Post": {
+            "type": "object",
+            "properties": {
+                "itemOne": {
+                    "description": "ItemsOne is the first thing",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/types.Post"
+                        }
+                    ]
+                },
+                "itemsTwo": {
+                    "description": "ItemsTwo is the second thing",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.GenericInnerMultiType-types_Post-array_web_GenericInnerType-array2_types_Post"
+                    }
+                },
+                "status": {
+                    "description": "Status of the things",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNestedResponseMulti-types_Post-web_GenericInnerMultiType-types_Post-types_Post": {
+            "type": "object",
+            "properties": {
+                "itemOne": {
+                    "description": "ItemsOne is the first thing",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/types.Post"
+                        }
+                    ]
+                },
+                "itemsTwo": {
+                    "description": "ItemsTwo is the second thing",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.GenericInnerMultiType-types_Post-types_Post"
+                    }
+                },
+                "status": {
+                    "description": "Status of the things",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNestedResponseMulti-types_Post-web_GenericInnerMultiType-types_Post-web_GenericInnerType-types_Post": {
+            "type": "object",
+            "properties": {
+                "itemOne": {
+                    "description": "ItemsOne is the first thing",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/types.Post"
+                        }
+                    ]
+                },
+                "itemsTwo": {
+                    "description": "ItemsTwo is the second thing",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.GenericInnerMultiType-types_Post-web_GenericInnerType-types_Post"
+                    }
+                },
+                "status": {
+                    "description": "Status of the things",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNestedResponseMulti-web_GenericInnerType-array_types_Post-array_types_Post": {
+            "type": "object",
+            "properties": {
+                "itemOne": {
+                    "description": "ItemsOne is the first thing",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/web.GenericInnerType-array_types_Post"
+                        }
+                    ]
+                },
+                "itemsTwo": {
+                    "description": "ItemsTwo is the second thing",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/types.Post"
+                        }
+                    }
+                },
+                "status": {
+                    "description": "Status of the things",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNestedResponseMulti-web_GenericInnerType-types_Post-types_Post": {
+            "type": "object",
+            "properties": {
+                "itemOne": {
+                    "description": "ItemsOne is the first thing",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/web.GenericInnerType-types_Post"
+                        }
+                    ]
+                },
+                "itemsTwo": {
+                    "description": "ItemsTwo is the second thing",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.Post"
+                    }
+                },
+                "status": {
+                    "description": "Status of the things",
+                    "type": "string"
+                }
+            }
+        },
+        "web.GenericNodeThree-string": {
+            "type": "object",
+            "properties": {
+                "current": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "next": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/web.GenericNodeThree-string"
+                    }
+                }
+            }
+        }
+    }
+}
