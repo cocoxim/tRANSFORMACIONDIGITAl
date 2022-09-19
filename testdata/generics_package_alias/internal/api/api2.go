@@ -42,4 +42,5 @@ func CreateMovie05() {
 // @Success 200 {object} myv1.RenamedListResult[myv2.RenamedProductDto] ""
 // @Router /api06 [post]
 func CreateMovie06() {
-	_ = myv1.ListResult[myv2.Produ
+	_ = myv1.ListResult[myv2.ProductDto]{}
+}
