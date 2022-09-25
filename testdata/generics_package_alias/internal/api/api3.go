@@ -21,4 +21,26 @@ func CreateMovie07() {
 // @Produce  json
 // @Success 200 {object} ListResult[ProductDto] ""
 // @Router /api08 [post]
-func 
+func CreateMovie08() {
+	var _ ProductDto
+}
+
+// @Summary Create movie
+// @Description models imported from an unnamed package
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} ListResult[v1.ProductDto] ""
+// @Router /api09 [post]
+func CreateMovie09() {
+	var _ ProductDto
+}
+
+// @Summary Create movie
+// @Description models imported from an unnamed package
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} v1.ListResult[ProductDto] ""
+// @Router /api10 [post]
+func CreateMovie10() {
+	var _ ProductDto
+}
