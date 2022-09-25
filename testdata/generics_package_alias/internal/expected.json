@@ -1,0 +1,70 @@
+
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/api01": {
+            "post": {
+                "description": "Create a new movie production",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create movie",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_swaggo_swag_testdata_generics_package_alias_internal_path1_v1.ListResult-github_com_swaggo_swag_testdata_generics_package_alias_internal_path1_v1_ProductDto"
+                        }
+                    }
+                }
+            }
+        },
+        "/api02": {
+            "post": {
+                "description": "Create a new movie production",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create movie",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ListResultV1-ProductDtoV1"
+                        }
+                    }
+                }
+            }
+        },
+        "/api03": {
+            "post": {
+                "description": "Create a new movie production",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create movie",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_swaggo_swag_testdata_generics_package_alias_internal_path2_v1.ListResult-github_com_swaggo_swag_testdata_generics_package_alias_internal_path2_v1_ProductDto"
+                        }
+                    }
+                }
+            }
+        },
+        "/api04": {
+            "post": {
+                "description": "Create a new movie production",

@@ -9,4 +9,8 @@ import (
 // @Description models imported from a named external package
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} v1.Li
+// @Success 200 {object} v1.ListResult[myexternal.Customer] ""
+// @Router /api12 [post]
+func CreateMovie12() {
+	var _ myexternal.Customer
+}
