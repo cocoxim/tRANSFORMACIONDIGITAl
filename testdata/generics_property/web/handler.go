@@ -43,4 +43,7 @@ type StringResponse struct {
 	GenericResponse[[]string, *uint8]
 }
 
-type GenericRes
+type GenericResponse[T any, T2 any] struct {
+	Items  T
+	Items2 T2
+}
