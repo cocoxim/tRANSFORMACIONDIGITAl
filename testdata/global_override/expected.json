@@ -20,4 +20,21 @@
     "paths": {
         "/testapi/application": {
             "get": {
-                "descrip
+                "description": "test get application",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get application",
+                "operationId": "get-application",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/data.ApplicationResponse"
+                        }
+                    }
+                }
+          
