@@ -37,4 +37,25 @@
                         }
                     }
                 }
-          
+            }
+        }
+    },
+    "definitions": {
+        "data.ApplicationResponse": {
+            "type": "object",
+            "properties": {
+                "application": {
+                    "type": "string"
+                },
+                "application2": {
+                    "$ref": "#/definitions/othertypes.Application"
+                },
+                "application_array": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "application_time": {
+                    "type": "string"
+     
