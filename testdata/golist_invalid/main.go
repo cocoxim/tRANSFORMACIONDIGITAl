@@ -27,4 +27,6 @@ import (
 // @BasePath /v2
 func main() {
 	invalid.Foo()
-	http.HandleFunc("/testapi/up
+	http.HandleFunc("/testapi/upload", api.Upload)
+	http.ListenAndServe(":8080", nil)
+}
