@@ -35,4 +35,9 @@ func DoSomething(w http.ResponseWriter, r *http.Request) {
 // @title Swagger Example API
 // @version 1.0
 // @description This is a sample server.
-// 
+// @host localhost:4000
+// @basePath /api
+func main() {
+	http.HandleFunc("/do-something", DoSomething)
+	http.ListenAndServe(":8080", nil)
+}
