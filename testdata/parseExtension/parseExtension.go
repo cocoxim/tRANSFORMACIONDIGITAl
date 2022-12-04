@@ -11,4 +11,6 @@ func Fun2() {}
 // @x-google-backend {"address": "http://backend"}
 func Fun3() {}
 
-// @Router /w
+// @Router /with-empty-comment-line [get]
+//
+func FunEmptyCommentLine() {}
