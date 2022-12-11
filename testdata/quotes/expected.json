@@ -1,0 +1,5 @@
+{
+    "schemes": [],
+    "swagger": "2.0",
+    "info": {
+        "description": "# Title with \"quotes\"\n\nAs we want to verify that this markdown is formatted equally in both the general\nAPI description, in a tag description and in an endpoi
