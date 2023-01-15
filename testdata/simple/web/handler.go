@@ -31,4 +31,10 @@ type Pet struct {
 	Data              interface{}       `json:"data"`
 	Hidden            string            `json:"-"`
 	UUID              uuid.UUID         `json:"uuid"`
-	Decima
+	Decimal           decimal.Decimal   `json:"decimal"`
+	IntArray          []int             `json:"int_array" example:"1,2"`
+	StringMap         map[string]string `json:"string_map" example:"key1:value,key2:value2"`
+	EnumArray         []int             `json:"enum_array" enums:"1,2,3,5,7"`
+	FoodTypes         []string          `json:"food_types" swaggertype:"array,integer" enums:"0,1,2" x-enum-varnames:"Wet,Dry,Raw" extensions:"x-some-extension"`
+	FoodBrands        []string          `json:"food_brands" extensions:"x-some-extension"`
+	SingleEnumVarname string            `json:"single_enum_varname" sw
