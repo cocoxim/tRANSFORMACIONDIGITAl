@@ -37,4 +37,33 @@ type Pet struct {
 	EnumArray         []int             `json:"enum_array" enums:"1,2,3,5,7"`
 	FoodTypes         []string          `json:"food_types" swaggertype:"array,integer" enums:"0,1,2" x-enum-varnames:"Wet,Dry,Raw" extensions:"x-some-extension"`
 	FoodBrands        []string          `json:"food_brands" extensions:"x-some-extension"`
-	SingleEnumVarname string            `json:"single_enum_varname" sw
+	SingleEnumVarname string            `json:"single_enum_varname" swaggertype:"integer" enums:"1,2,3" x-enum-varnames:"one,two,three" extensions:"x-some-extension"`
+}
+
+type Tag struct {
+	ID   int    `json:"id" format:"int64"`
+	Name string `json:"name"`
+	Pets []Pet  `json:"pets"`
+}
+
+type Tags []*Tag
+
+type AnonymousStructArray []struct {
+	Foo string `json:"foo"`
+}
+
+type CrossAlias cross.Cross
+
+type Pet2 struct {
+	ID         int        `json:"id"`
+	MiddleName *string    `json:"middlename" extensions:"x-nullable,x-abc=def,!x-omitempty"`
+	DeletedAt  *time.Time `json:"deleted_at"`
+}
+
+type IndirectRecursiveTest struct {
+	Tags []Tag
+}
+
+type APIError struct {
+	ErrorCode    int
+	ErrorM
