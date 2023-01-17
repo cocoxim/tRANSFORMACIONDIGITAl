@@ -66,4 +66,28 @@ type IndirectRecursiveTest struct {
 
 type APIError struct {
 	ErrorCode    int
-	ErrorM
+	ErrorMessage string
+	CreatedAt    time.Time
+}
+
+type RevValueBase struct {
+	Status bool `json:"Status"`
+
+	Err int32 `json:"Err,omitempty"`
+}
+type RevValue struct {
+	RevValueBase `json:"rev_value_base"`
+
+	Data    int           `json:"Data"`
+	Cross   cross.Cross   `json:"cross"`
+	Crosses []cross.Cross `json:"crosses"`
+}
+
+// Below we have Pet5b as base type and Pet5a and Pet5c both have Pet5b as anonymous field, inheriting it's properties
+// By using these names we ensure that our test will fill if the order of parsing matters at all
+
+type Pet5a struct {
+	*Pet5b
+	Odd bool `json:"odd" binding:"required"`
+}
+
