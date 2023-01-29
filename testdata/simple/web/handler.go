@@ -91,3 +91,11 @@ type Pet5a struct {
 	Odd bool `json:"odd" binding:"required"`
 }
 
+type Pet5b struct {
+	Name string `json:"name" binding:"required"`
+}
+
+type Pet5c struct {
+	*Pet5b
+	Odd bool `json:"odd" binding:"required"`
+}
