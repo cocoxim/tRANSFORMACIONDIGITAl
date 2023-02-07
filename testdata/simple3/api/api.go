@@ -41,4 +41,31 @@ func GetStructArrayByString(w http.ResponseWriter, r *http.Request) {
 }
 
 // @Summary Upload file
-// @Descriptio
+// @Description Upload file
+// @ID file.upload
+// @Accept  multipart/form-data
+// @Produce  json
+// @Param   file formData file true  "this is a test file"
+// @Success 200 {string} string "ok"
+// @Failure 400 {object} web.APIError "We need ID!!"
+// @Failure 404 {object} web.APIError "Can not find ID"
+// @Router /file/upload [post]
+func Upload(w http.ResponseWriter, r *http.Request) {
+	//write your code
+}
+
+// @Summary use Anonymous field
+// @Success 200 {object} web.RevValue "ok"
+func AnonymousField() {
+
+}
+
+// @Summary use pet2
+// @Success 200 {object} web.Pet2 "ok"
+func Pet2() {
+
+}
+
+type Pet3 struct {
+	ID int `json:"id"`
+}
