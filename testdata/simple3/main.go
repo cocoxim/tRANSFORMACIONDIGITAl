@@ -43,4 +43,13 @@ import (
 // @scope.write Grants write access
 // @scope.admin Grants read and write access to administrative information
 
-// @securi
+// @securitydefinitions.oauth2.accessCode OAuth2AccessCode
+// @tokenUrl https://example.com/oauth/token
+// @authorizationurl https://example.com/oauth/authorize
+// @scope.admin Grants read and write access to administrative information
+func main() {
+	http.HandleFunc("/testapi/get-string-by-int/", api.GetStringByInt)
+	http.HandleFunc("//testapi/get-struct-array-by-string/", api.GetStructArrayByString)
+	http.HandleFunc("/testapi/upload", api.Upload)
+	http.ListenAndServe(":8080", nil)
+}
