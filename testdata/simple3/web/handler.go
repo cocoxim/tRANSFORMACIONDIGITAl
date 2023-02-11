@@ -24,3 +24,41 @@ type Pet struct {
 	Tags      []Tag
 	Pets      *[]Pet2
 	Pets2     []*Pet2
+	Status    string
+	Price     float32 `example:"3.25" multipleOf:"0.01"`
+	IsAlive   bool    `example:"true"`
+	Data      interface{}
+	Hidden    string `json:"-"`
+	UUID      uuid.UUID
+	Decimal   decimal.Decimal
+	Function  func()
+}
+
+type Tag struct {
+	ID   int `format:"int64"`
+	Name string
+	Pets []Pet
+}
+
+type Pet2 struct {
+	ID         int
+	MiddleName *string
+	DeletedAt  *time.Time
+}
+
+type APIError struct {
+	ErrorCode    int
+	ErrorMessage string
+	CreatedAt    time.Time
+}
+
+type RevValueBase struct {
+	Status bool
+
+	Err int32
+}
+type RevValue struct {
+	RevValueBase
+
+	Data int
+}
