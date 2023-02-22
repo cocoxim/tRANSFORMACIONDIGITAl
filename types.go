@@ -45,4 +45,26 @@ func (t *TypeSpecDef) Name() string {
 func (t *TypeSpecDef) TypeName() string {
 	if ignoreNameOverride(t.TypeSpec.Name.Name) {
 		return t.TypeSpec.Name.Name[1:]
-	} else if t.Type
+	} else if t.TypeSpec.Comment != nil {
+		// get alias from comment '// @name '
+		for _, comment := range t.TypeSpec.Comment.List {
+			texts := strings.Split(strings.TrimSpace(strings.TrimLeft(comment.Text, "/")), " ")
+			if len(texts) > 1 && strings.ToLower(texts[0]) == "@name" {
+				return texts[1]
+			}
+		}
+	}
+
+	var names []string
+	if t.NotUnique {
+		pkgPath := strings.Map(func(r rune) rune {
+			if r == '\\' || r == '/' || r == '.' {
+				return '_'
+			}
+			return r
+		}, t.PkgPath)
+		names = append(names, pkgPath)
+	} else {
+		names = append(names, t.File.Name.Name)
+	}
+	if parentFun, ok := (t.ParentSpec).(*ast.FuncDecl); ok && parentFun != 
