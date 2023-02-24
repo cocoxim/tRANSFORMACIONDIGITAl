@@ -67,4 +67,32 @@ func (t *TypeSpecDef) TypeName() string {
 	} else {
 		names = append(names, t.File.Name.Name)
 	}
-	if parentFun, ok := (t.ParentSpec).(*ast.FuncDecl); ok && parentFun != 
+	if parentFun, ok := (t.ParentSpec).(*ast.FuncDecl); ok && parentFun != nil {
+		names = append(names, parentFun.Name.Name)
+	}
+	names = append(names, t.TypeSpec.Name.Name)
+	return fullTypeName(names...)
+}
+
+// FullPath return the full path of the typeSpec.
+func (t *TypeSpecDef) FullPath() string {
+	return t.PkgPath + "." + t.Name()
+}
+
+// AstFileInfo information of an ast.File.
+type AstFileInfo struct {
+	//FileSet the FileSet object which is used to parse this go source file
+	FileSet *token.FileSet
+
+	// File ast.File
+	File *ast.File
+
+	// Path the path of the ast.File
+	Path string
+
+	// PackagePath package import path of the ast.File
+	PackagePath string
+
+	// ParseFlag determine what to parse
+	ParseFlag ParseFlag
+}
