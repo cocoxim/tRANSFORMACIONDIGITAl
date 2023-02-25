@@ -26,3 +26,6 @@ func (v CanIntegerValue) CanInt() bool {
 }
 
 // CanUint reports whether Uint can be used without panicking.
+func (v CanIntegerValue) CanUint() bool {
+	return v.Value.CanUint()
+}
