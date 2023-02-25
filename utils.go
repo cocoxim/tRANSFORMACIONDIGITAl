@@ -21,3 +21,36 @@ func FieldsFunc(s string, f func(rune2 rune) bool, n int) []string {
 	for end, rune := range s {
 		if f(rune) {
 			if start >= 0 {
+				spans = append(spans, span{start, end})
+				// Set start to a negative value.
+				// Note: using -1 here consistently and reproducibly
+				// slows down this code by a several percent on amd64.
+				start = ^start
+			}
+		} else {
+			if start < 0 {
+				start = end
+				if n > 0 && len(spans)+1 >= n {
+					break
+				}
+			}
+		}
+	}
+
+	// Last field might end at EOF.
+	if start >= 0 {
+		spans = append(spans, span{start, len(s)})
+	}
+
+	// Create strings from recorded field indices.
+	a := make([]string, len(spans))
+	for i, span := range spans {
+		a[i] = s[span.start:span.end]
+	}
+	return a
+}
+
+// FieldsByAnySpace split a string s by any space character into max n parts
+func FieldsByAnySpace(s string, n int) []string {
+	return FieldsFunc(s, unicode.IsSpace, n)
+}
