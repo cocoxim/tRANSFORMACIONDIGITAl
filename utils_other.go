@@ -22,4 +22,26 @@ func AppendUtf8Rune(p []byte, r rune) []byte {
 }
 
 // CanIntegerValue a wrapper of reflect.Value
-type CanInte
+type CanIntegerValue struct {
+	reflect.Value
+}
+
+// CanInt reports whether Uint can be used without panicking.
+func (v CanIntegerValue) CanInt() bool {
+	switch v.Kind() {
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		return true
+	default:
+		return false
+	}
+}
+
+// CanUint reports whether Uint can be used without panicking.
+func (v CanIntegerValue) CanUint() bool {
+	switch v.Kind() {
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
+		return true
+	default:
+		return false
+	}
+}
